@@ -1,0 +1,10 @@
+# esbuild
+.esbuild
+dist
+
+# dependency
+node_modules
+
+playground
+
+.env

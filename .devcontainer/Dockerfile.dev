@@ -1,0 +1,5 @@
+# 開発コンテナ用のDockerfile
+
+FROM node:14
+
+USER node
