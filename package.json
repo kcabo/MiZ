@@ -2,7 +2,7 @@
   "name": "miz",
   "version": "1.0.0",
   "private": true,
-  "description": "create your own certification of swimming race on the cloud!",
+  "description": "create your own certification of swimming races on the cloud!",
   "scripts": {
     "build": "node esbuild.config.js",
     "dev": "serverless offline",
@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@aws-sdk/s3-request-presigner": "^3.39.0"
+    "@aws-sdk/s3-request-presigner": "^3.39.0",
+    "@line/bot-sdk": "^7.4.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.84",
