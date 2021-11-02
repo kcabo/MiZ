@@ -1,5 +1,6 @@
 import { Message, WebhookEvent } from '@line/bot-sdk';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { createSheetEvent } from 'createSheet';
 import { reply, getWebhookEvents, isLineWebhookEvent } from 'line';
 
 export async function handler(
@@ -34,15 +35,9 @@ async function processEvent(event: WebhookEvent) {
     const { replyToken } = event;
     let response: Message;
     if (event.message.type == 'text') {
-      response = {
-        type: 'text' as const,
-        text: event.message.text,
-      };
+      response = await createSheetEvent(event.message.text);
     } else {
-      response = {
-        type: 'text' as const,
-        text: 'Hello!',
-      };
+      response = await createSheetEvent('Hello!');
     }
     await reply(replyToken, response);
   }
