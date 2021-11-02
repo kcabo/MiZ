@@ -10,6 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.39.0",
     "@aws-sdk/s3-request-presigner": "^3.39.0",
     "@line/bot-sdk": "^7.4.0"
   },
