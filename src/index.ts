@@ -1,26 +1,20 @@
 import { Message, WebhookEvent } from '@line/bot-sdk';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { createSheetEvent } from 'createSheet';
-import { getWebhookEvents, isLineWebhookEvent } from 'lineApi/validation';
+import { validateAndParseRequest } from 'lineApi/validation';
 import { reply } from 'lineApi/client';
 
 export async function handler(
-  event: APIGatewayProxyEventV2
+  ApiGatewayEvent: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyResultV2> {
-  if (isLineWebhookEvent(event)) {
+  const { valid, lineEvents } = validateAndParseRequest(ApiGatewayEvent);
+  if (valid) {
     // console.log('Request from LINE: ' + JSON.stringify(event, null, 1));
-
-    try {
-      const events = getWebhookEvents(event.body);
-      await Promise.all(events.map(async (event) => await processEvent(event)));
-    } catch (e) {
-      console.error('UNEXPECTED ERROR!! >\n', e);
-    } finally {
-      return {
-        statusCode: 200,
-        body: 'ok',
-      };
-    }
+    await Promise.all(lineEvents.map(async (e) => await processEvent(e)));
+    return {
+      statusCode: 200,
+      body: 'ok',
+    };
   } else {
     // console.warn('Request not from LINE: ' + JSON.stringify(event, null, 1));
 
