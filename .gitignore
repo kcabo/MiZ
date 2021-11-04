@@ -8,3 +8,6 @@ node_modules
 playground
 
 .env
+
+# jest coverage
+coverage
