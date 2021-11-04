@@ -1,7 +1,8 @@
 import { Message, WebhookEvent } from '@line/bot-sdk';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { createSheetEvent } from 'createSheet';
-import { reply, getWebhookEvents, isLineWebhookEvent } from 'line';
+import { getWebhookEvents, isLineWebhookEvent } from 'line';
+import { reply } from 'lineClient';
 
 export async function handler(
   event: APIGatewayProxyEventV2
