@@ -7,7 +7,7 @@
     "build": "node esbuild.config.js",
     "dev": "serverless offline",
     "expose": "lt --port 3000 --subdomain ${LOCALTUNNEL_SUBDOMAIN} --print-requests",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.39.0",
@@ -16,6 +16,9 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.84",
+    "@types/jest": "^27.0.2",
+    "esbuild-jest": "^0.5.0",
+    "jest": "^27.3.1",
     "localtunnel": "^2.0.2",
     "serverless": "^2.63.0",
     "serverless-esbuild": "^1.20.0",
