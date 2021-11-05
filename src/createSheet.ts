@@ -1,5 +1,12 @@
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
-import { ImageMessage } from '@line/bot-sdk';
+import {
+  ImageMessage,
+  MessageEvent,
+  TextMessage,
+  TextEventMessage,
+} from '@line/bot-sdk';
+import { parseToRaceCoreData } from 'timeParser';
+import { RaceCoreData, RaceData } from 'types';
 
 const client = new LambdaClient({ region: 'ap-northeast-1' });
 const PAPARAZZO_FUNCTION_ARN = process.env.PAPARAZZO_FUNCTION_ARN;
@@ -20,23 +27,35 @@ async function getSheetImageUrl(postData: any) {
   }
 }
 
-export async function createSheetEvent(userInputText: string) {
-  const data = {
+export async function createSheetEvent(event: MessageEvent) {
+  const message = event.message as TextEventMessage;
+  const { raceCoreData, error } = parseToRaceCoreData(message.text);
+  if (!raceCoreData) {
+    const askRetryMessage: TextMessage = {
+      type: 'text' as const,
+      text: 'メッセージが間違っています。正しい書式で再送してください。',
+    };
+    return askRetryMessage;
+  }
+  const presetData = {
     recordId: 1,
-    courseLength: '長水路',
+    courseLength: '長水路' as const,
     meet: '大会です',
     place: '家です',
-    date: Date().slice(0, 24),
-    swimmer: '僕です',
-    event: userInputText,
-    reaction: 12,
-    cumulativeTime: [3001, 6021],
+    date: getDate(),
   };
-  const { ok, url } = await getSheetImageUrl(data);
+  const raceData = { ...presetData, ...raceCoreData };
+  const { ok, url } = await getSheetImageUrl(raceData);
   const replyMessage: ImageMessage = {
     type: 'image' as const,
     originalContentUrl: url as string,
     previewImageUrl: url as string,
   };
   return replyMessage;
+}
+
+function getDate() {
+  return new Date(
+    Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000
+  ).toString();
 }

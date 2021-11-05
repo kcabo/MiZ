@@ -8,16 +8,16 @@ export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyResultV2> {
   const { valid, lineEvents } = validateAndParseRequest(ApiGatewayEvent);
+  // console.log(JSON.stringify(ApiGatewayEvent, null, 1));
+
   if (valid) {
-    // console.log('Request from LINE: ' + JSON.stringify(event, null, 1));
     await Promise.all(lineEvents.map(async (e) => await processEvent(e)));
     return {
       statusCode: 200,
       body: 'ok',
     };
   } else {
-    // console.warn('Request not from LINE: ' + JSON.stringify(event, null, 1));
-
+    console.warn('Request not from LINE');
     return {
       statusCode: 200,
       body: 'who are you?',
@@ -30,9 +30,9 @@ async function processEvent(event: WebhookEvent) {
     const { replyToken } = event;
     let response: Message;
     if (event.message.type == 'text') {
-      response = await createSheetEvent(event.message.text);
+      response = await createSheetEvent(event);
     } else {
-      response = await createSheetEvent('Hello!');
+      response = { type: 'text', text: 'hello!' };
     }
     await reply(replyToken, response);
   }
