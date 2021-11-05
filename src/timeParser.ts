@@ -1,12 +1,9 @@
 import { RaceCoreData } from 'types';
 
-type ParseResult =
-  | {
-      error: string;
-    }
-  | {
-      data: RaceCoreData;
-    };
+type ParseResult = {
+  error?: string;
+  raceCoreData?: RaceCoreData;
+};
 
 const inputTextPattern =
   /^(?<swimmer>.*[^\s0-9０-９].*)\n(?<event>.*[^\s0-9０-９].*)(?<reactionStrPrefixed>\n[0-9０-９]{2,3})?(?<cumulativeTimeStrPrefixed>(?:\n[0-9０-９]{3,6})+$)/;
@@ -43,7 +40,7 @@ export function parseToRaceCoreData(concatInput: string): ParseResult {
     const reaction = toCentiSeconds(reactionStr);
     result = { ...result, reaction };
   }
-  return { data: result };
+  return { raceCoreData: result };
 }
 
 export function toCentiSeconds(concatTime: string): number {

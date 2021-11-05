@@ -55,7 +55,7 @@ test('positive: event, reaction, time', () => {
     reaction: 62,
     cumulativeTime: [2945, 6276],
   };
-  expect(parseToRaceCoreData(userInput)).toEqual({ data: output });
+  expect(parseToRaceCoreData(userInput)).toEqual({ raceCoreData: output });
 });
 
 test('positive: event, time', () => {
@@ -70,7 +70,7 @@ test('positive: event, time', () => {
     event: '200mバタフライ',
     cumulativeTime: [2822, 5930, 9211, 12873],
   };
-  expect(parseToRaceCoreData(userInput)).toEqual({ data: output });
+  expect(parseToRaceCoreData(userInput)).toEqual({ raceCoreData: output });
 });
 
 test('negative parsing', () => {
