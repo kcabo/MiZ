@@ -1,0 +1,20 @@
+export type RaceTime = {
+  reaction?: number;
+  cumulativeTime: number[];
+};
+export type RaceCoreData = {
+  swimmer: string;
+  event: string;
+} & RaceTime;
+
+export type Meet = {
+  courseLength?: '長水路' | '短水路';
+  meet?: string;
+  place?: string;
+};
+
+export type RaceData = {
+  raceId: string;
+  date: string;
+} & Meet &
+  RaceCoreData;
