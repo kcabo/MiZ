@@ -6,6 +6,7 @@
   },
   "prettier.jsxSingleQuote": true,
   "prettier.singleQuote": true,
+  "jest.jestCommandLine": "npx jest --transform='{\"^.+\\\\.ts$\": \"esbuild-jest\"}'",
   "gitmoji.additionalEmojis": [
     {
       "emoji": "🚧",
