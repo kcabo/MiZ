@@ -14,7 +14,8 @@
     "donjayamanne.githistory",
     "vtrois.gitmoji-vscode",
     "streetsidesoftware.code-spell-checker",
-    "visualstudioexptteam.vscodeintellicode"
+    "visualstudioexptteam.vscodeintellicode",
+    "orta.vscode-jest"
   ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
