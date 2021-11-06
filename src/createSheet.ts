@@ -6,6 +6,7 @@ import {
   sendSheetImage,
 } from 'lineApi/replies';
 import { parseToRaceCoreData } from 'timeParser';
+import { formattedToday } from 'utils';
 import { RaceCoreData, RaceData } from 'types';
 
 export async function createSheetEvent(
@@ -17,12 +18,11 @@ export async function createSheetEvent(
     return askFixCreateSheetFormat();
   }
   const presetData = {
-    // recordId: 1,
     raceId: '1',
     courseLength: '長水路' as const,
     meet: '大会',
     place: '会場',
-    date: getDate(),
+    date: formattedToday(),
   };
   const raceData = { ...presetData, ...raceCoreData };
   const result = await requestGenerateSheet(raceData);
@@ -32,10 +32,4 @@ export async function createSheetEvent(
 
   const url = await generateURLforDownload('1.png');
   return sendSheetImage(url);
-}
-
-function getDate() {
-  return new Date(
-    Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000
-  ).toString();
 }
