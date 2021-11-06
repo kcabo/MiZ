@@ -1,57 +1,37 @@
-import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import { MessageEvent, Message, TextEventMessage } from '@line/bot-sdk';
+import { generateURLforDownload, requestGenerateSheet } from 'aws';
 import {
-  ImageMessage,
-  MessageEvent,
-  TextMessage,
-  TextEventMessage,
-} from '@line/bot-sdk';
+  askFixCreateSheetFormat,
+  paparazzoError,
+  sendSheetImage,
+} from 'lineApi/replies';
 import { parseToRaceCoreData } from 'timeParser';
 import { RaceCoreData, RaceData } from 'types';
 
-const client = new LambdaClient({ region: 'ap-northeast-1' });
-const PAPARAZZO_FUNCTION_ARN = process.env.PAPARAZZO_FUNCTION_ARN;
-
-async function getSheetImageUrl(postData: any) {
-  const params = {
-    FunctionName: PAPARAZZO_FUNCTION_ARN,
-    Payload: Buffer.from(JSON.stringify(postData)),
-  };
-  const command = new InvokeCommand(params);
-  const response = await client.send(command);
-  const payload = response.Payload;
-  if (payload) {
-    const data = JSON.parse(Buffer.from(payload).toString());
-    return data;
-  } else {
-    throw new Error('Paparazzo returned empty payload');
-  }
-}
-
-export async function createSheetEvent(event: MessageEvent) {
+export async function createSheetEvent(
+  event: MessageEvent
+): Promise<Message | Message[]> {
   const message = event.message as TextEventMessage;
   const { raceCoreData, error } = parseToRaceCoreData(message.text);
   if (!raceCoreData) {
-    const askRetryMessage: TextMessage = {
-      type: 'text' as const,
-      text: 'メッセージが間違っています。正しい書式で再送してください。',
-    };
-    return askRetryMessage;
+    return askFixCreateSheetFormat();
   }
   const presetData = {
-    recordId: 1,
+    // recordId: 1,
+    raceId: '1',
     courseLength: '長水路' as const,
-    meet: '大会です',
-    place: '家です',
+    meet: '大会',
+    place: '会場',
     date: getDate(),
   };
   const raceData = { ...presetData, ...raceCoreData };
-  const { ok, url } = await getSheetImageUrl(raceData);
-  const replyMessage: ImageMessage = {
-    type: 'image' as const,
-    originalContentUrl: url as string,
-    previewImageUrl: url as string,
-  };
-  return replyMessage;
+  const result = await requestGenerateSheet(raceData);
+  if (result.status == 'error') {
+    return paparazzoError();
+  }
+
+  const url = await generateURLforDownload('1.png');
+  return sendSheetImage(url);
 }
 
 function getDate() {

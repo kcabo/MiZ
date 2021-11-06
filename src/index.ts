@@ -28,7 +28,7 @@ export async function handler(
 async function processEvent(event: WebhookEvent) {
   if (event.type == 'message') {
     const { replyToken } = event;
-    let response: Message;
+    let response: Message | Message[];
     if (event.message.type == 'text') {
       response = await createSheetEvent(event);
     } else {
