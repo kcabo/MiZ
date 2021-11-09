@@ -19,3 +19,17 @@ export function paparazzoError(): TextMessage {
     text: '画像生成でエラーが生じました。時間をおいて再度お試しください',
   };
 }
+
+export function putRaceError(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: 'データを登録できませんでした。時間をおいて再度お試しください',
+  };
+}
+
+export function userIdNotFound(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: 'ユーザーのプロフィール情報の取得に同意していないため、ご利用できません。',
+  };
+}

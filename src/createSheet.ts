@@ -1,22 +1,24 @@
-import { MessageEvent, Message, TextEventMessage } from '@line/bot-sdk';
-import { generateURLforDownload, requestGenerateSheet } from 'aws';
+import { Message, TextEventMessage } from '@line/bot-sdk';
+import { generateURLforDownload, putNewRace, requestGenerateSheet } from 'aws';
 import {
   askFixCreateSheetFormat,
   paparazzoError,
+  putRaceError,
   sendSheetImage,
 } from 'lineApi/replies';
 import { parseToRaceCoreData } from 'timeParser';
 import { formattedToday } from 'utils';
-import { RaceCoreData, RaceData } from 'types';
+import { RaceData } from 'types';
 
 export async function createSheetEvent(
-  event: MessageEvent
+  message: TextEventMessage,
+  userId: string
 ): Promise<Message | Message[]> {
-  const message = event.message as TextEventMessage;
   const { raceCoreData, error } = parseToRaceCoreData(message.text);
   if (!raceCoreData) {
     return askFixCreateSheetFormat();
   }
+
   const presetData = {
     raceId: '1',
     courseLength: '長水路' as const,
@@ -24,12 +26,20 @@ export async function createSheetEvent(
     place: '会場',
     date: formattedToday(),
   };
-  const raceData = { ...presetData, ...raceCoreData };
-  const result = await requestGenerateSheet(raceData);
-  if (result.status == 'error') {
+  const raceData: RaceData = { ...presetData, ...raceCoreData };
+
+  const generateSheetResult = await requestGenerateSheet(raceData);
+  if (generateSheetResult.status == 'error') {
     return paparazzoError();
   }
 
-  const url = await generateURLforDownload('1.png');
+  const putDataResult = await putNewRace(raceData, userId);
+  if (putDataResult.$metadata.httpStatusCode !== 200) {
+    return putRaceError();
+  }
+
+  const sheetObjectKey = '1.png';
+  const url = await generateURLforDownload(sheetObjectKey);
+
   return sendSheetImage(url);
 }
