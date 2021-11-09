@@ -18,3 +18,10 @@ export type RaceData = {
   date: string;
 } & Meet &
   RaceCoreData;
+
+export type DbRaceItem = {
+  userId: string;
+  sk: string;
+  createdAt: string;
+  updatedAt: string;
+} & Omit<RaceData, 'raceId'>;

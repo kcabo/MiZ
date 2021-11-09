@@ -8,3 +8,7 @@ dayjs.extend(utc);
 export function formattedToday() {
   return dayjs().tz('Asia/Tokyo').format('YYYY-MM-DD');
 }
+
+export function nowISO() {
+  return dayjs().format('YYYY-MM-DDTHH:mm:ss[Z]');
+}
