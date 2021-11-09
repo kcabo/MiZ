@@ -3,7 +3,7 @@ import { documentClient } from './dynamodb';
 import { DbRaceItem, RaceData } from 'types';
 import { nowISO } from '../utils';
 
-const TABLE_NAME = 'miz-dev';
+const TABLE_NAME = process.env.DYNAMODB_RACE_TABLE_NAME;
 
 export async function putNewRace(raceData: RaceData, userId: string) {
   const now = nowISO();

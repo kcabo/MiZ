@@ -5,6 +5,7 @@ declare global {
       LINE_CHANNEL_SECRET: string;
       PAPARAZZO_FUNCTION_ARN: string;
       PAPARAZZO_BUCKET_NAME: string;
+      DYNAMODB_RACE_TABLE_NAME: string;
     }
   }
 }
