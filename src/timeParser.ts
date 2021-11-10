@@ -6,7 +6,7 @@ type ParseResult = {
 };
 
 const inputTextPattern =
-  /^(?<swimmer>.*[^\s0-9０-９].*)\n(?<event>.*[^\s0-9０-９].*)(?<reactionStrPrefixed>\n[0-9０-９]{2,3})?(?<cumulativeTimeStrPrefixed>(?:\n[0-9０-９]{3,6})+$)/;
+  /^(?<swimmer>.*[^\n0-9０-９].*)\n(?<event>.*[^\s0-9０-９].*)(?<reactionStrPrefixed>\n[0-9０-９]{2,3})?(?<cumulativeTimeStrPrefixed>(?:\n[0-9０-９]{3,6})+$)/;
 
 type MatchedObjects = {
   swimmer: string;
