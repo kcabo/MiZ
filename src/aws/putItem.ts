@@ -1,9 +1,7 @@
-import { documentClient } from './dynamodb';
+import { documentClient, RACE_TABLE_NAME } from './dynamodb';
 
 import { DbRaceItem, RaceData } from 'types';
 import { nowISO } from '../utils';
-
-const TABLE_NAME = process.env.DYNAMODB_RACE_TABLE_NAME;
 
 export async function putNewRace(raceData: RaceData, userId: string) {
   const now = nowISO();
@@ -23,7 +21,7 @@ export async function putNewRace(raceData: RaceData, userId: string) {
   };
 
   return documentClient.put({
-    TableName: TABLE_NAME,
+    TableName: RACE_TABLE_NAME,
     Item: raceItem,
   });
 }
