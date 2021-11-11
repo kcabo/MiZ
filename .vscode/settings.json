@@ -4,7 +4,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "prettier.jsxSingleQuote": true,
   "prettier.singleQuote": true,
   "jest.jestCommandLine": "npx jest --transform='{\"^.+\\\\.ts$\": \"esbuild-jest\"}'",
   "gitmoji.additionalEmojis": [
@@ -12,6 +11,11 @@
       "emoji": "🚧",
       "code": ":construction:",
       "description": "Work in progress"
+    },
+    {
+      "emoji": "🍰",
+      "code": ":cake:",
+      "description": "chore"
     },
     {
       "emoji": "✨",
@@ -29,29 +33,14 @@
       "description": "Refactor code"
     },
     {
-      "emoji": "⚡️",
-      "code": ":zap:",
-      "description": "Improve performance"
-    },
-    {
-      "emoji": "🔥",
-      "code": ":fire:",
-      "description": "Remove code or files"
-    },
-    {
       "emoji": "🚚",
       "code": ":truck:",
-      "description": "Move or rename resources (e.g.: files, paths, routes)"
+      "description": "Move or rename resources"
     },
     {
       "emoji": "🐛",
       "code": ":bug:",
       "description": "Fix a bug"
-    },
-    {
-      "emoji": "🚑",
-      "code": ":ambulance:",
-      "description": "Critical hotfix"
     },
     {
       "emoji": "📝",
@@ -64,29 +53,19 @@
       "description": "Add or update configuration files"
     },
     {
-      "emoji": "🚀",
-      "code": ":rocket:",
-      "description": "Deploy stuff"
+      "emoji": "📦️",
+      "code": ":package:",
+      "description": "Change dependencies"
     },
     {
-      "emoji": "🎉",
-      "code": ":tada:",
-      "description": "Begin a project"
+      "emoji": "🚀",
+      "code": ":rocket:",
+      "description": "Project milestones"
     },
     {
       "emoji": "✅",
       "code": ":white_check_mark:",
       "description": "Add, update, or pass tests"
-    },
-    {
-      "emoji": "⏪",
-      "code": ":rewind:",
-      "description": "Revert changes"
-    },
-    {
-      "emoji": "🔀",
-      "code": ":twisted_rightwards_arrows:",
-      "description": "Merge branches"
     }
   ],
   "gitmoji.onlyUseAdditionalEmojis": true
