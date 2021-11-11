@@ -9,8 +9,8 @@ export function askFixCreateSheetFormat(): TextMessage {
 export function sendSheetImage(url: string): ImageMessage {
   return {
     type: 'image' as const,
-    originalContentUrl: url as string,
-    previewImageUrl: url as string,
+    originalContentUrl: url,
+    previewImageUrl: url,
   };
 }
 export function paparazzoError(): TextMessage {
