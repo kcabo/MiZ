@@ -6,6 +6,10 @@
   },
   "prettier.singleQuote": true,
   "jest.jestCommandLine": "npx jest --transform='{\"^.+\\\\.ts$\": \"esbuild-jest\"}'",
+  "jest.autoRun": {
+    "watch": false,
+    "onSave": "test-file"
+  },
   "gitmoji.additionalEmojis": [
     {
       "emoji": "🚧",
