@@ -25,3 +25,17 @@ export type DbRaceItem = {
   createdAt: string;
   updatedAt: string;
 } & Omit<RaceData, 'raceId'>;
+
+export type DbUserItem = {
+  userId: string;
+  sk: string; // USER#{userId}
+  userName: string;
+  mode: 'swimmer' | 'manager';
+  isTermAgreed: boolean;
+  friendship: boolean;
+  createdAt: string;
+};
+
+export type PaparazzoResponse = {
+  status: 'ok' | 'error';
+};

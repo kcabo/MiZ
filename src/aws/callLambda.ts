@@ -1,21 +1,10 @@
 import { InvokeCommand } from '@aws-sdk/client-lambda';
 
 import { lambdaClient } from './lambdaClient';
-import { RaceData } from 'types';
+import { isPaparazzoResponse } from '../typeChecker';
+import { RaceData, PaparazzoResponse } from '../types';
 
 const PAPARAZZO_FUNCTION_ARN = process.env.PAPARAZZO_FUNCTION_ARN;
-
-type PaparazzoResponse = {
-  status: 'ok' | 'error';
-};
-
-function isPaparazzoResponse(arg: any): arg is PaparazzoResponse {
-  return (
-    !!arg &&
-    typeof arg.status === 'string' &&
-    ['ok', 'error'].includes(arg.status)
-  );
-}
 
 export async function requestGenerateSheet(
   raceData: RaceData
