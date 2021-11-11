@@ -1,22 +1,31 @@
-import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import { InvokeCommand } from '@aws-sdk/client-lambda';
+
+import { lambdaClient } from './lambdaClient';
 import { RaceData } from 'types';
 
 const PAPARAZZO_FUNCTION_ARN = process.env.PAPARAZZO_FUNCTION_ARN;
-const lambda = new LambdaClient({ region: 'ap-northeast-1' });
 
-type Response = {
+type PaparazzoResponse = {
   status: 'ok' | 'error';
 };
 
+function isPaparazzoResponse(arg: any): arg is PaparazzoResponse {
+  return (
+    !!arg &&
+    typeof arg.status === 'string' &&
+    ['ok', 'error'].includes(arg.status)
+  );
+}
+
 export async function requestGenerateSheet(
   raceData: RaceData
-): Promise<Response> {
+): Promise<PaparazzoResponse> {
   const params = {
     FunctionName: PAPARAZZO_FUNCTION_ARN,
     Payload: Buffer.from(JSON.stringify(raceData)),
   };
   const command = new InvokeCommand(params);
-  const response = await lambda.send(command);
+  const response = await lambdaClient.send(command);
   const payload = response.Payload;
 
   if (!payload) {
@@ -24,8 +33,13 @@ export async function requestGenerateSheet(
     return { status: 'error' as const };
   }
 
-  const parsedResponse = JSON.parse(
-    Buffer.from(payload).toString()
-  ) as Response;
+  const parsedResponse = JSON.parse(Buffer.from(payload).toString());
+  if (!isPaparazzoResponse(parsedResponse)) {
+    console.error(
+      'Paparazzo returned invalid payload:',
+      JSON.stringify(parsedResponse)
+    );
+    return { status: 'error' as const };
+  }
   return parsedResponse;
 }
