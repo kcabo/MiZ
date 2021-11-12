@@ -7,14 +7,7 @@ import {
   getUser,
   getCachedMeetData,
 } from 'aws';
-import {
-  askAgreeTerm,
-  askFixCreateSheetFormat,
-  failedToIdentifyUser,
-  paparazzoError,
-  putRaceError,
-  sendSheetImage,
-} from 'lineApi/replies';
+import * as BotReply from 'lineApi/replies';
 import { parseToRaceCoreData } from 'timeParser';
 import { formattedToday } from 'utils';
 import { DbUserItem, RaceData } from 'types';
@@ -26,17 +19,17 @@ export async function createSheetEvent(
   const user = await getUser(userId);
   if (!user) {
     console.error('Cannot find user:', userId);
-    return failedToIdentifyUser();
+    return BotReply.failedToIdentifyUser();
   }
 
   if (!user.isTermAgreed) {
-    return askAgreeTerm();
+    return BotReply.askAgreeTerm();
   }
 
   const messageText = complementSwimmerNameToText(user, message.text);
   const { raceCoreData, error } = parseToRaceCoreData(messageText);
   if (!raceCoreData) {
-    return askFixCreateSheetFormat();
+    return BotReply.askFixCreateSheetFormat();
   }
 
   const raceId = message.id;
@@ -46,18 +39,18 @@ export async function createSheetEvent(
 
   const generateSheetResult = await requestGenerateSheet(raceData);
   if (generateSheetResult.status == 'error') {
-    return paparazzoError();
+    return BotReply.paparazzoError();
   }
 
   const putDataResult = await putNewRace(raceData, userId);
   if (putDataResult.$metadata.httpStatusCode !== 200) {
-    return putRaceError();
+    return BotReply.putRaceError();
   }
 
   const sheetObjectKey = raceId + '.png';
   const url = await generateURLforDownload(sheetObjectKey);
 
-  return sendSheetImage(url);
+  return BotReply.sendSheetImage(url);
 }
 
 function complementSwimmerNameToText(

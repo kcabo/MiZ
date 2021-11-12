@@ -1,31 +1,23 @@
 import { getUserDisplayName } from 'lineApi/userProfile';
 import { getUser, putNewUser, updateUser } from './aws';
-import {
-  greetAndShowTerm,
-  putUserError,
-  returnFromBlock,
-  failedToIdentifyUser,
-  alreadyAgreedToTerm,
-  updateUserError,
-  tutorial,
-} from './lineApi/replies';
+import * as BotReply from './lineApi/replies';
 
 export async function register(userId: string) {
   // 既にDBに登録しているかどうか確認
   const user = await getUser(userId);
   if (user) {
-    return returnFromBlock();
+    return BotReply.returnFromBlock();
   }
 
   // デフォルト値で登録
   const userName = await getUserDisplayName(userId);
   const putDataResult = await putNewUser(userId, userName);
   if (putDataResult.$metadata.httpStatusCode !== 200) {
-    return putUserError();
+    return BotReply.putUserError();
   }
 
   // 規約に同意して始めるボタンを返す
-  return greetAndShowTerm();
+  return BotReply.greetAndShowTerm();
 }
 
 export async function agreeToTerms(userId: string) {
@@ -33,12 +25,12 @@ export async function agreeToTerms(userId: string) {
   const user = await getUser(userId);
   if (!user) {
     console.error('Cannot find user:', userId);
-    return failedToIdentifyUser();
+    return BotReply.failedToIdentifyUser();
   }
 
   // すでに同意しているか確認
   if (user.isTermAgreed) {
-    return alreadyAgreedToTerm();
+    return BotReply.alreadyAgreedToTerm();
   }
 
   // ユーザー情報の書き換え 規約の同意とモードの設定
@@ -48,8 +40,8 @@ export async function agreeToTerms(userId: string) {
   };
   const result = await updateUser(userId, userStatus);
   if (result.$metadata.httpStatusCode !== 200) {
-    return updateUserError();
+    return BotReply.updateUserError();
   }
 
-  return tutorial();
+  return BotReply.tutorial();
 }
