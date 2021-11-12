@@ -5,6 +5,7 @@ import {
   putNewRace,
   requestGenerateSheet,
   getUser,
+  getCachedMeetData,
 } from 'aws';
 import {
   askAgreeTerm,
@@ -39,12 +40,10 @@ export async function createSheetEvent(
 
   const presetData = {
     raceId: '1',
-    courseLength: '長水路' as const,
-    meet: '大会',
-    place: '会場',
     date: formattedToday(),
   };
-  const raceData: RaceData = { ...presetData, ...raceCoreData };
+  const cachedMeet = await getCachedMeetData(userId);
+  const raceData: RaceData = { ...presetData, ...cachedMeet, ...raceCoreData };
 
   const generateSheetResult = await requestGenerateSheet(raceData);
   if (generateSheetResult.status == 'error') {

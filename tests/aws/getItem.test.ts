@@ -1,6 +1,6 @@
-import { DbUserItem } from '../../src/types';
-import { getUser } from '../../src/aws';
-import { documentClient } from '../../src/aws/dynamodb';
+import { DbUserItem, Meet } from '../../src/types';
+import { getUser, getCachedMeetData } from '../../src/aws';
+import { documentClient } from '../../src/aws/dynamodbClient';
 
 const dbUserItem: DbUserItem = {
   userId: 'U123',
@@ -12,7 +12,7 @@ const dbUserItem: DbUserItem = {
   createdAt: '2021-10-11',
 };
 
-const validGetOutput = {
+const validUserGetOutput = {
   Item: dbUserItem,
 } as any;
 
@@ -37,13 +37,13 @@ afterAll(() => {
 });
 
 test('Get user', async () => {
-  documentClient.get = jest.fn(() => validGetOutput);
+  documentClient.get = jest.fn(() => validUserGetOutput);
   expect.assertions(1);
   const res = await getUser('U123');
   expect(res).toStrictEqual(dbUserItem);
 });
 
-test('Invalid Get parameter', async () => {
+test('Invalid user get parameter', async () => {
   documentClient.get = jest.fn(() => {
     throw new Error();
   });
@@ -63,11 +63,48 @@ test('Cannot find user', async () => {
   expect(mockErrorConsole.mock.calls[0][0]).toContain('Cannot find user');
 });
 
-test('Got unknown data structure', async () => {
+test('Got unknown user data structure', async () => {
   documentClient.get = jest.fn(() => unknownGetOutput);
   expect.assertions(3);
   const res = await getUser('U123');
   expect(res).toStrictEqual(undefined);
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
   expect(mockErrorConsole.mock.calls[0][0]).toContain('Invalid User item:');
+});
+
+const meetData: Meet = {
+  courseLength: '長水路',
+  meet: '大会',
+  place: '会場',
+};
+
+const validCachedMeetGetOutput = {
+  Item: meetData,
+} as any;
+
+test('Get cached meet data', async () => {
+  documentClient.get = jest.fn(() => validCachedMeetGetOutput);
+  expect.assertions(1);
+  const res = await getCachedMeetData('U123');
+  expect(res).toStrictEqual(meetData);
+});
+
+const meetData2 = {
+  courseLength: '長水路',
+  place: 4,
+  unneeded: 'where am I?',
+};
+
+test('Get cached meet data 2', async () => {
+  documentClient.get = jest.fn(() => ({ Item: meetData2 } as any));
+  expect.assertions(1);
+  const res = await getCachedMeetData('U123');
+  expect(res).toStrictEqual({ courseLength: '長水路' });
+});
+
+test('Get empty for cached meet data', async () => {
+  documentClient.get = jest.fn(() => emptyGetOutput);
+  expect.assertions(1);
+  const res = await getCachedMeetData('U123');
+  expect(res).toStrictEqual({});
 });

@@ -1,4 +1,4 @@
-import { DbUserItem } from 'types';
+import { DbUserItem, Meet } from 'types';
 import { isDbUserItem } from '../typeChecker';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
@@ -46,4 +46,25 @@ export async function getUser(userId: string): Promise<DbUserItem | undefined> {
   }
 
   return item;
+}
+
+export async function getCachedMeetData(userId: string): Promise<Meet> {
+  const sk = 'CACHE#' + userId;
+  const item = await getRequest(userId, sk);
+
+  if (!item || item.error === true) {
+    return {};
+  }
+
+  const meetObj = onlyMeetKeyValue(item);
+  return meetObj;
+}
+
+function onlyMeetKeyValue(obj: { [key: string]: any }): Meet {
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([k, v]) =>
+        typeof v === 'string' && ['courseLength', 'meet', 'place'].includes(k)
+    )
+  );
 }
