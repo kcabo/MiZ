@@ -1,4 +1,4 @@
-import { documentClient, RACE_TABLE_NAME } from './dynamodb';
+import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 import { DbRaceItem, RaceData } from 'types';
 import { nowISO } from '../utils';

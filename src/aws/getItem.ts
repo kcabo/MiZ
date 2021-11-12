@@ -1,7 +1,8 @@
+import { DbUserItem } from 'types';
 import { isDbUserItem } from '../typeChecker';
-import { documentClient, RACE_TABLE_NAME } from './dynamodb';
+import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
-type dbGetResult =
+type DbGetResult =
   | {
       [key: string]: any;
     }
@@ -10,7 +11,7 @@ type dbGetResult =
     }
   | undefined;
 
-async function getRequest(userId: string, sk: string): Promise<dbGetResult> {
+async function getRequest(userId: string, sk: string): Promise<DbGetResult> {
   try {
     const { Item } = await documentClient.get({
       TableName: RACE_TABLE_NAME,
@@ -30,7 +31,7 @@ async function getRequest(userId: string, sk: string): Promise<dbGetResult> {
   }
 }
 
-export async function getUser(userId: string) {
+export async function getUser(userId: string): Promise<DbUserItem | undefined> {
   const sk = 'USER#' + userId;
   const item = await getRequest(userId, sk);
 
