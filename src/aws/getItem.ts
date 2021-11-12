@@ -35,10 +35,7 @@ export async function getUser(userId: string): Promise<DbUserItem | undefined> {
   const sk = 'USER#' + userId;
   const item = await getRequest(userId, sk);
 
-  if (!item) {
-    console.error('Cannot find user:', userId);
-    return undefined;
-  } else if (item.error === true) {
+  if (!item || item.error === true) {
     return undefined;
   } else if (!isDbUserItem(item)) {
     console.error('Invalid User item:', JSON.stringify(item, null, 2));

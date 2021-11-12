@@ -25,6 +25,7 @@ export async function createSheetEvent(
 ): Promise<Message | Message[]> {
   const user = await getUser(userId);
   if (!user) {
+    console.error('Cannot find user:', userId);
     return failedToIdentifyUser();
   }
 
@@ -38,12 +39,10 @@ export async function createSheetEvent(
     return askFixCreateSheetFormat();
   }
 
-  const presetData = {
-    raceId: '1',
-    date: formattedToday(),
-  };
+  const raceId = message.id;
+  const date = formattedToday();
   const cachedMeet = await getCachedMeetData(userId);
-  const raceData: RaceData = { ...presetData, ...cachedMeet, ...raceCoreData };
+  const raceData: RaceData = { raceId, date, ...cachedMeet, ...raceCoreData };
 
   const generateSheetResult = await requestGenerateSheet(raceData);
   if (generateSheetResult.status == 'error') {
@@ -55,7 +54,7 @@ export async function createSheetEvent(
     return putRaceError();
   }
 
-  const sheetObjectKey = '1.png';
+  const sheetObjectKey = raceId + '.png';
   const url = await generateURLforDownload(sheetObjectKey);
 
   return sendSheetImage(url);
