@@ -28,9 +28,9 @@ export async function handler(
 }
 
 async function processEvent(event: WebhookEvent) {
+  const userId = await getUserId(event);
   if (event.type == 'message') {
     let response: Message | Message[];
-    const userId = await getUserId(event);
 
     if (event.message.type == 'text') {
       response = await createSheetEvent(event.message, userId);
@@ -40,22 +40,25 @@ async function processEvent(event: WebhookEvent) {
 
     await reply(event.replyToken, response);
   } else if (event.type == 'follow') {
-    const userId = await getUserId(event);
     const response = await register(userId);
 
     await reply(event.replyToken, response);
   } else if (event.type == 'unfollow') {
+  } else {
+    console.error('unknown event!:', JSON.stringify(event, null, 2));
   }
 }
 
-async function getUserId(event: ReplyableEvent): Promise<string> {
+async function getUserId(event: WebhookEvent): Promise<string> {
   const userId = event.source.userId;
   if (typeof userId === 'string') {
     return userId;
-  } else {
-    console.error('Cannot get LINE userId!:', JSON.stringify(event, null, 2));
+  }
+
+  console.error('Cannot get LINE userId!:', JSON.stringify(event, null, 2));
+  if ('replyToken' in event) {
     const response = userIdNotFound();
     await reply(event.replyToken, response);
-    return '-';
   }
+  return '-';
 }
