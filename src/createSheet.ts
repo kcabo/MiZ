@@ -7,7 +7,7 @@ import {
   getUser,
   getCachedMeetData,
 } from 'aws';
-import * as BotReply from 'lineApi/replies';
+import { BotReply } from 'lineApi';
 import { parseToRaceCoreData } from 'timeParser';
 import { formattedToday } from 'utils';
 import { DbUserItem, RaceData } from 'types';

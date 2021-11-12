@@ -1,6 +1,5 @@
-import { getUserDisplayName } from 'lineApi/userProfile';
-import { getUser, putNewUser, updateUser } from './aws';
-import * as BotReply from './lineApi/replies';
+import { getUserDisplayName, BotReply } from 'lineApi';
+import { getUser, putNewUser, updateUser } from 'aws';
 
 export async function register(userId: string) {
   // 既にDBに登録しているかどうか確認
