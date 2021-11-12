@@ -68,3 +68,24 @@ export function greetAndShowTerm(): TextMessage {
     text: '友達登録ありがとうございます！利用規約をご確認の上登録してください',
   };
 }
+
+export function alreadyAgreedToTerm(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: '利用規約には既に同意いただけております。引き続きご利用ください',
+  };
+}
+
+export function updateUserError(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: '利用規約には既に同意いただけております。引き続きご利用ください',
+  };
+}
+
+export function tutorial(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: 'ご利用いただきありがとうございます！MiZはレース結果を画像化するサービスです。まずはサンプルデータをお試しください',
+  };
+}
