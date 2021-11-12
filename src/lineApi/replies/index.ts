@@ -72,7 +72,7 @@ export function alreadyAgreedToTerm(): TextMessage {
 
 export function updateUserError(): TextMessage {
   return textMessageBase(
-    '利用規約には既に同意いただけております。引き続きご利用ください'
+    'ユーザーデータの更新にエラーが発生しました。時間をおいて再度お試しください'
   );
 }
 

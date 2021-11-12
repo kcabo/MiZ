@@ -6,6 +6,10 @@ export async function register(userId: string) {
   // 既にDBに登録しているかどうか確認
   const user = await getUser(userId);
   if (user) {
+    const result = await updateUser(userId, { friendship: true });
+    if (result.$metadata.httpStatusCode !== 200) {
+      return BotReply.updateUserError();
+    }
     return BotReply.returnFromBlock();
   }
 

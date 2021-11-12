@@ -5,6 +5,7 @@ import { reply } from 'lineApi/webhookReply';
 import { extractUserId } from 'lineApi/extractUserId';
 import { createSheetEvent } from 'createSheet';
 import { register } from 'UserRegister';
+import { blockedByUser } from 'UserQuit';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -44,6 +45,7 @@ async function processEvent(event: WebhookEvent) {
 
     await reply(event.replyToken, response);
   } else if (event.type == 'unfollow') {
+    await blockedByUser(userId);
   } else {
     console.error('unknown event!:', JSON.stringify(event, null, 2));
   }
