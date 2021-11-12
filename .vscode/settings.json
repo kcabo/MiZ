@@ -72,5 +72,6 @@
       "description": "Add, update, or pass tests"
     }
   ],
-  "gitmoji.onlyUseAdditionalEmojis": true
+  "gitmoji.onlyUseAdditionalEmojis": true,
+  "cSpell.words": ["Centi", "hoge", "postback", "unfollow", "Zenkaku"]
 }
