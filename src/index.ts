@@ -39,6 +39,11 @@ async function processEvent(event: WebhookEvent) {
   } else if (event.type == 'unfollow') {
     // ユーザーによるブロック
     await blockedByUser(userId);
+  } else if (event.type == 'postback') {
+    const response = BotReply.sampleFlex();
+    await reply(event.replyToken, response);
+    const data = event.postback.data;
+    console.log(JSON.parse(data));
   } else {
     console.error('unknown event!:', JSON.stringify(event, null, 2));
   }
@@ -49,11 +54,11 @@ async function respondToMessage(
   userId: string
 ): Promise<Message | Message[]> {
   if (message.type != 'text') {
-    return BotReply.ramdomSticker();
+    return BotReply.randomSticker();
   }
 
   if (!message.text.includes('\n')) {
-    return BotReply.tellIamAbot();
+    return BotReply.tellIamBot();
   }
 
   return await createSheet(message, userId);

@@ -1,11 +1,16 @@
-import { ImageMessage, StickerMessage, TextMessage } from '@line/bot-sdk';
+import {
+  FlexMessage,
+  ImageMessage,
+  StickerMessage,
+  TextMessage,
+} from '@line/bot-sdk';
 import { getRandomIntInclusive } from 'utils';
 
 function textMessageBase(text: string): TextMessage {
-  return { type: 'text' as const, text };
+  return { type: 'text', text };
 }
 
-export function ramdomSticker(): StickerMessage {
+export function randomSticker(): StickerMessage {
   const packageId = '6325';
   const stickerId = getRandomIntInclusive(10979904, 10979927).toString();
   return {
@@ -15,7 +20,7 @@ export function ramdomSticker(): StickerMessage {
   };
 }
 
-export function tellIamAbot(): TextMessage {
+export function tellIamBot(): TextMessage {
   return textMessageBase(
     '申し訳ございませんが、個別にお返事することはできません'
   );
@@ -97,4 +102,42 @@ export function tutorial(): TextMessage {
   return textMessageBase(
     'ご利用いただきありがとうございます！MiZはレース結果を画像化するサービスです。まずはサンプルデータをお試しください'
   );
+}
+
+export function sampleFlex(): FlexMessage {
+  return {
+    type: 'flex',
+    altText: 'sample',
+    contents: {
+      type: 'bubble',
+      body: {
+        type: 'box',
+        layout: 'vertical',
+        contents: [
+          {
+            type: 'box',
+            layout: 'horizontal',
+            contents: [
+              {
+                type: 'text',
+                text: 'Buy milk and lettuce before class',
+                color: '#8C8C8C',
+                size: 'sm',
+                wrap: true,
+              },
+            ],
+            flex: 1,
+          },
+        ],
+        spacing: 'md',
+        paddingAll: '12px',
+        action: {
+          type: 'postback',
+          label: 'hoge',
+          data: JSON.stringify({ TTL: 2111, sk: '21233' }),
+          displayText: '{\\aa/:}"\'',
+        },
+      },
+    },
+  };
 }
