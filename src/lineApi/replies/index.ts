@@ -1,5 +1,19 @@
 import { ImageMessage, TextMessage } from '@line/bot-sdk';
 
+export function failedToIdentifyUser(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: 'あなたの登録情報を参照できませんでした。時間をおいて再度お試しください。',
+  };
+}
+
+export function askAgreeTerm(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: '利用規約とプライバシーポリシーに同意してからご利用いただけます。',
+  };
+}
+
 export function askFixCreateSheetFormat(): TextMessage {
   return {
     type: 'text' as const,
