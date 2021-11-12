@@ -1,7 +1,24 @@
-import { ImageMessage, TextMessage } from '@line/bot-sdk';
+import { ImageMessage, StickerMessage, TextMessage } from '@line/bot-sdk';
+import { getRandomIntInclusive } from 'utils';
 
 function textMessageBase(text: string): TextMessage {
   return { type: 'text' as const, text };
+}
+
+export function ramdomSticker(): StickerMessage {
+  const packageId = '6325';
+  const stickerId = getRandomIntInclusive(10979904, 10979927).toString();
+  return {
+    type: 'sticker',
+    stickerId,
+    packageId,
+  };
+}
+
+export function tellIamAbot(): TextMessage {
+  return textMessageBase(
+    '申し訳ございませんが、個別にお返事することはできません'
+  );
 }
 
 export function failedToIdentifyUser(): TextMessage {

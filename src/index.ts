@@ -1,7 +1,12 @@
 import { EventMessage, Message, WebhookEvent } from '@line/bot-sdk';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 
-import { validateAndParseRequest, reply, extractUserId } from 'lineApi';
+import {
+  validateAndParseRequest,
+  reply,
+  extractUserId,
+  BotReply,
+} from 'lineApi';
 import { createSheet } from 'createSheet';
 import { register } from 'UserRegister';
 import { blockedByUser } from 'UserQuit';
@@ -44,11 +49,11 @@ async function respondToMessage(
   userId: string
 ): Promise<Message | Message[]> {
   if (message.type != 'text') {
-    return { type: 'text', text: 'hello!' };
+    return BotReply.ramdomSticker();
   }
 
   if (!message.text.includes('\n')) {
-    return { type: 'text', text: 'こんにちは！' };
+    return BotReply.tellIamAbot();
   }
 
   return await createSheet(message, userId);
