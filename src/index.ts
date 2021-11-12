@@ -1,9 +1,9 @@
-import { Message, ReplyableEvent, WebhookEvent } from '@line/bot-sdk';
+import { Message, WebhookEvent } from '@line/bot-sdk';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
-import { createSheetEvent } from 'createSheet';
 import { validateAndParseRequest } from 'lineApi/validation';
 import { reply } from 'lineApi/webhookReply';
-import { userIdNotFound } from 'lineApi/replies';
+import { extractUserId } from 'lineApi/extractUserId';
+import { createSheetEvent } from 'createSheet';
 import { register } from 'UserRegister';
 
 export async function handler(
@@ -28,7 +28,7 @@ export async function handler(
 }
 
 async function processEvent(event: WebhookEvent) {
-  const userId = await getUserId(event);
+  const userId = await extractUserId(event);
   if (event.type == 'message') {
     let response: Message | Message[];
 
@@ -47,18 +47,4 @@ async function processEvent(event: WebhookEvent) {
   } else {
     console.error('unknown event!:', JSON.stringify(event, null, 2));
   }
-}
-
-async function getUserId(event: WebhookEvent): Promise<string> {
-  const userId = event.source.userId;
-  if (typeof userId === 'string') {
-    return userId;
-  }
-
-  console.error('Cannot get LINE userId!:', JSON.stringify(event, null, 2));
-  if ('replyToken' in event) {
-    const response = userIdNotFound();
-    await reply(event.replyToken, response);
-  }
-  return '-';
 }
