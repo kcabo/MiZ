@@ -28,7 +28,7 @@ export async function putNewRace(raceData: RaceData, userId: string) {
 
 export async function putNewUser(userId: string, userName: string) {
   const now = nowISO();
-  const raceItem: DbUserItem = {
+  const userItem: DbUserItem = {
     userId: userId,
     sk: 'USER#' + userId,
     userName: userName,
@@ -40,6 +40,6 @@ export async function putNewUser(userId: string, userName: string) {
 
   return documentClient.put({
     TableName: RACE_TABLE_NAME,
-    Item: raceItem,
+    Item: userItem,
   });
 }
