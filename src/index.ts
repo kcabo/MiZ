@@ -2,7 +2,7 @@ import { Message, ReplyableEvent, WebhookEvent } from '@line/bot-sdk';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { createSheetEvent } from 'createSheet';
 import { validateAndParseRequest } from 'lineApi/validation';
-import { reply } from 'lineApi/client';
+import { reply } from 'lineApi/webhookReply';
 import { userIdNotFound } from 'lineApi/replies';
 import { register } from 'UserRegister';
 
