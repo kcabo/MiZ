@@ -4,6 +4,7 @@ import { createSheetEvent } from 'createSheet';
 import { validateAndParseRequest } from 'lineApi/validation';
 import { reply } from 'lineApi/client';
 import { userIdNotFound } from 'lineApi/replies';
+import { register } from 'UserRegister';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -36,7 +37,14 @@ async function processEvent(event: WebhookEvent) {
     } else {
       response = { type: 'text', text: 'hello!' };
     }
+
     await reply(event.replyToken, response);
+  } else if (event.type == 'follow') {
+    const userId = await getUserId(event);
+    const response = await register(userId);
+
+    await reply(event.replyToken, response);
+  } else if (event.type == 'unfollow') {
   }
 }
 

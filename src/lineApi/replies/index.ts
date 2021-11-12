@@ -47,3 +47,24 @@ export function userIdNotFound(): TextMessage {
     text: 'ユーザーのプロフィール情報の取得に同意していないため、ご利用できません。',
   };
 }
+
+export function returnFromBlock(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: 'おかえりなさい！\nデータを削除したい場合はお問い合わせください',
+  };
+}
+
+export function putUserError(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: '友だち追加でエラーが発生しました。時間をおいてから再度友達登録してみてください',
+  };
+}
+
+export function greetAndShowTerm(): TextMessage {
+  return {
+    type: 'text' as const,
+    text: '友達登録ありがとうございます！利用規約をご確認の上登録してください',
+  };
+}

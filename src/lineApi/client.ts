@@ -1,6 +1,6 @@
 import { Client, Message, HTTPError } from '@line/bot-sdk';
 
-const client = new Client({
+export const client = new Client({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
   channelSecret: process.env.LINE_CHANNEL_SECRET,
 });
