@@ -19,16 +19,17 @@ export type RaceData = {
 } & Meet &
   RaceCoreData;
 
-export type DbRaceItem = {
+export type DbPrimaryKeys = {
   userId: string;
   sk: string;
+};
+
+export type DbRaceItem = DbPrimaryKeys & {
   createdAt: string;
   updatedAt: string;
 } & Omit<RaceData, 'raceId'>;
 
-export type DbUserItem = {
-  userId: string;
-  sk: string; // USER#{userId}
+export type DbUserItem = DbPrimaryKeys & {
   userName: string;
   mode: 'swimmer' | 'manager';
   isTermAgreed: boolean;
