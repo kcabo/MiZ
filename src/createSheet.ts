@@ -12,7 +12,7 @@ import { parseToRaceCoreData } from 'timeParser';
 import { formattedToday } from 'utils';
 import { DbUserItem, RaceData } from 'types';
 
-export async function createSheetEvent(
+export async function createSheet(
   message: TextEventMessage,
   userId: string
 ): Promise<Message | Message[]> {
