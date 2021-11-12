@@ -1,6 +1,6 @@
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
-import { DbRaceItem, RaceData } from 'types';
+import { DbRaceItem, DbUserItem, RaceData } from 'types';
 import { nowISO } from '../utils';
 
 export async function putNewRace(raceData: RaceData, userId: string) {
@@ -18,6 +18,24 @@ export async function putNewRace(raceData: RaceData, userId: string) {
     place: raceData.place,
     createdAt: now,
     updatedAt: now,
+  };
+
+  return documentClient.put({
+    TableName: RACE_TABLE_NAME,
+    Item: raceItem,
+  });
+}
+
+export async function putNewUser(userId: string, userName: string) {
+  const now = nowISO();
+  const raceItem: DbUserItem = {
+    userId: userId,
+    sk: 'USER#' + userId,
+    userName: userName,
+    mode: 'swimmer', // デフォルト値
+    isTermAgreed: false, // 同意したらこの属性をアップデート
+    friendship: true,
+    createdAt: now,
   };
 
   return documentClient.put({
