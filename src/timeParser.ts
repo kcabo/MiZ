@@ -1,3 +1,4 @@
+import { shortenedEventToProperStyle } from 'eventConverter';
 import { RaceCoreData } from 'types';
 
 type ParseResult = {
@@ -27,20 +28,19 @@ export function parseToRaceCoreData(concatInput: string): ParseResult {
 
   // 正規表現の都合上、\n～の形でマッチするため、頭の改行文字を削除する
   const cumulativeTimeStr = removePrefixedLinefeed(cumulativeTimeStrPrefixed);
-  const cumulativeTime = toCentiSecondsArray(cumulativeTimeStr);
-  let result: RaceCoreData = {
+  let raceCoreData: RaceCoreData = {
     swimmer,
-    event,
-    cumulativeTime,
+    event: shortenedEventToProperStyle(event),
+    cumulativeTime: toCentiSecondsArray(cumulativeTimeStr),
   };
 
   if (reactionStrPrefixed) {
     // 正規表現の都合上、\n～の形でマッチするため、頭の改行文字を削除する
     const reactionStr = removePrefixedLinefeed(reactionStrPrefixed);
     const reaction = toCentiSeconds(reactionStr);
-    result = { ...result, reaction };
+    raceCoreData = { ...raceCoreData, reaction };
   }
-  return { raceCoreData: result };
+  return { raceCoreData: raceCoreData };
 }
 
 export function toCentiSeconds(concatTime: string): number {
