@@ -5,11 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch TypeScript Using ts-node",
+      "name": "ts-node",
       "request": "launch",
       "args": ["${file}", "--transpile-only"],
       "skipFiles": ["<node_internals>/**", "node_modules/**"],
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
       "type": "pwa-node"
     },
     {
