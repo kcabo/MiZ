@@ -5,6 +5,4 @@ export const RACE_TABLE_NAME = process.env.DYNAMODB_RACE_TABLE_NAME;
 
 const dbClient = new DynamoDBClient({ region: 'ap-northeast-1' });
 
-export const documentClient = DynamoDBDocument.from(dbClient, {
-  marshallOptions: { removeUndefinedValues: true },
-});
+export const documentClient = DynamoDBDocument.from(dbClient);

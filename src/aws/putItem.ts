@@ -1,7 +1,7 @@
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 import { DbRaceItem, DbUserItem, RaceData } from 'types';
-import { nowISO } from '../utils';
+import { nowISO, removeUndefinedFromObject } from '../utils';
 
 export async function putNewRace(raceData: RaceData, userId: string) {
   const now = nowISO();
@@ -20,9 +20,9 @@ export async function putNewRace(raceData: RaceData, userId: string) {
     updatedAt: now,
   };
 
-  return documentClient.put({
+  return await documentClient.put({
     TableName: RACE_TABLE_NAME,
-    Item: raceItem,
+    Item: removeUndefinedFromObject(raceItem),
   });
 }
 
@@ -38,7 +38,7 @@ export async function putNewUser(userId: string, userName: string) {
     createdAt: now,
   };
 
-  return documentClient.put({
+  return await documentClient.put({
     TableName: RACE_TABLE_NAME,
     Item: userItem,
   });

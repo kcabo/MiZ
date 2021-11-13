@@ -1,5 +1,6 @@
 import ErrorLog from 'logger';
 import { DbPrimaryKeys, DbUserItem } from 'types';
+import { removeUndefinedFromObject } from 'utils';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 type UpdateUserAttributes = Partial<
@@ -76,14 +77,8 @@ export function constructUpdateAttributeValues({
     ':userName': userName,
     ':friendship': friendship,
   };
-  const values = removeUndefined(allValues);
+  const values = removeUndefinedFromObject(allValues);
   return values;
-}
-
-function removeUndefined(obj: object): object {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([k, v]) => typeof v !== 'undefined')
-  );
 }
 
 function placeholder(arg: any): ':' | '#' {
