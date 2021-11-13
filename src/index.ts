@@ -7,10 +7,11 @@ import {
   extractUserId,
   BotReply,
 } from 'lineApi';
+import ErrorLog from 'logger';
 import { createSheet } from 'createSheet';
 import { register } from 'UserRegister';
 import { blockedByUser } from 'UserQuit';
-import ErrorLog from 'logger';
+import { listRaces } from 'listRaces';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -41,8 +42,6 @@ async function processEvent(event: WebhookEvent) {
     // ユーザーによるブロック
     await blockedByUser(userId);
   } else if (event.type == 'postback') {
-    const response = BotReply.sampleFlex();
-    await reply(event.replyToken, response);
     const data = event.postback.data;
     console.log(JSON.parse(data));
   } else {
@@ -56,6 +55,10 @@ async function respondToMessage(
 ): Promise<Message | Message[]> {
   if (message.type != 'text') {
     return BotReply.randomSticker();
+  }
+
+  if (message.text == '一覧') {
+    return await listRaces(userId);
   }
 
   if (!message.text.includes('\n')) {

@@ -18,3 +18,10 @@ export function isDbUserItem(arg: any): arg is DbUserItem {
     typeof arg.isTermAgreed === 'boolean'
   );
 }
+
+export function isQueriedDbRaceItems(arg: any): arg is { sk: string }[] {
+  if (!!arg && Array.isArray(arg) && arg.length > 0) {
+    return arg.every((el) => typeof el.sk === 'string');
+  }
+  return false;
+}

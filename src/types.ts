@@ -40,3 +40,8 @@ export type DbUserItem = DbPrimaryKeys & {
 export type PaparazzoResponse = {
   status: 'ok' | 'error';
 };
+
+export type RaceSheetBubble = {
+  url: string;
+  raceId: string;
+};

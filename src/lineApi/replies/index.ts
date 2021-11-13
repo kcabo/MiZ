@@ -4,7 +4,10 @@ import {
   StickerMessage,
   TextMessage,
 } from '@line/bot-sdk';
+
 import { getRandomIntInclusive } from 'utils';
+
+export { listRaceFlex } from './listRaceFlex';
 
 function textMessageBase(text: string): TextMessage {
   return { type: 'text', text };
@@ -104,40 +107,16 @@ export function tutorial(): TextMessage {
   );
 }
 
-export function sampleFlex(): FlexMessage {
-  return {
-    type: 'flex',
-    altText: 'sample',
-    contents: {
-      type: 'bubble',
-      body: {
-        type: 'box',
-        layout: 'vertical',
-        contents: [
-          {
-            type: 'box',
-            layout: 'horizontal',
-            contents: [
-              {
-                type: 'text',
-                text: 'Buy milk and lettuce before class',
-                color: '#8C8C8C',
-                size: 'sm',
-                wrap: true,
-              },
-            ],
-            flex: 1,
-          },
-        ],
-        spacing: 'md',
-        paddingAll: '12px',
-        action: {
-          type: 'postback',
-          label: 'hoge',
-          data: JSON.stringify({ TTL: 2111, sk: '21233' }),
-          displayText: '{\\aa/:}"\'',
-        },
-      },
-    },
-  };
+export function fetchRacesError(): TextMessage {
+  return textMessageBase(
+    'レース一覧を取得できませんでした。時間をおいて再度お試しください'
+  );
+}
+
+export function noRaceData(): TextMessage {
+  return textMessageBase('表示するレースデータがありません！');
+}
+
+export function unExpectedError(): TextMessage {
+  return textMessageBase('予期せぬエラーが発生しました');
 }
