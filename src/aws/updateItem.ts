@@ -15,14 +15,6 @@ export async function updateUser(
   };
 
   // インジェクションが怖いのであえて冗長気味に書いてる
-  const { mode, isTermAgreed, userName, friendship } = attributes;
-
-  let expression = 'set ';
-  expression += `#mode = ${placeholder(mode)}mode, `;
-  expression += `#isTermAgreed = ${placeholder(isTermAgreed)}isTermAgreed, `;
-  expression += `#userName = ${placeholder(userName)}userName, `;
-  expression += `#friendship = ${placeholder(friendship)}friendship`;
-
   const names = {
     '#mode': 'mode',
     '#isTermAgreed': 'isTermAgreed',
@@ -30,13 +22,8 @@ export async function updateUser(
     '#friendship': 'friendship',
   };
 
-  const allValues = {
-    ':mode': mode,
-    ':isTermAgreed': isTermAgreed,
-    ':userName': userName,
-    ':friendship': friendship,
-  };
-  const values = removeUndefined(allValues);
+  const expression = constructUpdateExpression(attributes);
+  const values = constructUpdateAttributeValues(attributes);
 
   try {
     const output = await documentClient.update({
@@ -63,6 +50,37 @@ export async function updateUser(
     );
     return undefined;
   }
+}
+
+export function constructUpdateExpression({
+  mode,
+  isTermAgreed,
+  userName,
+  friendship,
+}: UpdateUserAttributes): string {
+  const statements = [
+    `#mode = ${placeholder(mode)}mode`,
+    `#isTermAgreed = ${placeholder(isTermAgreed)}isTermAgreed`,
+    `#userName = ${placeholder(userName)}userName`,
+    `#friendship = ${placeholder(friendship)}friendship`,
+  ].join(', ');
+  return 'set ' + statements;
+}
+
+export function constructUpdateAttributeValues({
+  mode,
+  isTermAgreed,
+  userName,
+  friendship,
+}: UpdateUserAttributes) {
+  const allValues = {
+    ':mode': mode,
+    ':isTermAgreed': isTermAgreed,
+    ':userName': userName,
+    ':friendship': friendship,
+  };
+  const values = removeUndefined(allValues);
+  return values;
 }
 
 function removeUndefined(obj: object): object {
