@@ -11,6 +11,7 @@ import { BotReply } from 'lineApi';
 import { parseToRaceCoreData } from 'timeParser';
 import { formattedToday } from 'utils';
 import { DbUserItem, RaceData } from 'types';
+import ErrorLog from 'logger';
 
 export async function createSheet(
   message: TextEventMessage,
@@ -18,7 +19,7 @@ export async function createSheet(
 ): Promise<Message | Message[]> {
   const user = await getUser(userId);
   if (!user) {
-    console.error('Cannot find user:', userId);
+    ErrorLog('Cannot find user:', userId);
     return BotReply.failedToIdentifyUser();
   }
 

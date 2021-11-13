@@ -1,4 +1,5 @@
 import { Message, HTTPError } from '@line/bot-sdk';
+import ErrorLog from 'logger';
 
 import { client } from './client';
 
@@ -16,7 +17,7 @@ export async function reply(
         message: e.statusMessage,
         response: e.originalError.response.data,
       };
-      console.error('reply failed >', JSON.stringify(detail, null, 1));
+      ErrorLog('Failed to reply:', detail);
     } else {
       throw e;
     }

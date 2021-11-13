@@ -5,8 +5,9 @@ import {
 } from '../../src/aws/updateItem';
 import { documentClient } from '../../src/aws/dynamodbClient';
 
-const spy = jest.spyOn(console, 'error');
+const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 afterEach(() => spy.mockClear());
+afterAll(() => jest.restoreAllMocks());
 
 test('update user', async () => {
   const output = {
@@ -25,8 +26,9 @@ test('update user (db unavailable)', async () => {
 
   const res = await updateUser('U123', {});
   expect(res).toStrictEqual(undefined);
-  expect(spy).toHaveBeenCalledTimes(1);
-  expect(spy.mock.calls[0][0]).toContain('Update request by');
+  expect(spy).toHaveBeenCalledTimes(2);
+  expect(spy.mock.calls[0][0]).toContain('Failed to update user status');
+  expect(spy.mock.calls[1][0]).toContain('db output');
 });
 
 test('update user (invalid request)', async () => {
@@ -36,8 +38,9 @@ test('update user (invalid request)', async () => {
 
   const res = await updateUser('U123', {});
   expect(res).toStrictEqual(undefined);
-  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy).toHaveBeenCalledTimes(2);
   expect(spy.mock.calls[0][0]).toContain('Invalid update request');
+  expect(spy.mock.calls[1][0]).toContain('Raised Error');
 });
 
 const attributes = {

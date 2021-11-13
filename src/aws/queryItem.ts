@@ -1,3 +1,4 @@
+import ErrorLog from 'logger';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 export async function queryAllRaces(
@@ -18,10 +19,7 @@ export async function queryAllRaces(
       ScanIndexForward: false, // from end to start
     });
   } catch (error) {
-    console.error(
-      `Query failed on userId=${userId}:`,
-      JSON.stringify(error, null, 2)
-    );
+    ErrorLog(`Failed to query all races on userId=${userId}:`, error);
     return { error: true };
   }
 }

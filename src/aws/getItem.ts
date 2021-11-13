@@ -1,5 +1,6 @@
+import ErrorLog from 'logger';
 import { DbUserItem, Meet } from 'types';
-import { isDbUserItem } from '../typeChecker';
+import { isDbUserItem } from 'typeChecker';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 type DbGetResult =
@@ -23,10 +24,7 @@ async function getRequest(userId: string, sk: string): Promise<DbGetResult> {
 
     return Item;
   } catch (error) {
-    console.error(
-      `Get Request Failed on userId=${userId} and sk=${sk}:`,
-      JSON.stringify(error, null, 2)
-    );
+    ErrorLog(`Get Request Failed on userId=${userId} and sk=${sk}:`, error);
     return { error: true };
   }
 }
@@ -38,7 +36,7 @@ export async function getUser(userId: string): Promise<DbUserItem | undefined> {
   if (!item || item.error === true) {
     return undefined;
   } else if (!isDbUserItem(item)) {
-    console.error('Invalid User item:', JSON.stringify(item, null, 2));
+    ErrorLog('Cannot recognize the item received from db:', item);
     return undefined;
   }
 

@@ -103,9 +103,7 @@ test('wrong signature', () => {
     lineEvents: [],
   });
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
-  expect(mockErrorConsole.mock.calls[0][0]).toContain(
-    'Failed to validate the request signature.'
-  );
+  expect(mockErrorConsole.mock.calls[0][0]).toContain('Failed to validate');
 });
 
 test('no signature', () => {
@@ -122,9 +120,7 @@ test('no signature', () => {
     lineEvents: [],
   });
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
-  expect(mockErrorConsole.mock.calls[0][0]).toContain(
-    'Failed to validate the request signature.'
-  );
+  expect(mockErrorConsole.mock.calls[0][0]).toContain('Failed to validate');
 });
 
 test('no header', () => {
@@ -138,9 +134,7 @@ test('no header', () => {
     lineEvents: [],
   });
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
-  expect(mockErrorConsole.mock.calls[0][0]).toContain(
-    'Failed to validate the request signature.'
-  );
+  expect(mockErrorConsole.mock.calls[0][0]).toContain('Failed to validate');
 });
 
 test('empty body', () => {
@@ -152,9 +146,7 @@ test('empty body', () => {
     lineEvents: [],
   });
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
-  expect(mockErrorConsole.mock.calls[0][0]).toContain(
-    'Request body was empty.'
-  );
+  expect(mockErrorConsole.mock.calls[0][0]).toContain('Request body was empty');
 });
 
 test('cannot parse body', () => {
@@ -172,7 +164,7 @@ test('cannot parse body', () => {
   });
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
   expect(mockErrorConsole.mock.calls[0][0]).toContain(
-    'Could not parse the request body.'
+    'Could not parse the request body'
   );
 });
 
@@ -191,6 +183,6 @@ test('cannot parse to WebhookRequestBody', () => {
   });
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
   expect(mockErrorConsole.mock.calls[0][0]).toContain(
-    'Request body did not match the type <WebhookRequestBody>'
+    'Received unknown style of webhook request'
   );
 });

@@ -12,32 +12,15 @@ const dbUserItem: DbUserItem = {
   createdAt: '2021-10-11',
 };
 
-const validUserGetOutput = {
-  Item: dbUserItem,
-} as any;
-
-const emptyGetOutput = {
-  Item: undefined,
-} as any;
-
-const unknownGetOutput = {
-  Item: { who: 'amI?' },
-} as any;
-
 const mockErrorConsole = jest
   .spyOn(console, 'error')
   .mockImplementation(() => {});
 
-afterEach(() => {
-  mockErrorConsole.mockClear();
-});
-
-afterAll(() => {
-  jest.restoreAllMocks();
-});
+afterEach(() => mockErrorConsole.mockClear());
+afterAll(() => jest.restoreAllMocks());
 
 test('Get user', async () => {
-  documentClient.get = jest.fn(() => validUserGetOutput);
+  documentClient.get = jest.fn(() => ({ Item: dbUserItem } as any));
   expect.assertions(1);
   const res = await getUser('U123');
   expect(res).toStrictEqual(dbUserItem);
@@ -55,21 +38,21 @@ test('Invalid user get parameter', async () => {
 });
 
 test('Cannot find user', async () => {
-  documentClient.get = jest.fn(() => emptyGetOutput);
-  expect.assertions(3);
+  documentClient.get = jest.fn(() => ({ Item: undefined } as any));
+  expect.assertions(1);
   const res = await getUser('U123');
   expect(res).toStrictEqual(undefined);
-  expect(mockErrorConsole).toHaveBeenCalledTimes(1);
-  expect(mockErrorConsole.mock.calls[0][0]).toContain('Cannot find user');
 });
 
 test('Got unknown user data structure', async () => {
-  documentClient.get = jest.fn(() => unknownGetOutput);
+  documentClient.get = jest.fn(() => ({ Item: { who: 'amI?' } } as any));
   expect.assertions(3);
   const res = await getUser('U123');
   expect(res).toStrictEqual(undefined);
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
-  expect(mockErrorConsole.mock.calls[0][0]).toContain('Invalid User item:');
+  expect(mockErrorConsole.mock.calls[0][0]).toContain(
+    'Cannot recognize the item'
+  );
 });
 
 const meetData: Meet = {
@@ -78,32 +61,28 @@ const meetData: Meet = {
   place: '会場',
 };
 
-const validCachedMeetGetOutput = {
-  Item: meetData,
-} as any;
-
 test('Get cached meet data', async () => {
-  documentClient.get = jest.fn(() => validCachedMeetGetOutput);
+  documentClient.get = jest.fn(() => ({ Item: meetData } as any));
   expect.assertions(1);
   const res = await getCachedMeetData('U123');
   expect(res).toStrictEqual(meetData);
 });
 
-const meetData2 = {
+const incompleteMeetData = {
   courseLength: '長水路',
   place: 4,
   unneeded: 'where am I?',
 };
 
 test('Get cached meet data 2', async () => {
-  documentClient.get = jest.fn(() => ({ Item: meetData2 } as any));
+  documentClient.get = jest.fn(() => ({ Item: incompleteMeetData } as any));
   expect.assertions(1);
   const res = await getCachedMeetData('U123');
   expect(res).toStrictEqual({ courseLength: '長水路' });
 });
 
 test('Get empty for cached meet data', async () => {
-  documentClient.get = jest.fn(() => emptyGetOutput);
+  documentClient.get = jest.fn(() => ({ Item: undefined } as any));
   expect.assertions(1);
   const res = await getCachedMeetData('U123');
   expect(res).toStrictEqual({});

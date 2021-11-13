@@ -10,6 +10,7 @@ import {
 import { createSheet } from 'createSheet';
 import { register } from 'UserRegister';
 import { blockedByUser } from 'UserQuit';
+import ErrorLog from 'logger';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -45,7 +46,7 @@ async function processEvent(event: WebhookEvent) {
     const data = event.postback.data;
     console.log(JSON.parse(data));
   } else {
-    console.error('unknown event!:', JSON.stringify(event, null, 2));
+    ErrorLog('unknown event!:', event);
   }
 }
 

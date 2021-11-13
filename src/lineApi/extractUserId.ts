@@ -1,4 +1,5 @@
 import { WebhookEvent } from '@line/bot-sdk';
+import ErrorLog from 'logger';
 import * as BotReply from './replies';
 import { reply } from './webhookReply';
 
@@ -8,7 +9,7 @@ export async function extractUserId(event: WebhookEvent): Promise<string> {
     return userId;
   }
 
-  console.error('Cannot get LINE userId!:', JSON.stringify(event, null, 2));
+  ErrorLog('Cannot extract LINE userId from event:', event);
   if ('replyToken' in event) {
     const response = BotReply.userIdNotFound();
     await reply(event.replyToken, response);

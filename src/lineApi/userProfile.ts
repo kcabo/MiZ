@@ -1,3 +1,4 @@
+import ErrorLog from 'logger';
 import { client } from './client';
 
 export async function getUserDisplayName(userId: string) {
@@ -5,7 +6,7 @@ export async function getUserDisplayName(userId: string) {
     const profile = await client.getProfile(userId);
     return profile.displayName;
   } catch (error) {
-    console.error('Cannot fetch user profile. userId =', userId);
+    ErrorLog('Cannot fetch user profile:', userId);
     return '-';
   }
 }

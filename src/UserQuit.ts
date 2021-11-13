@@ -1,10 +1,11 @@
-import { getUser, updateUser } from './aws';
+import ErrorLog from 'logger';
+import { getUser, updateUser } from 'aws';
 
 export async function blockedByUser(userId: string) {
   // ユーザーの存在を一応確認
   const user = await getUser(userId);
   if (!user) {
-    console.error('Cannot find user:', userId);
+    ErrorLog('Cannot find user:', userId);
   }
 
   // ユーザー情報の書き換え

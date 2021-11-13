@@ -1,5 +1,6 @@
 import { getUserDisplayName, BotReply } from 'lineApi';
 import { getUser, putNewUser, updateUser } from 'aws';
+import ErrorLog from 'logger';
 
 export async function register(userId: string) {
   // 既にDBに登録しているかどうか確認
@@ -27,7 +28,7 @@ export async function agreeToTerms(userId: string) {
   // ユーザーの存在を一応確認
   const user = await getUser(userId);
   if (!user) {
-    console.error('Cannot find user:', userId);
+    ErrorLog('Cannot find user:', userId);
     return BotReply.failedToIdentifyUser();
   }
 

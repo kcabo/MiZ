@@ -4,18 +4,19 @@ import {
   WebhookEvent,
   WebhookRequestBody,
 } from '@line/bot-sdk';
+import ErrorLog from 'logger';
 
 export function validateAndParseRequest(event: APIGatewayProxyEventV2): {
   valid: boolean;
   lineEvents: WebhookEvent[];
 } {
   if (!event.body) {
-    console.error('Request body was empty.');
+    ErrorLog('Request body was empty:', event);
     return { valid: false, lineEvents: [] };
   }
 
   if (!isLineWebhookEvent(event)) {
-    console.error('Failed to validate the request signature.');
+    ErrorLog('Failed to validate the request signature', event);
     return { valid: false, lineEvents: [] };
   }
 
@@ -46,12 +47,12 @@ function getWebhookEvents(body: string): false | WebhookEvent[] {
   try {
     requestBody = JSON.parse(body);
   } catch (error) {
-    console.error('Could not parse the request body.');
+    ErrorLog('Could not parse the request body:', body);
     return false;
   }
 
   if (!isWebhookRequestBody(requestBody)) {
-    console.error('Request body did not match the type <WebhookRequestBody>');
+    ErrorLog('Received unknown style of webhook request:', requestBody);
     return false;
   }
 

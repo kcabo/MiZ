@@ -1,3 +1,4 @@
+import ErrorLog from 'logger';
 import { DbPrimaryKeys, DbUserItem } from 'types';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
@@ -35,19 +36,15 @@ export async function updateUser(
     });
 
     if (output.$metadata.httpStatusCode !== 200) {
-      console.error(
-        `Update request by ${userId} failed:`,
-        JSON.stringify(attributes, null, 2)
-      );
+      ErrorLog(`Failed to update user status on ${userId}:`, attributes);
+      ErrorLog('db output:', output);
       return undefined;
     }
 
     return output;
   } catch (e) {
-    console.error(
-      `Invalid update request by ${userId}:`,
-      JSON.stringify(attributes, null, 2)
-    );
+    ErrorLog(`Invalid update request by ${userId}:`, attributes);
+    ErrorLog('Raised Error:', e);
     return undefined;
   }
 }
