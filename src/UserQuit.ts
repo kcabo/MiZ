@@ -8,16 +8,7 @@ export async function blockedByUser(userId: string) {
   }
 
   // ユーザー情報の書き換え
-  const userStatus = {
-    friendship: false,
-  };
-  const result = await updateUser(userId, userStatus);
-  if (result.$metadata.httpStatusCode !== 200) {
-    console.error(
-      'DB request Failed on updating user friendship status:',
-      userId
-    );
-  } else {
-    console.warn('Blocked by user:', userId);
-  }
+  const userStatus = { friendship: false };
+  await updateUser(userId, userStatus);
+  console.warn('Blocked by user:', userId);
 }

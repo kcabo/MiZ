@@ -38,13 +38,31 @@ export async function updateUser(
   };
   const values = removeUndefined(allValues);
 
-  return documentClient.update({
-    TableName: RACE_TABLE_NAME,
-    Key: key,
-    UpdateExpression: expression,
-    ExpressionAttributeNames: names,
-    ExpressionAttributeValues: values,
-  });
+  try {
+    const output = await documentClient.update({
+      TableName: RACE_TABLE_NAME,
+      Key: key,
+      UpdateExpression: expression,
+      ExpressionAttributeNames: names,
+      ExpressionAttributeValues: values,
+    });
+
+    if (output.$metadata.httpStatusCode !== 200) {
+      console.error(
+        `Update request by ${userId} failed:`,
+        JSON.stringify(attributes, null, 2)
+      );
+      return undefined;
+    }
+
+    return output;
+  } catch (e) {
+    console.error(
+      `Invalid update request by ${userId}:`,
+      JSON.stringify(attributes, null, 2)
+    );
+    return undefined;
+  }
 }
 
 function removeUndefined(obj: object): object {

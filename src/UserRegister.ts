@@ -6,7 +6,7 @@ export async function register(userId: string) {
   const user = await getUser(userId);
   if (user) {
     const result = await updateUser(userId, { friendship: true });
-    if (result.$metadata.httpStatusCode !== 200) {
+    if (!result) {
       return BotReply.updateUserError();
     }
     return BotReply.returnFromBlock();
@@ -42,7 +42,7 @@ export async function agreeToTerms(userId: string) {
     isTermAgreed: true,
   };
   const result = await updateUser(userId, userStatus);
-  if (result.$metadata.httpStatusCode !== 200) {
+  if (!result) {
     return BotReply.updateUserError();
   }
 
