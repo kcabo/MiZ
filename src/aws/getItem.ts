@@ -1,6 +1,6 @@
 import ErrorLog from 'logger';
 import { DbRaceItem, DbUserItem, Meet } from 'types';
-import { isDbUserItem } from 'typeChecker';
+import { isDbRaceItem, isDbUserItem } from 'typeChecker';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 type DbGetResult =
@@ -72,6 +72,23 @@ export async function checkRaceExists(
   }
 
   return true;
+}
+
+export async function getRace(
+  userId: string,
+  raceId: string
+): Promise<DbRaceItem | undefined> {
+  const sk = raceId;
+  const item = await getRequest(userId, sk);
+
+  if (!item || item.error === true) {
+    return undefined;
+  } else if (!isDbRaceItem(item)) {
+    ErrorLog('Cannot recognize the item received from db:', item);
+    return undefined;
+  }
+
+  return item;
 }
 
 function onlyMeetKeyValue(obj: { [key: string]: any }): Meet {
