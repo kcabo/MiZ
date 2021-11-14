@@ -61,16 +61,16 @@ export type AgreeToTermPostback = {
 
 export type DownloadSheetPostback = {
   type: 'download';
-  sk: string;
+  raceId: string;
 };
 
 export type RequestDeleteSheetPostback = {
   type: 'reqDelete';
-  sk: string;
+  raceId: string;
   expiresAt: number; // unix time
 };
 
 export type DeleteSheetPostback = {
   type: 'delete';
-  sk: string;
+  raceId: string;
 };

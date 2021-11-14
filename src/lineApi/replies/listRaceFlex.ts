@@ -1,6 +1,6 @@
 import { FlexBox, FlexBubble, FlexMessage } from '@line/bot-sdk';
 
-import { RaceSheetBubble } from 'types';
+import { DownloadSheetPostback, RaceSheetBubble } from 'types';
 
 export function listRaceFlex(races: RaceSheetBubble[]): FlexMessage {
   const bubbles = races.map((race) => sheetBubble(race));
@@ -40,6 +40,11 @@ function body(url: string): FlexBox {
 }
 
 function footer(raceId: string): FlexBox {
+  const downloadActionPayload: DownloadSheetPostback = {
+    type: 'download',
+    raceId: raceId,
+  };
+
   return {
     type: 'box',
     layout: 'horizontal',
@@ -77,8 +82,8 @@ function footer(raceId: string): FlexBox {
         action: {
           type: 'postback',
           label: '-',
-          data: '{"sk": "21899111", "type":"delete"}',
-          displayText: '削除',
+          data: JSON.stringify(downloadActionPayload),
+          displayText: '[ダウンロード]',
         },
         justifyContent: 'center',
       },

@@ -1,7 +1,6 @@
 import { Message, TextEventMessage } from '@line/bot-sdk';
 
 import {
-  generateURLforDownload,
   putNewRace,
   requestGenerateSheet,
   getUser,
@@ -12,6 +11,7 @@ import { parseToRaceCoreData } from 'timeParser';
 import { formattedToday } from 'utils';
 import { DbUserItem, RaceData } from 'types';
 import ErrorLog from 'logger';
+import { sheetImageMessage } from 'showSheet';
 
 export async function createSheet(
   message: TextEventMessage,
@@ -48,10 +48,7 @@ export async function createSheet(
     return BotReply.putRaceError();
   }
 
-  const sheetObjectKey = raceId + '.png';
-  const url = await generateURLforDownload(sheetObjectKey);
-
-  return BotReply.sendSheetImage(url);
+  return await sheetImageMessage(raceId);
 }
 
 function complementSwimmerNameToText(

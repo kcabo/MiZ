@@ -13,6 +13,7 @@ import { userAgreedToTerms, userRegister } from 'userInit';
 import { blockedByUser } from 'blockedByUser';
 import { listRaces } from 'listRaces';
 import { PostbackData } from 'types';
+import { showSheet } from 'showSheet';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -83,9 +84,12 @@ async function respondToPostback(
   if (postbackPayload.type === 'agreeToTerm') {
     const mode = postbackPayload.mode;
     return await userAgreedToTerms(userId, mode);
+  } else if (postbackPayload.type === 'download') {
+    const raceId = postbackPayload.raceId;
+    return await showSheet(userId, raceId);
   }
 
-  return BotReply.cannotParsePostbackError();
+  return BotReply.unExpectedError();
 }
 
 function parsePostbackData(str: string): PostbackData | undefined {

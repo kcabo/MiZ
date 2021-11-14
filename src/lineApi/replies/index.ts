@@ -114,3 +114,7 @@ export function unExpectedError(): TextMessage {
 export function cannotParsePostbackError(): TextMessage {
   return textMessageBase('ポストバック送信データが不正です');
 }
+
+export function cannotGetRace(): TextMessage {
+  return textMessageBase('表示するレースデータが見つかりませんでした。');
+}
