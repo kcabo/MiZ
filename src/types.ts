@@ -51,8 +51,8 @@ export type RaceSheetBubble = {
 export type PostbackData =
   | AgreeToTermPostback
   | DownloadSheetPostback
-  | RequestDeleteSheetPostback
-  | DeleteSheetPostback;
+  | RequestDeleteRacePostback
+  | DeleteRacePostback;
 
 export type AgreeToTermPostback = {
   type: 'agreeToTerm';
@@ -64,13 +64,13 @@ export type DownloadSheetPostback = {
   raceId: string;
 };
 
-export type RequestDeleteSheetPostback = {
+export type RequestDeleteRacePostback = {
   type: 'reqDelete';
   raceId: string;
-  expiresAt: number; // unix time
 };
 
-export type DeleteSheetPostback = {
+export type DeleteRacePostback = {
   type: 'delete';
   raceId: string;
+  expiresAt: number; // unix time
 };

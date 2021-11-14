@@ -4,6 +4,7 @@ import { getRandomIntInclusive } from 'utils';
 
 export { listRaceFlex } from './listRaceFlex';
 export { registration } from './registration';
+export { confirmDeleteRace } from './confirmDeleteRace';
 
 function textMessageBase(text: string): TextMessage {
   return { type: 'text', text };
@@ -117,4 +118,10 @@ export function cannotParsePostbackError(): TextMessage {
 
 export function cannotGetRace(): TextMessage {
   return textMessageBase('表示するレースデータが見つかりませんでした。');
+}
+
+export function confirmDeleteTooLate(): TextMessage {
+  return textMessageBase(
+    '削除リクエストの有効期限が切れました。始めからやり直してください。'
+  );
 }

@@ -13,6 +13,15 @@ export function nowISO() {
   return dayjs().format('YYYY-MM-DDTHH:mm:ss[Z]');
 }
 
+export function nowUnix() {
+  return dayjs().unix();
+}
+
+export function isAlreadyPassedBy(unixTimePeriod: number) {
+  const now = nowUnix();
+  return unixTimePeriod < now;
+}
+
 export function getRandomIntInclusive(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);

@@ -1,6 +1,10 @@
 import { FlexBox, FlexBubble, FlexMessage } from '@line/bot-sdk';
 
-import { DownloadSheetPostback, RaceSheetBubble } from 'types';
+import {
+  DownloadSheetPostback,
+  RaceSheetBubble,
+  RequestDeleteRacePostback,
+} from 'types';
 
 export function listRaceFlex(races: RaceSheetBubble[]): FlexMessage {
   const bubbles = races.map((race) => sheetBubble(race));
@@ -45,6 +49,11 @@ function footer(raceId: string): FlexBox {
     raceId: raceId,
   };
 
+  const requestDeleteRaceActionPayload: RequestDeleteRacePostback = {
+    type: 'reqDelete',
+    raceId: raceId,
+  };
+
   return {
     type: 'box',
     layout: 'horizontal',
@@ -63,8 +72,8 @@ function footer(raceId: string): FlexBox {
         action: {
           type: 'postback',
           label: '-',
-          data: '{"sk": "21899111", "type":"delete"}',
-          displayText: '削除',
+          data: JSON.stringify(requestDeleteRaceActionPayload),
+          displayText: '[削除する]',
         },
         justifyContent: 'center',
       },
@@ -102,7 +111,7 @@ function footer(raceId: string): FlexBox {
           type: 'postback',
           label: '-',
           data: '{"sk": "21899111", "type":"delete"}',
-          displayText: '削除',
+          displayText: '編集',
         },
         justifyContent: 'center',
       },

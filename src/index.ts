@@ -14,6 +14,7 @@ import { blockedByUser } from 'blockedByUser';
 import { listRaces } from 'listRaces';
 import { PostbackData } from 'types';
 import { showSheet } from 'showSheet';
+import { confirmDeleteRace, deleteRace } from 'deleteRace';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -87,8 +88,16 @@ async function respondToPostback(
   } else if (postbackPayload.type === 'download') {
     const raceId = postbackPayload.raceId;
     return await showSheet(userId, raceId);
+  } else if (postbackPayload.type === 'reqDelete') {
+    const raceId = postbackPayload.raceId;
+    return await confirmDeleteRace(userId, raceId);
+  } else if (postbackPayload.type === 'delete') {
+    const raceId = postbackPayload.raceId;
+    const expiresAt = postbackPayload.expiresAt;
+    return await deleteRace(userId, raceId, expiresAt);
   }
 
+  ErrorLog('Received unknown postback:', postback);
   return BotReply.unExpectedError();
 }
 
