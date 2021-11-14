@@ -20,7 +20,7 @@ export function isDbUserItem(arg: any): arg is DbUserItem {
 }
 
 export function isQueriedDbRaceItems(arg: any): arg is { sk: string }[] {
-  if (!!arg && Array.isArray(arg) && arg.length > 0) {
+  if (!!arg && Array.isArray(arg)) {
     return arg.every((el) => typeof el.sk === 'string');
   }
   return false;
