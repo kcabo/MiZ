@@ -9,3 +9,4 @@ export {
 } from './getItem';
 export { updateUser } from './updateItem';
 export { queryAllRaces } from './queryItem';
+export { deleteRace } from './deleteItem';

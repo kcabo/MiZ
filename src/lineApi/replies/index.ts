@@ -125,3 +125,7 @@ export function confirmDeleteTooLate(): TextMessage {
     '削除リクエストの有効期限が切れました。始めからやり直してください。'
   );
 }
+
+export function successfullyDeletedRace(): TextMessage {
+  return textMessageBase('レースデータを削除しました');
+}

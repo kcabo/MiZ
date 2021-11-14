@@ -1,6 +1,6 @@
 import { Message } from '@line/bot-sdk';
 
-import { getRace } from 'aws';
+import { getRace, deleteRace } from 'aws';
 import { BotReply } from 'lineApi';
 import { isAlreadyPassedBy } from 'utils';
 
@@ -16,7 +16,7 @@ export async function confirmDeleteRace(
   return BotReply.confirmDeleteRace(race);
 }
 
-export async function deleteRace(
+export async function confirmedDeleteRace(
   userId: string,
   raceId: string,
   expiresAt: number
@@ -26,6 +26,10 @@ export async function deleteRace(
     return BotReply.confirmDeleteTooLate();
   }
 
-  //   TODO:削除を実装する
-  return BotReply.unExpectedError();
+  const { error } = await deleteRace(userId, raceId);
+  if (error) {
+    return BotReply.unExpectedError();
+  }
+
+  return BotReply.successfullyDeletedRace();
 }

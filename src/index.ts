@@ -14,7 +14,7 @@ import { blockedByUser } from 'blockedByUser';
 import { listRaces } from 'listRaces';
 import { PostbackData } from 'types';
 import { showSheet } from 'showSheet';
-import { confirmDeleteRace, deleteRace } from 'deleteRace';
+import { confirmDeleteRace, confirmedDeleteRace } from 'deleteRace';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -94,7 +94,7 @@ async function respondToPostback(
   } else if (postbackPayload.type === 'delete') {
     const raceId = postbackPayload.raceId;
     const expiresAt = postbackPayload.expiresAt;
-    return await deleteRace(userId, raceId, expiresAt);
+    return await confirmedDeleteRace(userId, raceId, expiresAt);
   }
 
   ErrorLog('Received unknown postback:', postback);
