@@ -29,9 +29,11 @@ export type DbRaceItem = DbPrimaryKeys & {
   updatedAt: string;
 } & Omit<RaceData, 'raceId'>;
 
+export type UserMode = 'swimmer' | 'manager';
+
 export type DbUserItem = DbPrimaryKeys & {
   userName: string;
-  mode: 'swimmer' | 'manager';
+  mode: UserMode;
   isTermAgreed: boolean;
   friendship: boolean;
   createdAt: string;
@@ -44,4 +46,25 @@ export type PaparazzoResponse = {
 export type RaceSheetBubble = {
   url: string;
   raceId: string;
+};
+
+export type AgreeToTermPostback = {
+  type: 'agreeToTerm';
+  mode: UserMode;
+};
+
+export type DownloadSheetPostback = {
+  type: 'download';
+  sk: string;
+};
+
+export type RequestDeleteSheetPostback = {
+  type: 'reqDelete';
+  sk: string;
+  expiresAt: number; // unix time
+};
+
+export type DeleteSheetPostback = {
+  type: 'delete';
+  sk: string;
 };

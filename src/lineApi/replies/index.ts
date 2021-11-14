@@ -1,13 +1,9 @@
-import {
-  FlexMessage,
-  ImageMessage,
-  StickerMessage,
-  TextMessage,
-} from '@line/bot-sdk';
+import { ImageMessage, StickerMessage, TextMessage } from '@line/bot-sdk';
 
 import { getRandomIntInclusive } from 'utils';
 
 export { listRaceFlex } from './listRaceFlex';
+export { registration } from './registration';
 
 function textMessageBase(text: string): TextMessage {
   return { type: 'text', text };
@@ -80,12 +76,6 @@ export function returnFromBlock(): TextMessage {
 export function putUserError(): TextMessage {
   return textMessageBase(
     '友だち追加でエラーが発生しました。時間をおいてから再度友達登録してみてください'
-  );
-}
-
-export function greetAndShowTerm(): TextMessage {
-  return textMessageBase(
-    '友達登録ありがとうございます！利用規約をご確認の上登録してください'
   );
 }
 

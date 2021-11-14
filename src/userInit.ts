@@ -21,7 +21,7 @@ export async function register(userId: string) {
   }
 
   // 規約に同意して始めるボタンを返す
-  return BotReply.greetAndShowTerm();
+  return BotReply.registration();
 }
 
 export async function agreeToTerms(userId: string) {
