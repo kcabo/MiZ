@@ -1,5 +1,5 @@
 import ErrorLog from 'logger';
-import { DbUserItem, Meet } from 'types';
+import { DbRaceItem, DbUserItem, Meet } from 'types';
 import { isDbUserItem } from 'typeChecker';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
@@ -12,10 +12,15 @@ type DbGetResult =
     }
   | undefined;
 
-async function getRequest(userId: string, sk: string): Promise<DbGetResult> {
+async function getRequest(
+  userId: string,
+  sk: string,
+  select?: string
+): Promise<DbGetResult> {
   try {
     const { Item } = await documentClient.get({
       TableName: RACE_TABLE_NAME,
+      ProjectionExpression: select,
       Key: {
         userId: userId,
         sk: sk,
@@ -53,6 +58,20 @@ export async function getCachedMeetData(userId: string): Promise<Meet> {
 
   const meetObj = onlyMeetKeyValue(item);
   return meetObj;
+}
+
+export async function checkRaceExists(
+  userId: string,
+  raceId: string
+): Promise<boolean> {
+  const sk = raceId;
+  const item = await getRequest(userId, sk, 'sk');
+
+  if (!item || item.error === true) {
+    return false;
+  }
+
+  return true;
 }
 
 function onlyMeetKeyValue(obj: { [key: string]: any }): Meet {
