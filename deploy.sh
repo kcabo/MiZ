@@ -5,6 +5,7 @@ set -eu
 # 事前に開発コンテナ内でJSをビルドするのを忘れずに
 
 # Login
+aws configure set output text
 ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account')
 aws ecr get-login-password |  docker login --username AWS --password-stdin https://${ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com
 
