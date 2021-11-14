@@ -110,3 +110,7 @@ export function noRaceData(): TextMessage {
 export function unExpectedError(): TextMessage {
   return textMessageBase('予期せぬエラーが発生しました');
 }
+
+export function cannotParsePostbackError(): TextMessage {
+  return textMessageBase('ポストバック送信データが不正です');
+}

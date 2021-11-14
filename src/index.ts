@@ -1,4 +1,4 @@
-import { EventMessage, Message, WebhookEvent } from '@line/bot-sdk';
+import { EventMessage, Message, Postback, WebhookEvent } from '@line/bot-sdk';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 
 import {
@@ -9,9 +9,10 @@ import {
 } from 'lineApi';
 import ErrorLog from 'logger';
 import { createSheet } from 'createSheet';
-import { register } from 'userInit';
+import { userAgreedToTerms, userRegister } from 'userInit';
 import { blockedByUser } from 'blockedByUser';
 import { listRaces } from 'listRaces';
+import { PostbackData } from 'types';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -36,14 +37,15 @@ async function processEvent(event: WebhookEvent) {
     await reply(event.replyToken, response);
   } else if (event.type == 'follow') {
     // ユーザーの新規登録またはブロック解除
-    const response = await register(userId);
+    const response = await userRegister(userId);
     await reply(event.replyToken, response);
   } else if (event.type == 'unfollow') {
     // ユーザーによるブロック
     await blockedByUser(userId);
   } else if (event.type == 'postback') {
-    const data = event.postback.data;
-    console.log(JSON.parse(data));
+    // FlexMessageによるPostback
+    const response = await respondToPostback(event.postback, userId);
+    await reply(event.replyToken, response);
   } else {
     ErrorLog('unknown event!:', event);
   }
@@ -66,4 +68,35 @@ async function respondToMessage(
   }
 
   return await createSheet(message, userId);
+}
+
+async function respondToPostback(
+  postback: Postback,
+  userId: string
+): Promise<Message | Message[]> {
+  const postbackPayload = parsePostbackData(postback.data);
+
+  if (!postbackPayload) {
+    return BotReply.cannotParsePostbackError();
+  }
+
+  if (postbackPayload.type === 'agreeToTerm') {
+    const mode = postbackPayload.mode;
+    return await userAgreedToTerms(userId, mode);
+  }
+
+  return BotReply.cannotParsePostbackError();
+}
+
+function parsePostbackData(str: string): PostbackData | undefined {
+  try {
+    const parsed = JSON.parse(str);
+    if (typeof parsed.type !== 'string') {
+      throw new Error('postback has no type key');
+    }
+    return parsed;
+  } catch (e) {
+    ErrorLog('Cannot parse postback data:', str);
+    return undefined;
+  }
 }

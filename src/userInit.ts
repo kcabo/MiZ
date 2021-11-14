@@ -1,8 +1,9 @@
 import { getUserDisplayName, BotReply } from 'lineApi';
 import { getUser, putNewUser, updateUser } from 'aws';
 import ErrorLog from 'logger';
+import { UserMode } from 'types';
 
-export async function register(userId: string) {
+export async function userRegister(userId: string) {
   // 既にDBに登録しているかどうか確認
   const user = await getUser(userId);
   if (user) {
@@ -24,7 +25,7 @@ export async function register(userId: string) {
   return BotReply.registration();
 }
 
-export async function agreeToTerms(userId: string) {
+export async function userAgreedToTerms(userId: string, mode: UserMode) {
   // ユーザーの存在を一応確認
   const user = await getUser(userId);
   if (!user) {
@@ -39,7 +40,7 @@ export async function agreeToTerms(userId: string) {
 
   // ユーザー情報の書き換え 規約の同意とモードの設定
   const userStatus = {
-    mode: 'swimmer' as const,
+    mode: mode,
     isTermAgreed: true,
   };
   const result = await updateUser(userId, userStatus);

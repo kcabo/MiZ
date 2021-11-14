@@ -48,6 +48,12 @@ export type RaceSheetBubble = {
   raceId: string;
 };
 
+export type PostbackData =
+  | AgreeToTermPostback
+  | DownloadSheetPostback
+  | RequestDeleteSheetPostback
+  | DeleteSheetPostback;
+
 export type AgreeToTermPostback = {
   type: 'agreeToTerm';
   mode: UserMode;
