@@ -9,8 +9,8 @@ import {
 } from 'lineApi';
 import ErrorLog from 'logger';
 import { createSheet } from 'createSheet';
-import { register } from 'UserRegister';
-import { blockedByUser } from 'UserQuit';
+import { register } from 'userInit';
+import { blockedByUser } from 'blockedByUser';
 import { listRaces } from 'listRaces';
 
 export async function handler(
