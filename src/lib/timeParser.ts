@@ -1,4 +1,4 @@
-import { shortenedEventToProperStyle } from 'eventConverter';
+import { shortenedEventToProperStyle } from 'lib/convertEvent';
 import { RaceCoreData } from 'types';
 
 type ParseResult = {

@@ -1,6 +1,6 @@
 import { ImageMessage, StickerMessage, TextMessage } from '@line/bot-sdk';
 
-import { getRandomIntInclusive } from 'utils';
+import { getRandomIntInclusive } from 'lib/utils';
 
 export { listRaceFlex } from './listRaceFlex';
 export { registration } from './registration';

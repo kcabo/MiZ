@@ -1,5 +1,5 @@
 import { WebhookEvent } from '@line/bot-sdk';
-import { ErrorLog } from 'logger';
+import { ErrorLog } from 'lib/logger';
 import * as BotReply from './replies';
 import { reply } from './webhookReply';
 

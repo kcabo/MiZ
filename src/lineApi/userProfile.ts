@@ -1,4 +1,4 @@
-import { ErrorLog } from 'logger';
+import { ErrorLog } from 'lib/logger';
 import { client } from './client';
 
 export async function fetchLineName(userId: string) {

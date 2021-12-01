@@ -7,7 +7,7 @@ import {
   extractUserId,
   BotReply,
 } from 'lineApi';
-import { ErrorLog } from 'logger';
+import { ErrorLog } from 'lib/logger';
 import { createSheet } from 'createSheet';
 import { becomeFriend } from 'becomeFriend';
 import { startService } from 'startService';

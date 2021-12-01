@@ -2,7 +2,7 @@ import {
   parseToRaceCoreData,
   toCentiSeconds,
   toCentiSecondsArray,
-} from 'timeParser';
+} from 'lib/timeParser';
 import { RaceCoreData } from 'types';
 
 test('Time Parsing (unit)', () => {

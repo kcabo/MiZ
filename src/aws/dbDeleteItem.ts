@@ -1,4 +1,4 @@
-import { dbErrorLog } from 'logger';
+import { dbErrorLog } from 'lib/logger';
 import { DbPrimaryKeys } from 'types';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 

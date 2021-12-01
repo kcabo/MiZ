@@ -1,5 +1,5 @@
 import { Message, HTTPError } from '@line/bot-sdk';
-import { ErrorLog } from 'logger';
+import { ErrorLog } from 'lib/logger';
 
 import { client } from './client';
 

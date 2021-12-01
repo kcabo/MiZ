@@ -1,6 +1,6 @@
 import { BotReply } from 'lineApi';
 import { updateUser, checkUserExists } from 'aws';
-import { ErrorLog } from 'logger';
+import { ErrorLog } from 'lib/logger';
 import { UserMode } from 'types';
 
 export async function startService(userId: string, mode: UserMode) {

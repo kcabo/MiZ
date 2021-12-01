@@ -2,8 +2,8 @@ import { PutCommandInput } from '@aws-sdk/lib-dynamodb';
 
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 import { DbItem, DbRaceItem, DbUserItem, Race } from 'types';
-import { nowISO } from 'utils';
-import { dbErrorLog } from 'logger';
+import { nowISO } from 'lib/utils';
+import { dbErrorLog } from 'lib/logger';
 
 export async function createRace(userId: string, raceId: string, race: Race) {
   const now = nowISO();

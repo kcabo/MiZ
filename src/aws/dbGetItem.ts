@@ -1,7 +1,7 @@
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
-import { dbErrorLog, ErrorLog } from 'logger';
+import { dbErrorLog, ErrorLog } from 'lib/logger';
 import { MeetKeys } from 'types';
-import { isDbRaceItem, isDbUserItem, isMeet } from 'typeGuard';
+import { isDbRaceItem, isDbUserItem, isMeet } from 'lib/typeGuard';
 import { InvalidItem, ItemNotFoundFromDB } from 'exceptions';
 
 export async function fetchRaceItem(userId: string, raceId: string) {

@@ -1,5 +1,5 @@
-import { ErrorLog } from 'logger';
-import { removeUndefinedFromObject } from 'utils';
+import { ErrorLog } from 'lib/logger';
+import { removeUndefinedFromObject } from 'lib/utils';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 type UpdateUserAttributes = Partial<{

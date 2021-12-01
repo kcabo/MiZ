@@ -1,6 +1,6 @@
 import { FlexMessage } from '@line/bot-sdk';
 
-import { nowUnix } from 'utils';
+import { nowUnix } from 'lib/utils';
 import { DbRaceItem, DeleteRacePostback } from 'types';
 
 export function confirmDeleteRace(race: DbRaceItem): FlexMessage {

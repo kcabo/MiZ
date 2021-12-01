@@ -3,7 +3,7 @@ import { Message } from '@line/bot-sdk';
 import { fetchRaceItem, deleteRaceItem } from 'aws';
 import { ItemNotFoundFromDB } from 'exceptions';
 import { BotReply } from 'lineApi';
-import { isAlreadyPassedBy } from 'utils';
+import { isAlreadyPassedBy } from 'lib/utils';
 
 export async function confirmDeleteRace(
   userId: string,

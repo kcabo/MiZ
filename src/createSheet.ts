@@ -7,8 +7,8 @@ import {
   fetchCachedMeetData,
 } from 'aws';
 import { BotReply } from 'lineApi';
-import { parseToRaceCoreData } from 'timeParser';
-import { formattedToday } from 'utils';
+import { parseToRaceCoreData } from 'lib/timeParser';
+import { formattedToday } from 'lib/utils';
 import { DbUserItem, Race } from 'types';
 import { ItemNotFoundFromDB } from 'exceptions';
 import { sheetImageMessage } from 'showSheet';
