@@ -3,7 +3,7 @@ import { Message } from '@line/bot-sdk';
 import { generateURLforDownload, queryAllRaces } from 'aws';
 import { BotReply } from 'lineApi';
 import { ErrorLog } from 'logger';
-import { isQueriedDbRaceItems } from 'typeGuard';
+import { isSkOnlyArray } from 'typeGuard';
 import { RaceSheetBubble } from 'types';
 
 export async function listRaces(userId: string): Promise<Message | Message[]> {
@@ -21,7 +21,7 @@ export async function listRaces(userId: string): Promise<Message | Message[]> {
     return BotReply.noRaceFound();
   }
 
-  if (!isQueriedDbRaceItems(items)) {
+  if (!isSkOnlyArray(items)) {
     ErrorLog('Invalid queried race items:', items);
     return BotReply.unExpectedError();
   }
