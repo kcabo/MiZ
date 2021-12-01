@@ -1,5 +1,5 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { validateAndParseRequest } from '../../src/lineApi/validation';
+import { validateAndParseRequest } from 'lineApi/validation';
 
 const multipleMessageEvent = {
   destination: 'U',

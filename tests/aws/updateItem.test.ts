@@ -1,9 +1,9 @@
-import { updateUser } from '../../src/aws';
+import { updateUser } from 'aws';
 import {
   constructUpdateAttributeValues,
   constructUpdateExpression,
-} from '../../src/aws/updateItem';
-import { documentClient } from '../../src/aws/dynamodbClient';
+} from 'aws/dbUpdateItem';
+import { documentClient } from 'aws/dynamodbClient';
 
 const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 afterEach(() => spy.mockClear());

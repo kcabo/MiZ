@@ -1,6 +1,6 @@
-import { DbUserItem, Meet } from '../../src/types';
-import { getUser, getCachedMeetData } from '../../src/aws';
-import { documentClient } from '../../src/aws/dynamodbClient';
+import { DbUserItem, Meet } from 'types';
+import { getUser, getCachedMeetData } from 'aws';
+import { documentClient } from 'aws/dynamodbClient';
 
 const dbUserItem: DbUserItem = {
   userId: 'U123',

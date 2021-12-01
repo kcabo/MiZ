@@ -1,6 +1,6 @@
-import { Race } from '../../src/types';
-import { requestGenerateSheet } from '../../src/aws';
-import { lambdaClient } from '../../src/aws/lambdaClient';
+import { Race } from 'types';
+import { requestGenerateSheet } from 'aws';
+import { lambdaClient } from 'aws/lambdaClient';
 
 const race: Race = {
   date: '2021-11-11',

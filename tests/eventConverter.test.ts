@@ -1,4 +1,4 @@
-import { shortenedEventToProperStyle } from '../src/eventConverter';
+import { shortenedEventToProperStyle } from 'eventConverter';
 
 it('Convert event appropriately', () => {
   expect(shortenedEventToProperStyle('はんふり')).toBe('50m自由形');

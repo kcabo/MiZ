@@ -2,8 +2,8 @@ import {
   parseToRaceCoreData,
   toCentiSeconds,
   toCentiSecondsArray,
-} from '../src/timeParser';
-import { RaceCoreData } from '../src/types';
+} from 'timeParser';
+import { RaceCoreData } from 'types';
 
 test('Time Parsing (unit)', () => {
   expect(toCentiSeconds('2')).toBe(2);
