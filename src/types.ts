@@ -33,10 +33,12 @@ export const RaceKeys: (keyof Race)[] = [
   'cumulativeTime',
 ];
 
-export type DbItem<T = {}> = T & {
+export type DbPrimaryKeys = {
   userId: string;
   sk: string;
 };
+
+export type DbItem<T = {}> = DbPrimaryKeys & T;
 
 export type DbRaceItem = DbItem<
   Race & {

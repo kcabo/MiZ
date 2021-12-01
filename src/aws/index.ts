@@ -9,4 +9,4 @@ export {
 } from './dbGetItem';
 export { updateUser } from './dbUpdateItem';
 export { queryAllRaces } from './dbQueryItems';
-export { deleteRace } from './dbDeleteItem';
+export { deleteRaceItem } from './dbDeleteItem';

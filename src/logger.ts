@@ -15,7 +15,11 @@ export function ErrorLog(message: string, arg: any) {
   }
 }
 
-export function dbErrorLog(type: 'create' | 'get', item: DbItem, error: Error) {
+export function dbErrorLog(
+  type: 'create' | 'get' | 'delete',
+  item: DbItem,
+  error: Error
+) {
   const { userId, sk, ...rest } = item;
   console.error(
     `[${type}] request failed on userId=${userId}, sk=${sk}:`,

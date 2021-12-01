@@ -1,6 +1,6 @@
 import { Message } from '@line/bot-sdk';
 
-import { getRace, deleteRace } from 'aws';
+import { getRace, deleteRaceItem } from 'aws';
 import { BotReply } from 'lineApi';
 import { isAlreadyPassedBy } from 'utils';
 
@@ -26,8 +26,8 @@ export async function confirmedDeleteRace(
     return BotReply.confirmDeleteTooLate();
   }
 
-  const { error } = await deleteRace(userId, raceId);
-  if (error) {
+  const result = await deleteRaceItem(userId, raceId);
+  if (result instanceof Error) {
     return BotReply.unExpectedError();
   }
 
