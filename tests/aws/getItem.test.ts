@@ -9,7 +9,7 @@ const dbUserItem: DbUserItem = {
   mode: 'swimmer',
   isTermAccepted: true,
   friendship: true,
-  createdAt: '2021-10-11',
+  createdAt: '2021-11-14T10:39:14Z',
 };
 
 const mockErrorConsole = jest
