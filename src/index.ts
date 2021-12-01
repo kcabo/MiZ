@@ -9,7 +9,8 @@ import {
 } from 'lineApi';
 import { ErrorLog } from 'logger';
 import { createSheet } from 'createSheet';
-import { userAcceptedTerms, becomeFriend } from 'becomeFriend';
+import { becomeFriend } from 'becomeFriend';
+import { startService } from 'startService';
 import { blockedByUser } from 'blockedByUser';
 import { listRaces } from 'listRaces';
 import { PostbackData } from 'types';
@@ -84,7 +85,7 @@ async function respondToPostback(
 
   if (postbackPayload.type === 'acceptTerm') {
     const mode = postbackPayload.mode;
-    return await userAcceptedTerms(userId, mode);
+    return await startService(userId, mode);
   } else if (postbackPayload.type === 'download') {
     const raceId = postbackPayload.raceId;
     return await showSheet(userId, raceId);
