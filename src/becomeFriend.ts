@@ -1,4 +1,4 @@
-import { getUserDisplayName, BotReply } from 'lineApi';
+import { fetchLineName, BotReply } from 'lineApi';
 import { createUser, updateUser, checkUserExists } from 'aws';
 
 export async function becomeFriend(userId: string) {
@@ -15,7 +15,8 @@ export async function becomeFriend(userId: string) {
   }
 
   // 見つからなければ新規ユーザーの友達登録として扱う
-  const userName = await getUserDisplayName(userId);
+  const userName = await fetchLineName(userId);
+
   const result = await createUser(userId, userName);
   if (result instanceof Error) {
     return BotReply.putUserError();
