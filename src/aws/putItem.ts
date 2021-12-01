@@ -1,27 +1,20 @@
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
-import { DbRaceItem, DbUserItem, RaceData } from 'types';
-import { nowISO, removeUndefinedFromObject } from '../utils';
+import { DbRaceItem, DbUserItem, Race } from 'types';
+import { nowISO } from '../utils';
 
-export async function putNewRace(raceData: RaceData, userId: string) {
+export async function putNewRace(userId: string, raceId: string, race: Race) {
   const now = nowISO();
   const raceItem: DbRaceItem = {
     userId: userId,
-    sk: raceData.raceId,
-    date: raceData.date,
-    swimmer: raceData.swimmer,
-    event: raceData.event,
-    reaction: raceData.reaction,
-    cumulativeTime: raceData.cumulativeTime,
-    courseLength: raceData.courseLength,
-    meet: raceData.meet,
-    place: raceData.place,
+    sk: raceId,
+    ...race,
     updatedAt: now,
   };
 
   return await documentClient.put({
     TableName: RACE_TABLE_NAME,
-    Item: removeUndefinedFromObject(raceItem),
+    Item: raceItem,
   });
 }
 

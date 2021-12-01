@@ -9,7 +9,7 @@ import {
 import { BotReply } from 'lineApi';
 import { parseToRaceCoreData } from 'timeParser';
 import { formattedToday } from 'utils';
-import { DbUserItem, RaceData } from 'types';
+import { DbUserItem, Race } from 'types';
 import ErrorLog from 'logger';
 import { sheetImageMessage } from 'showSheet';
 
@@ -36,14 +36,14 @@ export async function createSheet(
   const raceId = message.id;
   const date = formattedToday();
   const cachedMeet = await getCachedMeetData(userId);
-  const raceData: RaceData = { raceId, date, ...cachedMeet, ...raceCoreData };
+  const race: Race = { date, ...cachedMeet, ...raceCoreData };
 
-  const generateSheetResult = await requestGenerateSheet(raceData);
+  const generateSheetResult = await requestGenerateSheet(raceId, race);
   if (generateSheetResult.status == 'error') {
     return BotReply.paparazzoError();
   }
 
-  const putDataResult = await putNewRace(raceData, userId);
+  const putDataResult = await putNewRace(userId, raceId, race);
   if (putDataResult.$metadata.httpStatusCode !== 200) {
     return BotReply.putRaceError();
   }

@@ -18,7 +18,7 @@ export async function listRaces(userId: string): Promise<Message | Message[]> {
 
   const items = result.Items;
   if (!items || items.length === 0) {
-    return BotReply.noRaceData();
+    return BotReply.noRaceFound();
   }
 
   if (!isQueriedDbRaceItems(items)) {

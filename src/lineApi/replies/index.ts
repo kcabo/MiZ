@@ -104,7 +104,7 @@ export function fetchRacesError(): TextMessage {
   );
 }
 
-export function noRaceData(): TextMessage {
+export function noRaceFound(): TextMessage {
   return textMessageBase('表示するレースデータがありません！');
 }
 

@@ -1,9 +1,8 @@
-import { RaceData } from '../../src/types';
+import { Race } from '../../src/types';
 import { requestGenerateSheet } from '../../src/aws';
 import { lambdaClient } from '../../src/aws/lambdaClient';
 
-const raceData: RaceData = {
-  raceId: '1',
+const race: Race = {
   date: '2021-11-11',
   swimmer: 'Test',
   event: '100m 自由形',
@@ -37,14 +36,14 @@ afterAll(() => {
 test('Request to Paparazzo', async () => {
   lambdaClient.send = jest.fn(() => validInvokeOutput);
   expect.assertions(1);
-  const res = await requestGenerateSheet(raceData);
+  const res = await requestGenerateSheet('1', race);
   expect(res).toStrictEqual({ status: 'ok' });
 });
 
 test('Receive empty payload', async () => {
   lambdaClient.send = jest.fn(() => emptyInvokeOutput);
   expect.assertions(3);
-  const res = await requestGenerateSheet(raceData);
+  const res = await requestGenerateSheet('1', race);
   expect(res).toStrictEqual({ status: 'error' });
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
   expect(mockErrorConsole.mock.calls[0][0]).toContain(
@@ -55,7 +54,7 @@ test('Receive empty payload', async () => {
 test('Receive unknown payload', async () => {
   lambdaClient.send = jest.fn(() => unknownInvokeOutput);
   expect.assertions(3);
-  const res = await requestGenerateSheet(raceData);
+  const res = await requestGenerateSheet('1', race);
   expect(res).toStrictEqual({ status: 'error' });
   expect(mockErrorConsole).toHaveBeenCalledTimes(1);
   expect(mockErrorConsole.mock.calls[0][0]).toContain(

@@ -1,6 +1,8 @@
+export type CentiSeconds = number;
+
 export type RaceTime = {
-  reaction?: number;
-  cumulativeTime: number[];
+  reaction?: CentiSeconds;
+  cumulativeTime: CentiSeconds[];
 };
 export type RaceCoreData = {
   swimmer: string;
@@ -13,30 +15,54 @@ export type Meet = {
   place?: string;
 };
 
-export type RaceData = {
-  raceId: string;
-  date: string;
-} & Meet &
-  RaceCoreData;
+export const MeetKeys: (keyof Meet)[] = ['meet', 'courseLength', 'place'];
+
+export type Race = Meet & { date: string } & RaceCoreData;
+
+export type RaceForForm = Omit<Race, 'reaction' | 'cumulativeTime'> & {
+  reaction?: string;
+  cumulativeTime: CentiSeconds[]; // 未対応
+};
+
+export const RaceKeys: (keyof Race)[] = [
+  ...MeetKeys,
+  'date',
+  'event',
+  'swimmer',
+  'reaction',
+  'cumulativeTime',
+];
 
 export type DbPrimaryKeys = {
   userId: string;
   sk: string;
 };
 
-export type DbRaceItem = DbPrimaryKeys & {
-  updatedAt: string;
-} & Omit<RaceData, 'raceId'>;
+export type DbRaceItem = DbPrimaryKeys &
+  Race & {
+    updatedAt: string;
+  };
 
 export type UserMode = 'swimmer' | 'manager';
 
-export type DbUserItem = DbPrimaryKeys & {
+export type UserSettings = {
   userName: string;
   mode: UserMode;
-  isTermAccepted: boolean;
-  friendship: boolean;
-  createdAt: string;
 };
+
+export const UserSettingsKeys: (keyof UserSettings)[] = ['userName', 'mode'];
+
+export type DbUserItem = DbPrimaryKeys &
+  UserSettings & {
+    isTermAccepted: boolean;
+    friendship: boolean;
+    createdAt: string;
+  };
+
+export type DbMeetCacheItem = DbPrimaryKeys &
+  Meet & {
+    ttl: number;
+  };
 
 export type PaparazzoResponse = {
   status: 'ok' | 'error';
