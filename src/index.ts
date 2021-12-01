@@ -9,7 +9,7 @@ import {
 } from 'lineApi';
 import { ErrorLog } from 'logger';
 import { createSheet } from 'createSheet';
-import { userAcceptedTerms, userRegister } from 'userInit';
+import { userAcceptedTerms, becomeFriend } from 'becomeFriend';
 import { blockedByUser } from 'blockedByUser';
 import { listRaces } from 'listRaces';
 import { PostbackData } from 'types';
@@ -39,7 +39,7 @@ async function processEvent(event: WebhookEvent) {
     await reply(event.replyToken, response);
   } else if (event.type == 'follow') {
     // ユーザーの新規登録またはブロック解除
-    const response = await userRegister(userId);
+    const response = await becomeFriend(userId);
     await reply(event.replyToken, response);
   } else if (event.type == 'unfollow') {
     // ユーザーによるブロック

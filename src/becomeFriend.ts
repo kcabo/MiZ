@@ -3,7 +3,7 @@ import { createUser, updateUser, checkUserExists } from 'aws';
 import { ErrorLog } from 'logger';
 import { UserMode } from 'types';
 
-export async function userRegister(userId: string) {
+export async function becomeFriend(userId: string) {
   // 既にDBに登録しているかどうか確認
   const user = await checkUserExists(userId);
 
