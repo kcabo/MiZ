@@ -1,7 +1,7 @@
 import { Message, TextEventMessage } from '@line/bot-sdk';
 
 import {
-  putNewRace,
+  createRace,
   requestGenerateSheet,
   getUser,
   getCachedMeetData,
@@ -43,8 +43,8 @@ export async function createSheet(
     return BotReply.paparazzoError();
   }
 
-  const putDataResult = await putNewRace(userId, raceId, race);
-  if (putDataResult.$metadata.httpStatusCode !== 200) {
+  const result = await createRace(userId, raceId, race);
+  if (result instanceof Error) {
     return BotReply.putRaceError();
   }
 

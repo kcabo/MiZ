@@ -16,7 +16,8 @@
         "-r",
         "tsconfig-paths/register"
       ],
-      "type": "pwa-node"
+      "type": "pwa-node",
+      "console": "integratedTerminal"
     },
     {
       "name": "Lambda",

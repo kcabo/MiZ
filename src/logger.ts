@@ -1,3 +1,5 @@
+import { DbItem } from 'types';
+
 export function ErrorLog(message: string, arg: any) {
   if (arg instanceof Error) {
     console.error(message, arg);
@@ -11,4 +13,13 @@ export function ErrorLog(message: string, arg: any) {
   } else {
     console.error(message, arg);
   }
+}
+
+export function dbErrorLog(type: 'create' | 'get', item: DbItem, error: Error) {
+  const { userId, sk, ...rest } = item;
+  console.error(
+    `[${type}] request failed on userId=${userId}, sk=${sk}:`,
+    rest
+  );
+  console.error(error);
 }

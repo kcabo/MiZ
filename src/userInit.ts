@@ -1,5 +1,5 @@
 import { getUserDisplayName, BotReply } from 'lineApi';
-import { getUser, putNewUser, updateUser } from 'aws';
+import { getUser, createUser, updateUser } from 'aws';
 import { ErrorLog } from 'logger';
 import { UserMode } from 'types';
 
@@ -16,8 +16,8 @@ export async function userRegister(userId: string) {
 
   // デフォルト値で登録
   const userName = await getUserDisplayName(userId);
-  const putDataResult = await putNewUser(userId, userName);
-  if (putDataResult.$metadata.httpStatusCode !== 200) {
+  const result = await createUser(userId, userName);
+  if (result instanceof Error) {
     return BotReply.putUserError();
   }
 

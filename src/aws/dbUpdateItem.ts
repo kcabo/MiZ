@@ -1,17 +1,19 @@
 import { ErrorLog } from 'logger';
-import { DbPrimaryKeys, DbUserItem } from 'types';
 import { removeUndefinedFromObject } from 'utils';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
-type UpdateUserAttributes = Partial<
-  Omit<DbUserItem, keyof DbPrimaryKeys | 'createdAt'>
->;
+type UpdateUserAttributes = Partial<{
+  mode: string;
+  isTermAccepted: boolean;
+  userName: string;
+  friendship: boolean;
+}>;
 
 export async function updateUser(
   userId: string,
   attributes: UpdateUserAttributes
 ) {
-  const key: DbPrimaryKeys = {
+  const key = {
     userId: userId,
     sk: 'USER#' + userId,
   };

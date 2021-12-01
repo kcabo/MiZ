@@ -33,15 +33,16 @@ export const RaceKeys: (keyof Race)[] = [
   'cumulativeTime',
 ];
 
-export type DbPrimaryKeys = {
+export type DbItem<T = {}> = T & {
   userId: string;
   sk: string;
 };
 
-export type DbRaceItem = DbPrimaryKeys &
+export type DbRaceItem = DbItem<
   Race & {
     updatedAt: string;
-  };
+  }
+>;
 
 export type UserMode = 'swimmer' | 'manager';
 
@@ -52,17 +53,19 @@ export type UserSettings = {
 
 export const UserSettingsKeys: (keyof UserSettings)[] = ['userName', 'mode'];
 
-export type DbUserItem = DbPrimaryKeys &
+export type DbUserItem = DbItem<
   UserSettings & {
     isTermAccepted: boolean;
     friendship: boolean;
     createdAt: string;
-  };
+  }
+>;
 
-export type DbMeetCacheItem = DbPrimaryKeys &
+export type DbMeetCacheItem = DbItem<
   Meet & {
     ttl: number;
-  };
+  }
+>;
 
 export type PaparazzoResponse = {
   status: 'ok' | 'error';

@@ -1,6 +1,6 @@
 export { generateURLforDownload } from './s3Presign';
 export { requestGenerateSheet } from './callLambda';
-export { putNewRace, putNewUser } from './dbPutItem';
+export { createRace, createUser } from './dbPutItem';
 export {
   getUser,
   getCachedMeetData,
