@@ -3,7 +3,7 @@ import { Message } from '@line/bot-sdk';
 import { generateURLforDownload, queryAllRaces } from 'aws';
 import { BotReply } from 'lineApi';
 import { ErrorLog } from 'logger';
-import { isQueriedDbRaceItems } from 'typeChecker';
+import { isQueriedDbRaceItems } from 'typeGuard';
 import { RaceSheetBubble } from 'types';
 
 export async function listRaces(userId: string): Promise<Message | Message[]> {

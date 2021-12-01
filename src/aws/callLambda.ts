@@ -1,7 +1,7 @@
 import { InvokeCommand } from '@aws-sdk/client-lambda';
 
 import { lambdaClient } from './lambdaClient';
-import { isPaparazzoResponse } from 'typeChecker';
+import { isPaparazzoResponse } from 'typeGuard';
 import { Race, PaparazzoResponse } from 'types';
 import { ErrorLog } from 'logger';
 

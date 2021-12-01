@@ -1,6 +1,6 @@
 import { ErrorLog } from 'logger';
 import { DbRaceItem, DbUserItem, Meet } from 'types';
-import { isDbRaceItem, isDbUserItem } from 'typeChecker';
+import { isDbRaceItem, isDbUserItem } from 'typeGuard';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 type DbGetResult =
