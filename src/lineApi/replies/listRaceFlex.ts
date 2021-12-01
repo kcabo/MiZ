@@ -1,13 +1,11 @@
 import { FlexBox, FlexBubble, FlexMessage } from '@line/bot-sdk';
 
-import {
-  DownloadSheetPostback,
-  RaceSheetBubble,
-  RequestDeleteRacePostback,
-} from 'types';
+import { DownloadSheetPostback, RequestDeleteRacePostback } from 'types';
 
-export function listRaceFlex(races: RaceSheetBubble[]): FlexMessage {
-  const bubbles = races.map((race) => sheetBubble(race));
+export function listRaceFlex(
+  races: { raceId: string; url: string }[]
+): FlexMessage {
+  const bubbles = races.map(({ raceId, url }) => sheetBubble(raceId, url));
   return {
     type: 'flex',
     altText: 'レース一覧',
@@ -18,11 +16,11 @@ export function listRaceFlex(races: RaceSheetBubble[]): FlexMessage {
   };
 }
 
-function sheetBubble(race: RaceSheetBubble): FlexBubble {
+function sheetBubble(raceId: string, url: string): FlexBubble {
   return {
     type: 'bubble',
-    body: body(race.url),
-    footer: footer(race.raceId),
+    body: body(url),
+    footer: footer(raceId),
   };
 }
 

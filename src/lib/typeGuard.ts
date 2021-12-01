@@ -6,7 +6,7 @@ import {
   CentiSeconds,
   UserSettings,
   Meet,
-} from './types';
+} from 'types';
 
 export function isPaparazzoResponse(arg: any): arg is PaparazzoResponse {
   return (
@@ -57,6 +57,10 @@ export function isDbRaceItem(arg: any): arg is DbRaceItem {
     isValidISO8601(arg.updatedAt) &&
     isRace(arg)
   );
+}
+
+export function isDbRaceItemArray(arg: any): arg is DbRaceItem[] {
+  return !!arg && Array.isArray(arg) && arg.every(isDbRaceItem);
 }
 
 export function isMeet(arg: any): arg is Meet {

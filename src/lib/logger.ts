@@ -16,7 +16,7 @@ export function ErrorLog(message: string, arg: any) {
 }
 
 export function dbErrorLog(
-  type: 'create' | 'get' | 'delete',
+  type: 'create' | 'get' | 'delete' | 'query',
   item: DbItem,
   error: Error
 ) {

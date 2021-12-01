@@ -73,11 +73,6 @@ export type PaparazzoResponse = {
   status: 'ok' | 'error';
 };
 
-export type RaceSheetBubble = {
-  url: string;
-  raceId: string;
-};
-
 export type PostbackData =
   | AcceptTermPostback
   | DownloadSheetPostback

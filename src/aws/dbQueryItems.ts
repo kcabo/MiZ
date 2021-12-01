@@ -1,14 +1,28 @@
-import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
-import { ErrorLog } from 'lib/logger';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
+import { InvalidItem, ItemNotFoundFromDB } from 'exceptions';
+import { dbErrorLog, ErrorLog } from 'lib/logger';
+import { isSkOnlyArray } from 'lib/typeGuard';
 
 export async function queryAllRaces(
   userId: string,
+  startKey?: { [key: string]: any }
+) {
+  return await dbQueryRequest(userId, 19, startKey);
+}
+
+async function dbQueryRequest(
+  userId: string,
   pageSize: number,
   startKey?: { [key: string]: any }
-): Promise<QueryCommandOutput | undefined> {
+): Promise<
+  | {
+      raceIds: { sk: string }[];
+      LastEvaluatedKey?: { [key: string]: any };
+    }
+  | Error
+> {
   try {
-    const result = await documentClient.query({
+    const { Items, LastEvaluatedKey } = await documentClient.query({
       TableName: RACE_TABLE_NAME,
       IndexName: 'date-index',
       KeyConditionExpression: 'userId = :userId',
@@ -18,17 +32,25 @@ export async function queryAllRaces(
       ProjectionExpression: 'sk',
       Limit: pageSize,
       ExclusiveStartKey: startKey,
-      ScanIndexForward: false, // from end to start
+      ScanIndexForward: false, // from end to start = 値の大きい最近の日付から読む
     });
 
-    if (result.$metadata.httpStatusCode !== 200) {
-      ErrorLog('Failed to request:', result);
-      return undefined;
+    if (typeof Items === 'undefined' || Items.length === 0) {
+      return new ItemNotFoundFromDB();
     }
 
-    return result;
-  } catch (error) {
-    ErrorLog(`Failed to query all races on userId=${userId}:`, error);
-    return undefined;
+    if (!isSkOnlyArray(Items)) {
+      ErrorLog('Unknown Data!!', Items);
+      return new InvalidItem();
+    }
+
+    return { raceIds: Items, LastEvaluatedKey };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      dbErrorLog('query', { userId, sk: '-' }, error);
+      return error;
+    } else {
+      throw new Error();
+    }
   }
 }
