@@ -10,7 +10,7 @@ import { BotReply } from 'lineApi';
 import { parseToRaceCoreData } from 'timeParser';
 import { formattedToday } from 'utils';
 import { DbUserItem, Race } from 'types';
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 import { sheetImageMessage } from 'showSheet';
 
 export async function createSheet(

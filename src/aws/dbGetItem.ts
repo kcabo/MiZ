@@ -1,4 +1,4 @@
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 import { DbRaceItem, DbUserItem, Meet } from 'types';
 import { isDbRaceItem, isDbUserItem } from 'typeChecker';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';

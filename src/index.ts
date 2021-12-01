@@ -7,7 +7,7 @@ import {
   extractUserId,
   BotReply,
 } from 'lineApi';
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 import { createSheet } from 'createSheet';
 import { userAcceptedTerms, userRegister } from 'userInit';
 import { blockedByUser } from 'blockedByUser';

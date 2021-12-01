@@ -4,7 +4,7 @@ import {
   WebhookEvent,
   WebhookRequestBody,
 } from '@line/bot-sdk';
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 
 export function validateAndParseRequest(event: APIGatewayProxyEventV2): {
   valid: boolean;

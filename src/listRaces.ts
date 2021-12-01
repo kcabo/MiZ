@@ -2,7 +2,7 @@ import { Message } from '@line/bot-sdk';
 
 import { generateURLforDownload, queryAllRaces } from 'aws';
 import { BotReply } from 'lineApi';
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 import { isQueriedDbRaceItems } from 'typeChecker';
 import { RaceSheetBubble } from 'types';
 

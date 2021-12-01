@@ -1,4 +1,4 @@
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 import { DbPrimaryKeys, DbUserItem } from 'types';
 import { removeUndefinedFromObject } from 'utils';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';

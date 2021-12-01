@@ -1,4 +1,4 @@
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 // deleteはidempotentな操作らしいので存在しないキーを指定しても成功する

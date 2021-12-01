@@ -1,5 +1,5 @@
 import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 
 export async function queryAllRaces(

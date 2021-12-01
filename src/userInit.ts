@@ -1,6 +1,6 @@
 import { getUserDisplayName, BotReply } from 'lineApi';
 import { getUser, putNewUser, updateUser } from 'aws';
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 import { UserMode } from 'types';
 
 export async function userRegister(userId: string) {

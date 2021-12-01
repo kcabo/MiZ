@@ -3,7 +3,7 @@ import { InvokeCommand } from '@aws-sdk/client-lambda';
 import { lambdaClient } from './lambdaClient';
 import { isPaparazzoResponse } from 'typeChecker';
 import { Race, PaparazzoResponse } from 'types';
-import ErrorLog from 'logger';
+import { ErrorLog } from 'logger';
 
 const PAPARAZZO_FUNCTION_ARN = process.env.PAPARAZZO_FUNCTION_ARN;
 
