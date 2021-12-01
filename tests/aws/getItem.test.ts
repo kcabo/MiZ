@@ -7,7 +7,7 @@ const dbUserItem: DbUserItem = {
   sk: 'USER#U123',
   userName: 'hoge',
   mode: 'swimmer',
-  isTermAgreed: true,
+  isTermAccepted: true,
   friendship: true,
   createdAt: '2021-10-11',
 };

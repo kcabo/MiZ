@@ -25,7 +25,6 @@ export type DbPrimaryKeys = {
 };
 
 export type DbRaceItem = DbPrimaryKeys & {
-  createdAt: string;
   updatedAt: string;
 } & Omit<RaceData, 'raceId'>;
 
@@ -34,7 +33,7 @@ export type UserMode = 'swimmer' | 'manager';
 export type DbUserItem = DbPrimaryKeys & {
   userName: string;
   mode: UserMode;
-  isTermAgreed: boolean;
+  isTermAccepted: boolean;
   friendship: boolean;
   createdAt: string;
 };
@@ -49,13 +48,13 @@ export type RaceSheetBubble = {
 };
 
 export type PostbackData =
-  | AgreeToTermPostback
+  | AcceptTermPostback
   | DownloadSheetPostback
   | RequestDeleteRacePostback
   | DeleteRacePostback;
 
-export type AgreeToTermPostback = {
-  type: 'agreeToTerm';
+export type AcceptTermPostback = {
+  type: 'acceptTerm';
   mode: UserMode;
 };
 

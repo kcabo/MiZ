@@ -45,14 +45,14 @@ test('update user (invalid request)', async () => {
 
 const attributes = {
   mode: 'swimmer' as const,
-  isTermAgreed: false,
+  isTermAccepted: false,
   userName: undefined,
 };
 
 test('Construct expression', () => {
   const res = constructUpdateExpression(attributes);
   expect(res).toStrictEqual(
-    'set #mode = :mode, #isTermAgreed = :isTermAgreed, #userName = #userName, #friendship = #friendship'
+    'set #mode = :mode, #isTermAccepted = :isTermAccepted, #userName = #userName, #friendship = #friendship'
   );
 });
 
@@ -60,6 +60,6 @@ test('Construct attribute values', () => {
   const res = constructUpdateAttributeValues(attributes);
   expect(res).toStrictEqual({
     ':mode': 'swimmer',
-    ':isTermAgreed': false,
+    ':isTermAccepted': false,
   });
 });

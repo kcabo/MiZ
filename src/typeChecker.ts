@@ -15,7 +15,7 @@ export function isDbUserItem(arg: any): arg is DbUserItem {
     typeof arg.userName === 'string' &&
     typeof arg.mode === 'string' &&
     ['swimmer', 'manager'].includes(arg.mode) &&
-    typeof arg.isTermAgreed === 'boolean'
+    typeof arg.isTermAccepted === 'boolean'
   );
 }
 

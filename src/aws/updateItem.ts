@@ -19,7 +19,7 @@ export async function updateUser(
   // インジェクションが怖いのであえて冗長気味に書いてる
   const names = {
     '#mode': 'mode',
-    '#isTermAgreed': 'isTermAgreed',
+    '#isTermAccepted': 'isTermAccepted',
     '#userName': 'userName',
     '#friendship': 'friendship',
   };
@@ -52,13 +52,13 @@ export async function updateUser(
 
 export function constructUpdateExpression({
   mode,
-  isTermAgreed,
+  isTermAccepted,
   userName,
   friendship,
 }: UpdateUserAttributes): string {
   const statements = [
     `#mode = ${placeholder(mode)}mode`,
-    `#isTermAgreed = ${placeholder(isTermAgreed)}isTermAgreed`,
+    `#isTermAccepted = ${placeholder(isTermAccepted)}isTermAccepted`,
     `#userName = ${placeholder(userName)}userName`,
     `#friendship = ${placeholder(friendship)}friendship`,
   ].join(', ');
@@ -67,13 +67,13 @@ export function constructUpdateExpression({
 
 export function constructUpdateAttributeValues({
   mode,
-  isTermAgreed,
+  isTermAccepted,
   userName,
   friendship,
 }: UpdateUserAttributes) {
   const allValues = {
     ':mode': mode,
-    ':isTermAgreed': isTermAgreed,
+    ':isTermAccepted': isTermAccepted,
     ':userName': userName,
     ':friendship': friendship,
   };

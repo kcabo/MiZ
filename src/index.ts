@@ -9,7 +9,7 @@ import {
 } from 'lineApi';
 import ErrorLog from 'logger';
 import { createSheet } from 'createSheet';
-import { userAgreedToTerms, userRegister } from 'userInit';
+import { userAcceptedTerms, userRegister } from 'userInit';
 import { blockedByUser } from 'blockedByUser';
 import { listRaces } from 'listRaces';
 import { PostbackData } from 'types';
@@ -23,7 +23,7 @@ export async function handler(
   // console.log(JSON.stringify(ApiGatewayEvent, null, 2));
 
   if (!valid) {
-    console.warn('Request not from LINE');
+    ErrorLog('Request not from LINE:', lineEvents);
     return { statusCode: 200, body: 'who are you?' };
   }
 
@@ -82,9 +82,9 @@ async function respondToPostback(
     return BotReply.cannotParsePostbackError();
   }
 
-  if (postbackPayload.type === 'agreeToTerm') {
+  if (postbackPayload.type === 'acceptTerm') {
     const mode = postbackPayload.mode;
-    return await userAgreedToTerms(userId, mode);
+    return await userAcceptedTerms(userId, mode);
   } else if (postbackPayload.type === 'download') {
     const raceId = postbackPayload.raceId;
     return await showSheet(userId, raceId);

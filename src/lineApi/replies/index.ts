@@ -32,7 +32,7 @@ export function failedToIdentifyUser(): TextMessage {
   );
 }
 
-export function askAgreeTerm(): TextMessage {
+export function pleaseAcceptTerm(): TextMessage {
   return textMessageBase(
     '利用規約とプライバシーポリシーに同意してからご利用いただけます。'
   );
@@ -80,7 +80,7 @@ export function putUserError(): TextMessage {
   );
 }
 
-export function alreadyAgreedToTerm(): TextMessage {
+export function termsAlreadyAccepted(): TextMessage {
   return textMessageBase(
     '利用規約には既に同意いただけております。引き続きご利用ください'
   );

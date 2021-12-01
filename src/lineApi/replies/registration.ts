@@ -1,13 +1,13 @@
 import { FlexMessage } from '@line/bot-sdk';
-import { AgreeToTermPostback } from 'types';
+import { AcceptTermPostback } from 'types';
 
 export function registration(): FlexMessage {
-  const startAsSwimmerPostback: AgreeToTermPostback = {
-    type: 'agreeToTerm',
+  const startAsSwimmerPostback: AcceptTermPostback = {
+    type: 'acceptTerm',
     mode: 'swimmer',
   };
-  const startAsManagerPostback: AgreeToTermPostback = {
-    type: 'agreeToTerm',
+  const startAsManagerPostback: AcceptTermPostback = {
+    type: 'acceptTerm',
     mode: 'manager',
   };
   return {

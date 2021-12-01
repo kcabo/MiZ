@@ -16,7 +16,6 @@ export async function putNewRace(raceData: RaceData, userId: string) {
     courseLength: raceData.courseLength,
     meet: raceData.meet,
     place: raceData.place,
-    createdAt: now,
     updatedAt: now,
   };
 
@@ -33,7 +32,7 @@ export async function putNewUser(userId: string, userName: string) {
     sk: 'USER#' + userId,
     userName: userName,
     mode: 'swimmer', // デフォルト値
-    isTermAgreed: false, // 同意したらこの属性をアップデート
+    isTermAccepted: false, // 同意したらこの属性をアップデート
     friendship: true,
     createdAt: now,
   };

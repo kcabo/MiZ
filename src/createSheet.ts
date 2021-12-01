@@ -23,8 +23,8 @@ export async function createSheet(
     return BotReply.failedToIdentifyUser();
   }
 
-  if (!user.isTermAgreed) {
-    return BotReply.askAgreeTerm();
+  if (!user.isTermAccepted) {
+    return BotReply.pleaseAcceptTerm();
   }
 
   const messageText = complementSwimmerNameToText(user, message.text);

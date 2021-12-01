@@ -25,7 +25,7 @@ export async function userRegister(userId: string) {
   return BotReply.registration();
 }
 
-export async function userAgreedToTerms(userId: string, mode: UserMode) {
+export async function userAcceptedTerms(userId: string, mode: UserMode) {
   // ユーザーの存在を一応確認
   const user = await getUser(userId);
   if (!user) {
@@ -34,14 +34,14 @@ export async function userAgreedToTerms(userId: string, mode: UserMode) {
   }
 
   // すでに同意しているか確認
-  if (user.isTermAgreed) {
-    return BotReply.alreadyAgreedToTerm();
+  if (user.isTermAccepted) {
+    return BotReply.termsAlreadyAccepted();
   }
 
   // ユーザー情報の書き換え 規約の同意とモードの設定
   const userStatus = {
     mode: mode,
-    isTermAgreed: true,
+    isTermAccepted: true,
   };
   const result = await updateUser(userId, userStatus);
   if (!result) {
