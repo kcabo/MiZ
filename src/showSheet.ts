@@ -8,7 +8,9 @@ export async function showSheet(
 ): Promise<Message | Message[]> {
   // 念の為対象ユーザーが当該raceIdのデータを保持していることを確認
   // 万が一FlexMessageがクライアント側で書き換えられた場合、意図せず他人のデータを渡してしまう可能性があるため
-  if (!checkRaceExists(userId, raceId)) {
+  const isUserOwnsRace = await checkRaceExists(userId, raceId);
+
+  if (!isUserOwnsRace) {
     return BotReply.cannotGetRace();
   }
 

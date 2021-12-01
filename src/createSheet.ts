@@ -3,24 +3,26 @@ import { Message, TextEventMessage } from '@line/bot-sdk';
 import {
   createRace,
   requestGenerateSheet,
-  getUser,
-  getCachedMeetData,
+  fetchUser,
+  fetchCachedMeetData,
 } from 'aws';
 import { BotReply } from 'lineApi';
 import { parseToRaceCoreData } from 'timeParser';
 import { formattedToday } from 'utils';
 import { DbUserItem, Race } from 'types';
-import { ErrorLog } from 'logger';
+import { ItemNotFoundFromDB } from 'exceptions';
 import { sheetImageMessage } from 'showSheet';
 
 export async function createSheet(
   message: TextEventMessage,
   userId: string
 ): Promise<Message | Message[]> {
-  const user = await getUser(userId);
-  if (!user) {
-    ErrorLog('Cannot find user:', userId);
+  const user = await fetchUser(userId);
+
+  if (user instanceof ItemNotFoundFromDB) {
     return BotReply.failedToIdentifyUser();
+  } else if (user instanceof Error) {
+    return BotReply.unExpectedError();
   }
 
   if (!user.isTermAccepted) {
@@ -35,7 +37,7 @@ export async function createSheet(
 
   const raceId = message.id;
   const date = formattedToday();
-  const cachedMeet = await getCachedMeetData(userId);
+  const cachedMeet = await fetchCachedMeetData(userId);
   const race: Race = { date, ...cachedMeet, ...raceCoreData };
 
   const generateSheetResult = await requestGenerateSheet(raceId, race);

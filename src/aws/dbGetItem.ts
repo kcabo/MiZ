@@ -1,101 +1,98 @@
-import { ErrorLog } from 'logger';
-import { DbRaceItem, DbUserItem, Meet } from 'types';
-import { isDbRaceItem, isDbUserItem } from 'typeGuard';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
+import { dbErrorLog, ErrorLog } from 'logger';
+import { MeetKeys } from 'types';
+import { isDbRaceItem, isDbUserItem, isMeet } from 'typeGuard';
+import { InvalidItem, ItemNotFoundFromDB } from 'exceptions';
 
-type DbGetResult =
-  | {
-      [key: string]: any;
-    }
-  | {
-      error: true;
-    }
-  | undefined;
-
-async function getRequest(
-  userId: string,
-  sk: string,
-  select?: string
-): Promise<DbGetResult> {
-  try {
-    const { Item } = await documentClient.get({
-      TableName: RACE_TABLE_NAME,
-      ProjectionExpression: select,
-      Key: {
-        userId: userId,
-        sk: sk,
-      },
-    });
-
-    return Item;
-  } catch (error) {
-    ErrorLog(`Get Request Failed on userId=${userId} and sk=${sk}:`, error);
-    return { error: true };
-  }
+export async function fetchRaceItem(userId: string, raceId: string) {
+  return await dbGetRequest(userId, raceId, { validation: isDbRaceItem });
 }
 
-export async function getUser(userId: string): Promise<DbUserItem | undefined> {
-  const sk = 'USER#' + userId;
-  const item = await getRequest(userId, sk);
-
-  if (!item || item.error === true) {
-    return undefined;
-  } else if (!isDbUserItem(item)) {
-    ErrorLog('Cannot recognize the item received from db:', item);
-    return undefined;
-  }
-
-  return item;
-}
-
-export async function getCachedMeetData(userId: string): Promise<Meet> {
+export async function fetchCachedMeetData(userId: string) {
   const sk = 'CACHE#' + userId;
-  const item = await getRequest(userId, sk);
-
-  if (!item || item.error === true) {
+  const result = await dbGetRequest(userId, sk, {
+    validation: isMeet,
+    selectKeys: MeetKeys,
+  });
+  if (result instanceof Error) {
     return {};
   }
-
-  const meetObj = onlyMeetKeyValue(item);
-  return meetObj;
+  return result;
 }
 
-export async function checkRaceExists(
-  userId: string,
-  raceId: string
-): Promise<boolean> {
-  const sk = raceId;
-  const item = await getRequest(userId, sk, 'sk');
+export async function fetchUser(userId: string) {
+  const sk = 'USER#' + userId;
+  return await dbGetRequest(userId, sk, { validation: isDbUserItem });
+}
 
-  if (!item || item.error === true) {
-    return false;
-  }
+export async function checkRaceExists(userId: string, raceId: string) {
+  return await checkExists(userId, raceId);
+}
 
+export async function checkUserExists(userId: string) {
+  const sk = 'USER#' + userId;
+  return await checkExists(userId, sk);
+}
+
+async function checkExists(userId: string, sk: string) {
+  const result = await dbGetRequest(userId, sk, { selectKeys: ['sk'] });
+  if (result instanceof Error) return false;
   return true;
 }
 
-export async function getRace(
+async function dbGetRequest<T = any>(
   userId: string,
-  raceId: string
-): Promise<DbRaceItem | undefined> {
-  const sk = raceId;
-  const item = await getRequest(userId, sk);
-
-  if (!item || item.error === true) {
-    return undefined;
-  } else if (!isDbRaceItem(item)) {
-    ErrorLog('Cannot recognize the item received from db:', item);
-    return undefined;
+  sk: string,
+  options: {
+    validation?: (arg: any) => arg is T;
+    selectKeys?: string[];
   }
+): Promise<T | Error> {
+  const { validation, selectKeys } = options;
 
-  return item;
+  const dynamicCommand = selectKeys
+    ? constructGetSelectCommand(selectKeys)
+    : {};
+
+  const keys = { userId, sk };
+
+  try {
+    const { Item } = await documentClient.get({
+      ...dynamicCommand,
+      TableName: RACE_TABLE_NAME,
+      Key: keys,
+    });
+
+    if (typeof Item === 'undefined') {
+      return new ItemNotFoundFromDB();
+    }
+
+    if (validation && !validation(Item)) {
+      ErrorLog('Unknown Data!!', Item);
+      return new InvalidItem();
+    }
+
+    return Item as T;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      dbErrorLog('get', keys, error);
+      return error;
+    } else {
+      throw new Error();
+    }
+  }
 }
 
-function onlyMeetKeyValue(obj: { [key: string]: any }): Meet {
-  return Object.fromEntries(
-    Object.entries(obj).filter(
-      ([k, v]) =>
-        typeof v === 'string' && ['courseLength', 'meet', 'place'].includes(k)
-    )
-  );
+function constructGetSelectCommand(keys: string[]) {
+  const initialValue: { [key: string]: any } = {};
+
+  const names = keys.reduce((accumulator, currentValue) => {
+    accumulator[`#${currentValue}`] = currentValue;
+    return accumulator;
+  }, initialValue);
+
+  return {
+    ProjectionExpression: keys.map((k) => `#${k}`).join(', '),
+    ExpressionAttributeNames: names,
+  };
 }

@@ -1,6 +1,7 @@
 import { Message } from '@line/bot-sdk';
 
-import { getRace, deleteRaceItem } from 'aws';
+import { fetchRaceItem, deleteRaceItem } from 'aws';
+import { ItemNotFoundFromDB } from 'exceptions';
 import { BotReply } from 'lineApi';
 import { isAlreadyPassedBy } from 'utils';
 
@@ -8,12 +9,15 @@ export async function confirmDeleteRace(
   userId: string,
   raceId: string
 ): Promise<Message | Message[]> {
-  const race = await getRace(userId, raceId);
-  if (!race) {
+  const raceItem = await fetchRaceItem(userId, raceId);
+
+  if (raceItem instanceof ItemNotFoundFromDB) {
     return BotReply.cannotGetRace();
+  } else if (raceItem instanceof Error) {
+    return BotReply.unExpectedError();
   }
 
-  return BotReply.confirmDeleteRace(race);
+  return BotReply.confirmDeleteRace(raceItem);
 }
 
 export async function confirmedDeleteRace(

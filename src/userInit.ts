@@ -1,11 +1,13 @@
 import { getUserDisplayName, BotReply } from 'lineApi';
-import { getUser, createUser, updateUser } from 'aws';
+import { createUser, updateUser, checkUserExists } from 'aws';
 import { ErrorLog } from 'logger';
 import { UserMode } from 'types';
 
 export async function userRegister(userId: string) {
   // 既にDBに登録しているかどうか確認
-  const user = await getUser(userId);
+  const user = await checkUserExists(userId);
+
+  // 登録済みならブロック解除として扱う
   if (user) {
     const result = await updateUser(userId, { friendship: true });
     if (!result) {
@@ -14,35 +16,26 @@ export async function userRegister(userId: string) {
     return BotReply.returnFromBlock();
   }
 
-  // デフォルト値で登録
+  // 見つからなければ新規ユーザーの友達登録として扱う
   const userName = await getUserDisplayName(userId);
   const result = await createUser(userId, userName);
   if (result instanceof Error) {
     return BotReply.putUserError();
   }
-
-  // 規約に同意して始めるボタンを返す
   return BotReply.registration();
 }
 
 export async function userAcceptedTerms(userId: string, mode: UserMode) {
   // ユーザーの存在を一応確認
-  const user = await getUser(userId);
+  const user = await checkUserExists(userId);
+
   if (!user) {
     ErrorLog('Cannot find user:', userId);
     return BotReply.failedToIdentifyUser();
   }
 
-  // すでに同意しているか確認
-  if (user.isTermAccepted) {
-    return BotReply.termsAlreadyAccepted();
-  }
-
   // ユーザー情報の書き換え 規約の同意とモードの設定
-  const userStatus = {
-    mode: mode,
-    isTermAccepted: true,
-  };
+  const userStatus = { mode, isTermAccepted: true };
   const result = await updateUser(userId, userStatus);
   if (!result) {
     return BotReply.updateUserError();

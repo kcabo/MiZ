@@ -4,8 +4,8 @@ import {
   PaparazzoResponse,
   Race,
   CentiSeconds,
-  DbMeetCacheItem,
   UserSettings,
+  Meet,
 } from './types';
 
 export function isPaparazzoResponse(arg: any): arg is PaparazzoResponse {
@@ -59,13 +59,9 @@ export function isDbRaceItem(arg: any): arg is DbRaceItem {
   );
 }
 
-export function isDbMeetCacheItem(arg: any): arg is DbMeetCacheItem {
+export function isMeet(arg: any): arg is Meet {
   return (
     !!arg &&
-    typeof arg.userId === 'string' &&
-    typeof arg.sk === 'string' &&
-    arg.sk.startsWith('CACHE#') &&
-    typeof arg.ttl === 'number' &&
     isCourseLength(arg.courseLength) &&
     undefinedOrString(arg.meet) &&
     undefinedOrString(arg.place)
