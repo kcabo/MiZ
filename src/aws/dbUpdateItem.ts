@@ -1,88 +1,95 @@
-import { ErrorLog } from 'lib/logger';
-import { removeUndefinedFromObject } from 'lib/utils';
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
+import { dbErrorLog, ErrorLog } from 'lib/logger';
+import {
+  UserSettings,
+  UserSettingsKeys,
+  UserStatus,
+  UserStatusKeys,
+} from 'types';
 
-type UpdateUserAttributes = Partial<{
-  mode: string;
-  isTermAccepted: boolean;
-  userName: string;
-  friendship: boolean;
-}>;
+type AmbiguousObject = { [key: string]: string | number | boolean };
+type UpdatableUserData = Partial<UserSettings | UserStatus>;
 
 export async function updateUser(
   userId: string,
-  attributes: UpdateUserAttributes
-) {
-  const key = {
-    userId: userId,
-    sk: 'USER#' + userId,
-  };
-
-  // インジェクションが怖いのであえて冗長気味に書いてる
-  const names = {
-    '#mode': 'mode',
-    '#isTermAccepted': 'isTermAccepted',
-    '#userName': 'userName',
-    '#friendship': 'friendship',
-  };
-
-  const expression = constructUpdateExpression(attributes);
-  const values = constructUpdateAttributeValues(attributes);
+  target: UpdatableUserData
+): Promise<0 | Error> {
+  const sk = 'USER#' + userId;
+  const allowedKeys = [...UserSettingsKeys, ...UserStatusKeys];
 
   try {
-    const output = await documentClient.update({
-      TableName: RACE_TABLE_NAME,
-      Key: key,
-      UpdateExpression: expression,
-      ExpressionAttributeNames: names,
-      ExpressionAttributeValues: values,
-    });
-
-    if (output.$metadata.httpStatusCode !== 200) {
-      ErrorLog(`Failed to update user status on ${userId}:`, attributes);
-      ErrorLog('db output:', output);
-      return undefined;
+    await dbUpdateRequest(userId, sk, target, allowedKeys, 'isTermAccepted'); // 既存のUserItemなら必ずisTermAcceptedのattributeが存在しているはず
+    return 0;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      dbErrorLog('update', { userId, sk, ...target }, error);
+      return error;
+    } else {
+      throw new Error();
     }
-
-    return output;
-  } catch (e) {
-    ErrorLog(`Invalid update request by ${userId}:`, attributes);
-    ErrorLog('Raised Error:', e);
-    return undefined;
   }
 }
 
-export function constructUpdateExpression({
-  mode,
-  isTermAccepted,
-  userName,
-  friendship,
-}: UpdateUserAttributes): string {
-  const statements = [
-    `#mode = ${placeholder(mode)}mode`,
-    `#isTermAccepted = ${placeholder(isTermAccepted)}isTermAccepted`,
-    `#userName = ${placeholder(userName)}userName`,
-    `#friendship = ${placeholder(friendship)}friendship`,
-  ].join(', ');
-  return 'set ' + statements;
+async function dbUpdateRequest<T extends AmbiguousObject>(
+  userId: string,
+  sk: string,
+  data: T,
+  allowedKeys: string[],
+  attributeToCheckExists: string
+) {
+  const output = await documentClient.update({
+    TableName: RACE_TABLE_NAME,
+    Key: {
+      userId: userId,
+      sk: sk,
+    },
+    ...constructUpdateCommand(data, allowedKeys, attributeToCheckExists),
+    ConditionExpression: `attribute_exists(#${attributeToCheckExists})`, // 新規作成防止のための確認。対象データにしか存在しないキーを指定
+  });
+
+  return output;
 }
 
-export function constructUpdateAttributeValues({
-  mode,
-  isTermAccepted,
-  userName,
-  friendship,
-}: UpdateUserAttributes) {
-  const allValues = {
-    ':mode': mode,
-    ':isTermAccepted': isTermAccepted,
-    ':userName': userName,
-    ':friendship': friendship,
+type Commands = {
+  expressions: `#${string} = :${string}`[];
+  names: { [key: `#${string}`]: string };
+  values: { [key: `:${string}`]: string | number | boolean };
+};
+
+function constructUpdateCommand<T extends AmbiguousObject>(
+  updateData: T,
+  allowedKeys: (keyof T)[],
+  additionalAttributeName?: string
+) {
+  const { expressions, names, values } = Object.entries(updateData).reduce(
+    (accumulator: Commands, [key, item]) => {
+      // keysには決められた値のリストのいずれかしか入らない
+      if (!allowedKeys.includes(key)) {
+        ErrorLog('Not allowed key detected:', updateData);
+        throw new Error('Not allowed key detected');
+      }
+
+      accumulator.expressions.push(`#${key} = :${key}`);
+      accumulator.names[`#${key}`] = key;
+      accumulator.values[`:${key}`] = item; // ただしitemには任意の値が入る
+
+      return accumulator;
+    },
+    { expressions: [], names: {}, values: {} }
+  );
+
+  if (additionalAttributeName) {
+    names[`#${additionalAttributeName}`] = additionalAttributeName;
+  }
+
+  return {
+    UpdateExpression: 'set ' + expressions.join(', '),
+    ExpressionAttributeNames: names,
+    ExpressionAttributeValues: values,
   };
-  const values = removeUndefinedFromObject(allValues);
-  return values;
 }
 
-function placeholder(arg: any): ':' | '#' {
-  return typeof arg == 'undefined' ? '#' : ':';
-}
+// for test only
+export const __local__ = {
+  constructUpdateCommand,
+};

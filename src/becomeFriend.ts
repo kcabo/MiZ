@@ -8,7 +8,7 @@ export async function becomeFriend(userId: string) {
   // 登録済みならブロック解除として扱う
   if (user) {
     const result = await updateUser(userId, { friendship: true });
-    if (!result) {
+    if (result instanceof Error) {
       return BotReply.updateUserError();
     }
     return BotReply.returnFromBlock();

@@ -15,7 +15,7 @@ export async function startService(userId: string, mode: UserMode) {
   // ユーザー情報の書き換え 規約の同意とモードの設定
   const userStatus = { mode, isTermAccepted: true };
   const result = await updateUser(userId, userStatus);
-  if (!result) {
+  if (result instanceof Error) {
     return BotReply.updateUserError();
   }
 
