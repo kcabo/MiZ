@@ -9,7 +9,7 @@ import {
 import { BotReply } from 'lineApi';
 import { parseToRaceCoreData } from 'lib/timeParser';
 import { formattedToday } from 'lib/utils';
-import { DbUserItem, Race } from 'types';
+import { Race, RaceCoreData } from 'types';
 import { ItemNotFoundFromDB } from 'exceptions';
 import { sheetImageMessage } from 'showSheet';
 
@@ -29,16 +29,23 @@ export async function createSheet(
     return BotReply.pleaseAcceptTerm();
   }
 
-  const messageText = complementSwimmerNameToText(user, message.text);
-  const { raceCoreData, error } = parseToRaceCoreData(messageText);
-  if (!raceCoreData) {
+  let parsed: RaceCoreData | SyntaxError;
+
+  // 選手モードなら選手名なし・いきなり種目名からのメッセージ
+  if (user.mode === 'swimmer') {
+    parsed = parseToRaceCoreData([user.userName, message.text].join('\n'));
+  } else {
+    parsed = parseToRaceCoreData(message.text);
+  }
+
+  if (parsed instanceof SyntaxError) {
     return BotReply.askFixCreateSheetFormat();
   }
 
   const raceId = message.id;
   const date = formattedToday();
   const cachedMeet = await fetchCachedMeetData(userId);
-  const race: Race = { date, ...cachedMeet, ...raceCoreData };
+  const race: Race = { date, ...cachedMeet, ...parsed };
 
   const generateSheetResult = await requestGenerateSheet(raceId, race);
   if (generateSheetResult.status == 'error') {
@@ -51,17 +58,4 @@ export async function createSheet(
   }
 
   return await sheetImageMessage(raceId);
-}
-
-function complementSwimmerNameToText(
-  user: DbUserItem,
-  message: string
-): string {
-  let messageText: string;
-  if (user.mode == 'swimmer') {
-    messageText = [user.userName, message].join('\n');
-  } else {
-    messageText = message;
-  }
-  return messageText;
 }

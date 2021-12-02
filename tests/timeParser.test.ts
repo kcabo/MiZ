@@ -1,9 +1,7 @@
-import {
-  parseToRaceCoreData,
-  toCentiSeconds,
-  toCentiSecondsArray,
-} from 'lib/timeParser';
+import { parseToRaceCoreData, __local__ } from 'lib/timeParser';
 import { RaceCoreData } from 'types';
+
+const { toCentiSeconds, toCentiSecondsArray } = __local__;
 
 test('Time Parsing (unit)', () => {
   expect(toCentiSeconds('2')).toBe(2);
@@ -55,7 +53,7 @@ test('positive: event, reaction, time', () => {
     reaction: 62,
     cumulativeTime: [2945, 6276],
   };
-  expect(parseToRaceCoreData(userInput)).toEqual({ raceCoreData: output });
+  expect(parseToRaceCoreData(userInput)).toStrictEqual(output);
 });
 
 test('positive: event, time', () => {
@@ -70,7 +68,7 @@ test('positive: event, time', () => {
     event: '200mバタフライ',
     cumulativeTime: [2822, 5930, 9211, 12873],
   };
-  expect(parseToRaceCoreData(userInput)).toEqual({ raceCoreData: output });
+  expect(parseToRaceCoreData(userInput)).toStrictEqual(output);
 });
 
 test('negative parsing', () => {
@@ -83,8 +81,9 @@ test('negative parsing', () => {
     '',
     '\n\n',
   ];
-  const result = { error: 'unmatching pattern' };
   invalidInputs.map((input) => {
-    expect(parseToRaceCoreData(input)).toEqual(result);
+    expect(parseToRaceCoreData(input)).toStrictEqual(
+      SyntaxError('invalid pattern')
+    );
   });
 });
