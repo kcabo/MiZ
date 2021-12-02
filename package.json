@@ -5,7 +5,7 @@
   "description": "create your own certification of swimming races on the cloud!",
   "scripts": {
     "build": "node esbuild.config.js",
-    "dev": "serverless offline",
+    "dev": "export $(cat .env | xargs) && serverless offline",
     "expose": "lt --port 3000 --subdomain ${LOCALTUNNEL_SUBDOMAIN} --print-requests",
     "test": "jest --coverage",
     "preinstall": "npx npm-force-resolutions"

@@ -7,6 +7,8 @@ declare global {
       PAPARAZZO_BUCKET_NAME: string;
       DYNAMODB_RACE_TABLE_NAME: string;
       PRESIGN_EXPIRES_IN: string;
+      RACES_LIFF_ID: string;
+      SETTINGS_LIFF_ID: string;
     }
   }
 }
