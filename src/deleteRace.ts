@@ -1,6 +1,6 @@
 import { Message } from '@line/bot-sdk';
 
-import { fetchRace, deleteRaceItem } from 'aws';
+import { fetchRace, deleteRaceItem, deleteSheetImage } from 'aws';
 import { ItemNotFoundFromDB } from 'exceptions';
 import { BotReply } from 'lineApi';
 import { isAlreadyPassedBy } from 'lib/utils';
@@ -30,10 +30,16 @@ export async function confirmedDeleteRace(
     return BotReply.confirmDeleteTooLate();
   }
 
-  const result = await deleteRaceItem(userId, raceId);
-  if (result instanceof ItemNotFoundFromDB) {
+  const dbResult = await deleteRaceItem(userId, raceId);
+  if (dbResult instanceof ItemNotFoundFromDB) {
     return BotReply.noRaceFound();
-  } else if (result instanceof Error) {
+  } else if (dbResult instanceof Error) {
+    return BotReply.unExpectedError();
+  }
+
+  // データベースの削除リクエストでレースデータの所有は確認済みのため、画像削除をしても安全
+  const s3Result = await deleteSheetImage(raceId);
+  if (s3Result instanceof Error) {
     return BotReply.unExpectedError();
   }
 
