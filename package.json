@@ -17,7 +17,8 @@
     "@aws-sdk/lib-dynamodb": "^3.43.0",
     "@aws-sdk/s3-request-presigner": "^3.43.0",
     "@line/bot-sdk": "^7.4.0",
-    "dayjs": "^1.10.7"
+    "dayjs": "^1.10.7",
+    "nanoid": "^3.1.30"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.85",
