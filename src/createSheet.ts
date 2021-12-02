@@ -7,7 +7,7 @@ import {
   fetchCachedMeetData,
 } from 'aws';
 import { BotReply } from 'lineApi';
-import { parseToRaceCoreData } from 'lib/timeParser';
+import { parseToRaceCoreData } from 'lib/parseTime';
 import { formattedToday } from 'lib/utils';
 import { Race, RaceCoreData } from 'types';
 import { ItemNotFoundFromDB, PaparazzoError } from 'exceptions';

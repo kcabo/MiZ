@@ -1,4 +1,4 @@
-import { parseToRaceCoreData, __local__ } from 'lib/timeParser';
+import { parseToRaceCoreData, __local__ } from 'lib/parseTime';
 import { RaceCoreData } from 'types';
 
 const { toCentiSeconds, toCentiSecondsArray } = __local__;
