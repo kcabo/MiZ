@@ -1,6 +1,7 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      NODE_ENV: 'development' | 'production';
       LINE_CHANNEL_ACCESS_TOKEN: string;
       LINE_CHANNEL_SECRET: string;
       PAPARAZZO_FUNCTION_ARN: string;
