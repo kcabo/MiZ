@@ -9,9 +9,10 @@ import {
 } from 'aws';
 import { BotReply } from 'lineApi';
 import { parseToRaceCoreData } from 'lib/parseTime';
-import { formattedToday } from 'lib/utils';
 import { Race, RaceCoreData } from 'types';
 import { ItemNotFoundFromDB, PaparazzoError } from 'exceptions';
+import { formattedToday } from 'lib/utils';
+import { generateId } from 'lib/generateId';
 
 export async function createSheet(
   userId: string,
@@ -42,7 +43,7 @@ export async function createSheet(
     return BotReply.askFixCreateSheetFormat();
   }
 
-  const raceId = message.id;
+  const raceId = generateId();
   const date = formattedToday();
   const cachedMeet = await fetchCachedMeetData(userId);
   const race: Race = { date, ...cachedMeet, ...parsed };
