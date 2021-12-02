@@ -23,7 +23,7 @@ export async function listRaces(userId: string): Promise<Message | Message[]> {
       url: await generateURLforDownload(sk + '.png'),
     }))
   );
-  return BotReply.listRaceFlex(urls);
+  return BotReply.sheetImageCarousel(urls);
 
   // ページングや絞り込み、表示の切り替えはクイックリプライアクションに設定
   // とりあえずはこれらはなしで

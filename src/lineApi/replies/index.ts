@@ -2,7 +2,7 @@ import { ImageMessage, StickerMessage, TextMessage } from '@line/bot-sdk';
 
 import { getRandomIntInclusive } from 'lib/utils';
 
-export { listRaceFlex } from './listRaceFlex';
+export { sheetImageCarousel } from './sheetImageCarousel';
 export { registration } from './registration';
 export { confirmDeleteRace } from './confirmDeleteRace';
 

@@ -2,7 +2,7 @@ import { FlexBox, FlexBubble, FlexMessage } from '@line/bot-sdk';
 
 import { DownloadSheetPostback, RequestDeleteRacePostback } from 'types';
 
-export function listRaceFlex(
+export function sheetImageCarousel(
   races: { raceId: string; url: string }[]
 ): FlexMessage {
   const bubbles = races.map(({ raceId, url }) => sheetBubble(raceId, url));
