@@ -9,10 +9,11 @@ export async function rerenderSheet(
   raceId: string
 ): Promise<Message | Message[]> {
   const race = await fetchRace(userId, raceId);
+
   if (race instanceof ItemNotFoundFromDB) {
     return BotReply.noRaceFound();
   } else if (race instanceof Error) {
-    return BotReply.unExpectedError();
+    return BotReply.dbRequestFailed();
   }
 
   // 画像再生成

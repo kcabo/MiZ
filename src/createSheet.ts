@@ -23,7 +23,7 @@ export async function createSheet(
   if (user instanceof ItemNotFoundFromDB) {
     return BotReply.failedToIdentifyUser();
   } else if (user instanceof Error) {
-    return BotReply.unExpectedError();
+    return BotReply.dbRequestFailed();
   }
 
   if (!user.isTermAccepted) {
@@ -55,6 +55,7 @@ export async function createSheet(
   }
 
   // データ生成
+  // ここで失敗すると画像は存在するがデータがテーブルにない状況になる
   const result = await createRace(userId, raceId, race);
   if (result instanceof Error) {
     return BotReply.putRaceError();

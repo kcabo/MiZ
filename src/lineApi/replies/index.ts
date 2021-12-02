@@ -1,4 +1,4 @@
-import { ImageMessage, StickerMessage, TextMessage } from '@line/bot-sdk';
+import { StickerMessage, TextMessage } from '@line/bot-sdk';
 
 import { getRandomIntInclusive } from 'lib/utils';
 
@@ -104,7 +104,21 @@ export function noRaceFound(): TextMessage {
 }
 
 export function unExpectedError(): TextMessage {
-  return textMessageBase('予期せぬエラーが発生しました');
+  return textMessageBase(
+    '予期せぬエラーが発生しました。開発者が急いで対応いたします'
+  );
+}
+
+export function dbRequestFailed(): TextMessage {
+  return textMessageBase(
+    'データ処理中にエラーが生じました。アクセスが集中している可能性があります。時間をおいて再度お試しください'
+  );
+}
+
+export function s3DeleteRequestFailed(): TextMessage {
+  return textMessageBase(
+    '画像の削除中にエラーが生じました。アクセスが集中している可能性があります。時間をおいて再度お試しください'
+  );
 }
 
 export function cannotParsePostbackError(): TextMessage {

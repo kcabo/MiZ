@@ -13,7 +13,7 @@ export async function listRaces(userId: string): Promise<Message | Message[]> {
   if (result instanceof ItemNotFoundFromDB) {
     return BotReply.noRaceFound();
   } else if (result instanceof Error) {
-    return BotReply.unExpectedError();
+    return BotReply.dbRequestFailed();
   }
 
   const { raceIds } = result;

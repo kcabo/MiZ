@@ -14,7 +14,7 @@ export async function confirmDeleteRace(
   if (race instanceof ItemNotFoundFromDB) {
     return BotReply.noRaceFound();
   } else if (race instanceof Error) {
-    return BotReply.unExpectedError();
+    return BotReply.dbRequestFailed();
   }
 
   return BotReply.confirmDeleteRace(raceId, race);
@@ -34,13 +34,13 @@ export async function confirmedDeleteRace(
   if (dbResult instanceof ItemNotFoundFromDB) {
     return BotReply.noRaceFound();
   } else if (dbResult instanceof Error) {
-    return BotReply.unExpectedError();
+    return BotReply.dbRequestFailed();
   }
 
   // データベースの削除リクエストでレースデータの所有は確認済みのため、画像削除をしても安全
   const s3Result = await deleteSheetImage(raceId);
   if (s3Result instanceof Error) {
-    return BotReply.unExpectedError();
+    return BotReply.s3DeleteRequestFailed();
   }
 
   return BotReply.successfullyDeletedRace();
