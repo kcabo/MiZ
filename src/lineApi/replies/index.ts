@@ -116,10 +116,6 @@ export function cannotParsePostbackError(): TextMessage {
   return textMessageBase('ポストバック送信データが不正です');
 }
 
-export function cannotGetRace(): TextMessage {
-  return textMessageBase('表示するレースデータが見つかりませんでした。');
-}
-
 export function confirmDeleteTooLate(): TextMessage {
   return textMessageBase(
     '削除リクエストの有効期限が切れました。始めからやり直してください。'

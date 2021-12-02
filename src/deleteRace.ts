@@ -12,7 +12,7 @@ export async function confirmDeleteRace(
   const raceItem = await fetchRaceItem(userId, raceId);
 
   if (raceItem instanceof ItemNotFoundFromDB) {
-    return BotReply.cannotGetRace();
+    return BotReply.noRaceFound();
   } else if (raceItem instanceof Error) {
     return BotReply.unExpectedError();
   }

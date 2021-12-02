@@ -10,7 +10,7 @@ export async function showSheet(
   const isUserOwnsRace = await checkRaceExists(userId, raceId);
 
   if (!isUserOwnsRace) {
-    return BotReply.cannotGetRace();
+    return BotReply.noRaceFound();
   }
 
   const sheetObjectKey = raceId + '.png';
