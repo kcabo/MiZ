@@ -16,6 +16,7 @@ import { listRaces } from 'listRaces';
 import { PostbackData } from 'types';
 import { showSheet } from 'showSheet';
 import { confirmDeleteRace, confirmedDeleteRace } from 'deleteRace';
+import { rerenderSheet } from 'rerenderSheet';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -66,11 +67,15 @@ async function respondToMessage(
     return await listRaces(userId);
   }
 
+  if (/^!render=\w+$/.test(message.text)) {
+    return await rerenderSheet(userId, message.text);
+  }
+
   if (!message.text.includes('\n')) {
     return BotReply.tellIamBot();
   }
 
-  return await createSheet(message, userId);
+  return await createSheet(userId, message);
 }
 
 async function respondToPostback(

@@ -14,8 +14,8 @@ import { Race, RaceCoreData } from 'types';
 import { ItemNotFoundFromDB, PaparazzoError } from 'exceptions';
 
 export async function createSheet(
-  message: TextEventMessage,
-  userId: string
+  userId: string,
+  message: TextEventMessage
 ): Promise<Message | Message[]> {
   const user = await fetchUser(userId);
 
