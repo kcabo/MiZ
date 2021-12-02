@@ -91,9 +91,9 @@ function footer(raceId: string): FlexBox {
         width: '50px',
         action: {
           type: 'postback',
-          label: 'ダウンロード',
+          label: '保存',
           data: JSON.stringify(downloadActionPayload),
-          displayText: '[ダウンロード]',
+          displayText: '[保存]',
         },
         justifyContent: 'center',
       },

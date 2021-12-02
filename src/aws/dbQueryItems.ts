@@ -7,7 +7,7 @@ export async function queryAllRaces(
   userId: string,
   startKey?: { [key: string]: any }
 ) {
-  return await dbQueryRequest(userId, 19, startKey);
+  return await dbQueryRequest(userId, 10, startKey);
 }
 
 async function dbQueryRequest(
