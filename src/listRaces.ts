@@ -20,7 +20,7 @@ export async function listRaces(userId: string): Promise<Message | Message[]> {
   const urls = await Promise.all(
     raceIds.map(async ({ sk }) => ({
       raceId: sk,
-      url: await generateURLforDownload(sk + '.png'),
+      url: await generateURLforDownload(sk),
     }))
   );
   return BotReply.sheetImageCarousel(urls);

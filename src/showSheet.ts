@@ -13,7 +13,6 @@ export async function showSheet(
     return BotReply.noRaceFound();
   }
 
-  const sheetObjectKey = raceId + '.png';
-  const url = await generateURLforDownload(sheetObjectKey);
+  const url = await generateURLforDownload(raceId);
   return BotReply.sheetImage(raceId, url, { imageOnly: true }); // 画像だけを単体で送信する
 }

@@ -21,7 +21,6 @@ export async function rerenderSheet(
     return BotReply.paparazzoError();
   }
 
-  const sheetObjectKey = raceId + '.png';
-  const url = await generateURLforDownload(sheetObjectKey);
+  const url = await generateURLforDownload(raceId);
   return BotReply.sheetImage(raceId, url);
 }

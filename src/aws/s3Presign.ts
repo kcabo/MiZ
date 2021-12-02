@@ -5,7 +5,8 @@ const BUCKET_NAME = process.env.PAPARAZZO_BUCKET_NAME;
 const PRESIGN_EXPIRES_IN = Number(process.env.PRESIGN_EXPIRES_IN) || 100;
 const s3 = new S3Client({ region: 'ap-northeast-1' });
 
-export async function generateURLforDownload(objectKey: string) {
+export async function generateURLforDownload(raceId: string) {
+  const objectKey = raceId + '.png';
   const param = {
     Bucket: BUCKET_NAME,
     Key: objectKey,

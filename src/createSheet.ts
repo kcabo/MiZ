@@ -60,7 +60,6 @@ export async function createSheet(
     return BotReply.putRaceError();
   }
 
-  const sheetObjectKey = raceId + '.png';
-  const url = await generateURLforDownload(sheetObjectKey);
+  const url = await generateURLforDownload(raceId);
   return BotReply.sheetImage(raceId, url);
 }
