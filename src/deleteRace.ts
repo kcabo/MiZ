@@ -31,7 +31,9 @@ export async function confirmedDeleteRace(
   }
 
   const result = await deleteRaceItem(userId, raceId);
-  if (result instanceof Error) {
+  if (result instanceof ItemNotFoundFromDB) {
+    return BotReply.noRaceFound();
+  } else if (result instanceof Error) {
     return BotReply.unExpectedError();
   }
 
