@@ -66,16 +66,15 @@ function footer(raceId: string): FlexBox {
         contents: [
           {
             type: 'icon',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/delete.png',
+            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/edit.png',
             size: 'xxl',
           },
         ],
         width: '50px',
         action: {
-          type: 'postback',
-          label: '削除',
-          data: JSON.stringify(requestDeleteRaceActionPayload),
-          displayText: '[削除する]',
+          type: 'uri',
+          label: '編集',
+          uri: editRaceLiffUrl,
         },
         justifyContent: 'center',
       },
@@ -98,21 +97,23 @@ function footer(raceId: string): FlexBox {
         },
         justifyContent: 'center',
       },
+
       {
         type: 'box',
         layout: 'baseline',
         contents: [
           {
             type: 'icon',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/edit.png',
+            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/delete.png',
             size: 'xxl',
           },
         ],
         width: '50px',
         action: {
-          type: 'uri',
-          label: '編集',
-          uri: editRaceLiffUrl,
+          type: 'postback',
+          label: '削除',
+          data: JSON.stringify(requestDeleteRaceActionPayload),
+          displayText: '[削除する]',
         },
         justifyContent: 'center',
       },

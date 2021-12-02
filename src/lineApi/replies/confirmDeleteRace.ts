@@ -7,7 +7,7 @@ export function confirmDeleteRace(raceId: string, race: Race): FlexMessage {
   const deleteRaceActionPayload: DeleteRacePostback = {
     type: 'delete',
     raceId: raceId,
-    expiresAt: nowUnix() + 60, // 60秒間有効
+    expiresAt: nowUnix() + 20, // 20秒間有効
   };
 
   return {
