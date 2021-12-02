@@ -1,12 +1,12 @@
 import { FlexMessage } from '@line/bot-sdk';
 
 import { nowUnix } from 'lib/utils';
-import { DbRaceItem, DeleteRacePostback } from 'types';
+import { DeleteRacePostback, Race } from 'types';
 
-export function confirmDeleteRace(race: DbRaceItem): FlexMessage {
+export function confirmDeleteRace(raceId: string, race: Race): FlexMessage {
   const deleteRaceActionPayload: DeleteRacePostback = {
     type: 'delete',
-    raceId: race.sk,
+    raceId: raceId,
     expiresAt: nowUnix() + 60, // 60秒間有効
   };
 

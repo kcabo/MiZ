@@ -2,13 +2,13 @@ import { mockClient } from 'aws-sdk-client-mock';
 import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 
 import {
-  fetchRaceItem,
+  fetchRace,
   checkRaceExists,
   fetchUser,
   checkUserExists,
   fetchCachedMeetData,
 } from 'aws';
-import { DbRaceItem, DbUserItem, Meet } from 'types';
+import { Race, DbUserItem, Meet } from 'types';
 import { InvalidItem, ItemNotFoundFromDB } from 'exceptions';
 
 const dbUserItem: DbUserItem = {
@@ -27,15 +27,12 @@ const meetData: Meet = {
   place: '会場',
 };
 
-const dbRaceItem: DbRaceItem = {
-  userId: 'Dev',
-  sk: 'USER#Dev',
+const race: Race = {
   ...meetData,
   date: '2021-12-01',
   event: '自由形決勝',
   swimmer: 'Hoge',
   cumulativeTime: [3019, 6111],
-  updatedAt: '2021-11-14T10:39:14Z',
 };
 
 const skOnly = { sk: '1' };
@@ -50,7 +47,7 @@ ddbMock
   })
   .resolves({ Item: skOnly })
   .on(GetCommand, { Key: { userId: 'RACE' } })
-  .resolves({ Item: dbRaceItem })
+  .resolves({ Item: race })
   .on(GetCommand, { Key: { userId: 'USER' } })
   .resolves({ Item: dbUserItem })
   .on(GetCommand, { Key: { userId: 'CACHE' } })
@@ -70,22 +67,22 @@ afterAll(() => jest.restoreAllMocks());
 
 describe('Get race', () => {
   test('success', async () => {
-    const output = await fetchRaceItem('RACE', '');
-    expect(output).toStrictEqual(dbRaceItem);
+    const output = await fetchRace('RACE', '');
+    expect(output).toStrictEqual(race);
   });
 
   test('sdk fail', async () => {
-    const output = await fetchRaceItem('Fail', '');
+    const output = await fetchRace('Fail', '');
     expect(output).toStrictEqual(new Error('mocked rejection'));
   });
 
   test('empty', async () => {
-    const output = await fetchRaceItem('Empty', '');
+    const output = await fetchRace('Empty', '');
     expect(output).toStrictEqual(new ItemNotFoundFromDB());
   });
 
   test('invalid', async () => {
-    const output = await fetchRaceItem('InvalidRace', '');
+    const output = await fetchRace('InvalidRace', '');
     expect(output).toStrictEqual(new InvalidItem());
   });
 });

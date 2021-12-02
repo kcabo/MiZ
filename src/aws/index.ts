@@ -2,7 +2,7 @@ export { generateURLforDownload } from './s3Presign';
 export { generateSheetImage } from './callLambda';
 export { createRace, createUser } from './dbPutItem';
 export {
-  fetchRaceItem,
+  fetchRace,
   checkRaceExists,
   fetchUser,
   checkUserExists,

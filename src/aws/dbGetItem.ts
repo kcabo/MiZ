@@ -1,11 +1,15 @@
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 import { dbErrorLog, ErrorLog } from 'lib/logger';
-import { MeetKeys } from 'types';
-import { isDbRaceItem, isDbUserItem, isMeet } from 'lib/typeGuard';
+import { MeetKeys, RaceKeys } from 'types';
+import { isDbUserItem, isMeet, isRace } from 'lib/typeGuard';
 import { InvalidItem, ItemNotFoundFromDB } from 'exceptions';
 
-export async function fetchRaceItem(userId: string, raceId: string) {
-  return await dbGetRequest(userId, raceId, { validation: isDbRaceItem });
+// メタデータは取得しない
+export async function fetchRace(userId: string, raceId: string) {
+  return await dbGetRequest(userId, raceId, {
+    validation: isRace,
+    selectKeys: RaceKeys,
+  });
 }
 
 export async function fetchCachedMeetData(userId: string) {
