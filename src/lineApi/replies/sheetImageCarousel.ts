@@ -2,6 +2,8 @@ import { FlexBox, FlexBubble, FlexMessage } from '@line/bot-sdk';
 
 import { DownloadSheetPostback, RequestDeleteRacePostback } from 'types';
 
+const RACES_LIFF_ID = process.env.RACES_LIFF_ID || '';
+
 export function sheetImageCarousel(
   races: { raceId: string; url: string }[]
 ): FlexMessage {
@@ -52,6 +54,8 @@ function footer(raceId: string): FlexBox {
     raceId: raceId,
   };
 
+  const editRaceLiffUrl = `https://liff.line.me/${RACES_LIFF_ID}/${raceId}`;
+
   return {
     type: 'box',
     layout: 'horizontal',
@@ -69,7 +73,7 @@ function footer(raceId: string): FlexBox {
         width: '50px',
         action: {
           type: 'postback',
-          label: '-',
+          label: '削除',
           data: JSON.stringify(requestDeleteRaceActionPayload),
           displayText: '[削除する]',
         },
@@ -88,7 +92,7 @@ function footer(raceId: string): FlexBox {
         width: '50px',
         action: {
           type: 'postback',
-          label: '-',
+          label: 'ダウンロード',
           data: JSON.stringify(downloadActionPayload),
           displayText: '[ダウンロード]',
         },
@@ -106,10 +110,9 @@ function footer(raceId: string): FlexBox {
         ],
         width: '50px',
         action: {
-          type: 'postback',
-          label: '-',
-          data: '{"sk": "21899111", "type":"delete"}',
-          displayText: '編集',
+          type: 'uri',
+          label: '編集',
+          uri: editRaceLiffUrl,
         },
         justifyContent: 'center',
       },
