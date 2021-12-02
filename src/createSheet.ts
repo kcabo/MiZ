@@ -61,5 +61,5 @@ export async function createSheet(
 
   const sheetObjectKey = raceId + '.png';
   const url = await generateURLforDownload(sheetObjectKey);
-  return BotReply.sendImage(url);
+  return BotReply.sheetImage(raceId, url);
 }

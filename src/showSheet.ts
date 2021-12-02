@@ -15,5 +15,5 @@ export async function showSheet(
 
   const sheetObjectKey = raceId + '.png';
   const url = await generateURLforDownload(sheetObjectKey);
-  return BotReply.sendImage(url);
+  return BotReply.sheetImage(raceId, url, { imageOnly: true }); // 画像だけを単体で送信する
 }

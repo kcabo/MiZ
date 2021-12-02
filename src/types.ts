@@ -93,6 +93,7 @@ export type AmbiguousObject = { [key: string]: AmbiguousValue };
 export type PostbackData =
   | AcceptTermPostback
   | DownloadSheetPostback
+  | RerenderSheetPostback
   | RequestDeleteRacePostback
   | DeleteRacePostback;
 
@@ -103,6 +104,11 @@ export type AcceptTermPostback = {
 
 export type DownloadSheetPostback = {
   type: 'download';
+  raceId: string;
+};
+
+export type RerenderSheetPostback = {
+  type: 'rerender';
   raceId: string;
 };
 

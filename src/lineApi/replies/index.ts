@@ -2,6 +2,7 @@ import { ImageMessage, StickerMessage, TextMessage } from '@line/bot-sdk';
 
 import { getRandomIntInclusive } from 'lib/utils';
 
+export { sheetImage } from './sheetImage';
 export { sheetImageCarousel } from './sheetImageCarousel';
 export { registration } from './registration';
 export { confirmDeleteRace } from './confirmDeleteRace';
@@ -43,13 +44,7 @@ export function askFixCreateSheetFormat(): TextMessage {
     'データ生成メッセージの形式が間違っています。正しい書式で再送してください。'
   );
 }
-export function sendImage(url: string): ImageMessage {
-  return {
-    type: 'image' as const,
-    originalContentUrl: url,
-    previewImageUrl: url,
-  };
-}
+
 export function paparazzoError(): TextMessage {
   return textMessageBase(
     '画像生成でエラーが生じました。時間をおいて再度お試しください'

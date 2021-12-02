@@ -68,7 +68,8 @@ async function respondToMessage(
   }
 
   if (/^!render=\w+$/.test(message.text)) {
-    return await rerenderSheet(userId, message.text);
+    const raceId = message.text.slice(8); // !render= が8文字
+    return await rerenderSheet(userId, raceId);
   }
 
   if (!message.text.includes('\n')) {
@@ -88,12 +89,12 @@ async function respondToPostback(
     return BotReply.cannotParsePostbackError();
   }
 
-  if (postbackPayload.type === 'acceptTerm') {
-    const mode = postbackPayload.mode;
-    return await startService(userId, mode);
-  } else if (postbackPayload.type === 'download') {
+  if (postbackPayload.type === 'download') {
     const raceId = postbackPayload.raceId;
     return await showSheet(userId, raceId);
+  } else if (postbackPayload.type === 'rerender') {
+    const raceId = postbackPayload.raceId;
+    return await rerenderSheet(userId, raceId);
   } else if (postbackPayload.type === 'reqDelete') {
     const raceId = postbackPayload.raceId;
     return await confirmDeleteRace(userId, raceId);
@@ -101,6 +102,9 @@ async function respondToPostback(
     const raceId = postbackPayload.raceId;
     const expiresAt = postbackPayload.expiresAt;
     return await confirmedDeleteRace(userId, raceId, expiresAt);
+  } else if (postbackPayload.type === 'acceptTerm') {
+    const mode = postbackPayload.mode;
+    return await startService(userId, mode);
   }
 
   ErrorLog('Received unknown postback:', postback);
