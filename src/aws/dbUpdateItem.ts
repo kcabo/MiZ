@@ -5,9 +5,10 @@ import {
   UserSettingsKeys,
   UserStatus,
   UserStatusKeys,
+  AmbiguousObject,
+  AmbiguousValue,
 } from 'types';
 
-type AmbiguousObject = { [key: string]: string | number | boolean };
 type UpdatableUserData = Partial<UserSettings | UserStatus>;
 
 export async function updateUser(
@@ -53,7 +54,7 @@ async function dbUpdateRequest<T extends AmbiguousObject>(
 type Commands = {
   expressions: `#${string} = :${string}`[];
   names: { [key: `#${string}`]: string };
-  values: { [key: `:${string}`]: string | number | boolean };
+  values: { [key: `:${string}`]: AmbiguousValue };
 };
 
 function constructUpdateCommand<T extends AmbiguousObject>(

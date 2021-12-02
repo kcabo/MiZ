@@ -1,5 +1,5 @@
 export { generateURLforDownload } from './s3Presign';
-export { requestGenerateSheet } from './callLambda';
+export { generateSheetImage } from './callLambda';
 export { createRace, createUser } from './dbPutItem';
 export {
   fetchRaceItem,

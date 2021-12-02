@@ -1,6 +1,12 @@
+import { mockClient } from 'aws-sdk-client-mock';
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+
+import { generateSheetImage } from 'aws';
+import { __local__ } from 'aws/callLambda';
 import { Race } from 'types';
-import { requestGenerateSheet } from 'aws';
-import { lambdaClient } from 'aws/lambdaClient';
+import { PaparazzoError } from 'exceptions';
+
+const { toJsonBuffer } = __local__;
 
 const race: Race = {
   date: '2021-11-11',
@@ -9,55 +15,55 @@ const race: Race = {
   cumulativeTime: [2890, 6109],
 };
 
-const validInvokeOutput = {
-  Payload: Buffer.from(JSON.stringify({ status: 'ok' })),
-} as any;
+const validPair = {
+  input: { Payload: toJsonBuffer({ raceId: '1', ...race }) },
+  output: { Payload: toJsonBuffer({ status: 'ok' }) },
+};
 
-const emptyInvokeOutput = {
-  Payload: undefined,
-} as any;
+const emptyPair = {
+  input: { Payload: toJsonBuffer({ raceId: 'Empty', ...race }) },
+  output: {},
+};
 
-const unknownInvokeOutput = {
-  Payload: Buffer.from(JSON.stringify({ status: 'Hello' })),
-} as any;
+const invalidPair = {
+  input: { Payload: toJsonBuffer({ raceId: 'Invalid', ...race }) },
+  output: { Payload: toJsonBuffer({ hoge: 'ok' }) },
+};
 
-const mockErrorConsole = jest
-  .spyOn(console, 'error')
-  .mockImplementation(() => {});
+const errorPair = {
+  input: { Payload: toJsonBuffer({ raceId: 'Error', ...race }) },
+  output: undefined,
+};
 
-afterEach(() => {
-  mockErrorConsole.mockClear();
-});
+const lambdaMock = mockClient(LambdaClient);
+lambdaMock
+  .on(InvokeCommand, validPair.input)
+  .resolves(validPair.output)
+  .on(InvokeCommand, emptyPair.input)
+  .resolves(emptyPair.output)
+  .on(InvokeCommand, invalidPair.input)
+  .resolves(invalidPair.output)
+  .on(InvokeCommand, errorPair.input)
+  .rejects('mocked rejection');
 
-afterAll(() => {
-  jest.restoreAllMocks();
-});
+afterAll(() => jest.restoreAllMocks());
 
 test('Request to Paparazzo', async () => {
-  lambdaClient.send = jest.fn(() => validInvokeOutput);
-  expect.assertions(1);
-  const res = await requestGenerateSheet('1', race);
-  expect(res).toStrictEqual({ status: 'ok' });
+  const res = await generateSheetImage('1', race);
+  expect(res).toBe(0);
 });
 
 test('Receive empty payload', async () => {
-  lambdaClient.send = jest.fn(() => emptyInvokeOutput);
-  expect.assertions(3);
-  const res = await requestGenerateSheet('1', race);
-  expect(res).toStrictEqual({ status: 'error' });
-  expect(mockErrorConsole).toHaveBeenCalledTimes(1);
-  expect(mockErrorConsole.mock.calls[0][0]).toContain(
-    'Paparazzo returned empty payload'
-  );
+  const res = await generateSheetImage('Empty', race);
+  expect(res).toStrictEqual(new PaparazzoError('empty payload'));
 });
 
 test('Receive unknown payload', async () => {
-  lambdaClient.send = jest.fn(() => unknownInvokeOutput);
-  expect.assertions(3);
-  const res = await requestGenerateSheet('1', race);
-  expect(res).toStrictEqual({ status: 'error' });
-  expect(mockErrorConsole).toHaveBeenCalledTimes(1);
-  expect(mockErrorConsole.mock.calls[0][0]).toContain(
-    'Paparazzo returned invalid payload:'
-  );
+  const res = await generateSheetImage('Invalid', race);
+  expect(res).toStrictEqual(new PaparazzoError('invalid payload'));
+});
+
+test('sdk fails', async () => {
+  const res = await generateSheetImage('Error', race);
+  expect(res).toStrictEqual(new PaparazzoError('request failed'));
 });

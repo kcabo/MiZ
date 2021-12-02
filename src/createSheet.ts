@@ -2,7 +2,7 @@ import { Message, TextEventMessage } from '@line/bot-sdk';
 
 import {
   createRace,
-  requestGenerateSheet,
+  generateSheetImage,
   fetchUser,
   fetchCachedMeetData,
 } from 'aws';
@@ -10,7 +10,7 @@ import { BotReply } from 'lineApi';
 import { parseToRaceCoreData } from 'lib/timeParser';
 import { formattedToday } from 'lib/utils';
 import { Race, RaceCoreData } from 'types';
-import { ItemNotFoundFromDB } from 'exceptions';
+import { ItemNotFoundFromDB, PaparazzoError } from 'exceptions';
 import { sheetImageMessage } from 'showSheet';
 
 export async function createSheet(
@@ -47,11 +47,13 @@ export async function createSheet(
   const cachedMeet = await fetchCachedMeetData(userId);
   const race: Race = { date, ...cachedMeet, ...parsed };
 
-  const generateSheetResult = await requestGenerateSheet(raceId, race);
-  if (generateSheetResult.status == 'error') {
+  // 画像生成
+  const generateSheetResult = await generateSheetImage(raceId, race);
+  if (generateSheetResult instanceof PaparazzoError) {
     return BotReply.paparazzoError();
   }
 
+  // データ生成
   const result = await createRace(userId, raceId, race);
   if (result instanceof Error) {
     return BotReply.putRaceError();

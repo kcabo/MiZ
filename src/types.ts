@@ -79,6 +79,17 @@ export type PaparazzoResponse = {
   status: 'ok' | 'error';
 };
 
+// DBに格納されている可能性のあるデータ型。ネストされていない
+export type AmbiguousValue =
+  | string
+  | number
+  | boolean
+  | string[]
+  | number[]
+  | boolean[];
+
+export type AmbiguousObject = { [key: string]: AmbiguousValue };
+
 export type PostbackData =
   | AcceptTermPostback
   | DownloadSheetPostback
