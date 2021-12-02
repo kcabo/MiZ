@@ -10,9 +10,16 @@ export async function createRace(userId: string, raceId: string, race: Race) {
   const sk = raceId;
   const item: DbRaceItem = { userId, sk, ...race, updatedAt: now };
 
-  return await dbPutRequest(item);
+  // 新規作成を保証する 新規作成の場合はskはまだ存在していないはず
+  const additionalCommand = {
+    ExpressionAttributeNames: { '#sk': 'sk' },
+    ConditionExpression: 'attribute_not_exists(#sk)',
+  };
+
+  return await dbPutRequest(item, additionalCommand);
 }
 
+// 新規ユーザー作成時は事前にgetを走らせて存在しないことを確認しているため新規作成保証の必要はない
 export async function createUser(userId: string, userName: string) {
   const now = nowISO();
   const sk = 'USER#' + userId;
