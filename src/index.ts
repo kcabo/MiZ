@@ -7,16 +7,16 @@ import {
   extractUserId,
   BotReply,
 } from 'lineApi';
-import { ErrorLog } from 'lib/logger';
 import { createSheet } from 'createSheet';
 import { becomeFriend } from 'becomeFriend';
 import { startService } from 'startService';
 import { blockedByUser } from 'blockedByUser';
 import { listRaces } from 'listRaces';
-import { PostbackData } from 'types';
 import { showSheet } from 'showSheet';
 import { confirmDeleteRace, confirmedDeleteRace } from 'deleteRace';
 import { rerenderSheet } from 'rerenderSheet';
+import { parsePostbackData } from 'lib/parsePostback';
+import { ErrorLog } from 'lib/logger';
 
 export async function handler(
   ApiGatewayEvent: APIGatewayProxyEventV2
@@ -35,24 +35,29 @@ export async function handler(
 
 async function processEvent(event: WebhookEvent) {
   const userId = await extractUserId(event);
+
+  // 通常の画像生成リクエストか関係のないメッセージなど
   if (event.type == 'message') {
-    // 通常の画像生成リクエストか関係のないメッセージ
     const response = await respondToMessage(event.message, userId);
-    await reply(event.replyToken, response);
-  } else if (event.type == 'follow') {
-    // ユーザーの新規登録またはブロック解除
-    const response = await becomeFriend(userId);
-    await reply(event.replyToken, response);
-  } else if (event.type == 'unfollow') {
-    // ユーザーによるブロック
-    await blockedByUser(userId);
-  } else if (event.type == 'postback') {
-    // FlexMessageによるPostback
-    const response = await respondToPostback(event.postback, userId);
-    await reply(event.replyToken, response);
-  } else {
-    ErrorLog('unknown event!:', event);
+    return await reply(event.replyToken, response);
   }
+
+  // ユーザーの新規登録またはブロック解除
+  if (event.type == 'follow') {
+    const response = await becomeFriend(userId);
+    return await reply(event.replyToken, response);
+  }
+
+  if (event.type == 'unfollow') {
+    return await blockedByUser(userId);
+  }
+
+  if (event.type == 'postback') {
+    const response = await respondToPostback(event.postback, userId);
+    return await reply(event.replyToken, response);
+  }
+
+  ErrorLog('unknown event!:', event);
 }
 
 async function respondToMessage(
@@ -61,6 +66,10 @@ async function respondToMessage(
 ): Promise<Message | Message[]> {
   if (message.type != 'text') {
     return BotReply.randomSticker();
+  }
+
+  if (message.text.includes('\n')) {
+    return await createSheet(userId, message);
   }
 
   if (message.text == '一覧') {
@@ -72,54 +81,44 @@ async function respondToMessage(
     return await rerenderSheet(userId, raceId);
   }
 
-  if (!message.text.includes('\n')) {
-    return BotReply.tellIamBot();
-  }
-
-  return await createSheet(userId, message);
+  return BotReply.tellIamBot();
 }
 
 async function respondToPostback(
   postback: Postback,
   userId: string
 ): Promise<Message | Message[]> {
-  const postbackPayload = parsePostbackData(postback.data);
+  const data = parsePostbackData(postback.data);
 
-  if (!postbackPayload) {
+  if (!data) {
     return BotReply.cannotParsePostbackError();
   }
 
-  if (postbackPayload.type === 'download') {
-    const raceId = postbackPayload.raceId;
+  if (data.type === 'download') {
+    const { raceId } = data;
     return await showSheet(userId, raceId);
-  } else if (postbackPayload.type === 'rerender') {
-    const raceId = postbackPayload.raceId;
+  }
+
+  if (data.type === 'rerender') {
+    const { raceId } = data;
     return await rerenderSheet(userId, raceId);
-  } else if (postbackPayload.type === 'reqDelete') {
-    const raceId = postbackPayload.raceId;
+  }
+
+  if (data.type === 'reqDelete') {
+    const { raceId } = data;
     return await confirmDeleteRace(userId, raceId);
-  } else if (postbackPayload.type === 'delete') {
-    const raceId = postbackPayload.raceId;
-    const expiresAt = postbackPayload.expiresAt;
+  }
+
+  if (data.type === 'delete') {
+    const { raceId, expiresAt } = data;
     return await confirmedDeleteRace(userId, raceId, expiresAt);
-  } else if (postbackPayload.type === 'acceptTerm') {
-    const mode = postbackPayload.mode;
+  }
+
+  if (data.type === 'acceptTerm') {
+    const { mode } = data;
     return await startService(userId, mode);
   }
 
   ErrorLog('Received unknown postback:', postback);
   return BotReply.unExpectedError();
-}
-
-function parsePostbackData(str: string): PostbackData | undefined {
-  try {
-    const parsed = JSON.parse(str);
-    if (typeof parsed.type !== 'string') {
-      throw new Error('postback has no type key');
-    }
-    return parsed;
-  } catch (e) {
-    ErrorLog('Cannot parse postback data:', str);
-    return undefined;
-  }
 }

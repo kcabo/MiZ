@@ -6,6 +6,7 @@ import {
   CentiSeconds,
   UserSettings,
   Meet,
+  PostbackData,
 } from 'types';
 
 export function isPaparazzoResponse(arg: any): arg is PaparazzoResponse {
@@ -113,5 +114,19 @@ function isValidISO8601(arg: any): arg is string {
   return (
     typeof arg === 'string' &&
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(arg)
+  );
+}
+
+export function isPostbackData(arg: any): arg is PostbackData {
+  return (
+    !!arg &&
+    typeof arg.type === 'string' &&
+    ((arg.type === 'acceptTerm' && ['swimmer', 'manager'].includes(arg.mode)) ||
+      (arg.type === 'download' && typeof arg.raceId === 'string') ||
+      (arg.type === 'rerender' && typeof arg.raceId === 'string') ||
+      (arg.type === 'reqDelete' && typeof arg.raceId === 'string') ||
+      (arg.type === 'delete' &&
+        typeof arg.raceId === 'string' &&
+        typeof arg.expiresAt === 'number'))
   );
 }
