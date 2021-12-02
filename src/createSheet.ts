@@ -8,9 +8,14 @@ import {
   generateURLforDownload,
 } from 'aws';
 import { BotReply } from 'lineApi';
-import { parseToRaceCoreData } from 'lib/parseTime';
 import { Race, RaceCoreData } from 'types';
-import { ItemNotFoundFromDB, PaparazzoError } from 'exceptions';
+import {
+  ItemNotFoundFromDB,
+  PaparazzoError,
+  PayloadTooLarge,
+  WrongMessageFormat,
+} from 'exceptions';
+import { parseToRaceCoreData } from 'lib/parseTime';
 import { formattedToday } from 'lib/utils';
 import { generateId } from 'lib/generateId';
 
@@ -30,7 +35,7 @@ export async function createSheet(
     return BotReply.pleaseAcceptTerm();
   }
 
-  let parsed: RaceCoreData | SyntaxError;
+  let parsed: RaceCoreData | WrongMessageFormat | PayloadTooLarge;
 
   // 選手モードなら選手名なし・いきなり種目名からのメッセージ
   if (user.mode === 'swimmer') {
@@ -39,8 +44,10 @@ export async function createSheet(
     parsed = parseToRaceCoreData(message.text);
   }
 
-  if (parsed instanceof SyntaxError) {
+  if (parsed instanceof WrongMessageFormat) {
     return BotReply.askFixCreateSheetFormat();
+  } else if (parsed instanceof PayloadTooLarge) {
+    return BotReply.tooLongTimeText();
   }
 
   const raceId = generateId();

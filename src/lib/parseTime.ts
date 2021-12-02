@@ -1,56 +1,84 @@
+import { PayloadTooLarge, WrongMessageFormat } from 'exceptions';
 import { shortenedEventToProperStyle } from 'lib/convertEvent';
 import { RaceCoreData } from 'types';
 
-const inputTextPattern =
-  /^(?<swimmer>.*[^\n0-9０-９].*)\n(?<event>.*[^\s0-9０-９].*)(?<strReactionPrefixed>\n[0-9０-９]{2,3})?(?<strCumulativeTimePrefixed>(?:\n[0-9０-９]{3,6})+$)/;
-
-type MatchedObjects = {
-  swimmer: string;
-  event: string;
-  strReactionPrefixed?: string;
-  strCumulativeTimePrefixed: string;
-};
-
 // 選手名\n種目名\nRTとタイム～の形式の入力
-export function parseToRaceCoreData(input: string): RaceCoreData | SyntaxError {
-  const found = input.match(inputTextPattern);
-  if (!found) {
-    return SyntaxError('invalid pattern');
+export function parseToRaceCoreData(
+  input: string
+): RaceCoreData | WrongMessageFormat | PayloadTooLarge {
+  const matched = applyPattern(input);
+  if (matched instanceof WrongMessageFormat) {
+    return matched;
   }
 
-  const { swimmer, event, strReactionPrefixed, strCumulativeTimePrefixed } =
-    found.groups as MatchedObjects; // safe
+  const cumulativeTime = toCentiSecondsArray(matched.cumulativeTimeStr);
+  if (cumulativeTime instanceof PayloadTooLarge) {
+    return cumulativeTime;
+  }
 
-  // 正規表現の都合上、\n～の形でマッチするため、頭の改行文字を削除する
-  const cumulativeTimeStr = removePrefixedLinefeed(strCumulativeTimePrefixed);
+  const formalEvent = shortenedEventToProperStyle(matched.event);
+
   let raceCoreData: RaceCoreData = {
-    swimmer,
-    event: shortenedEventToProperStyle(event),
-    cumulativeTime: toCentiSecondsArray(cumulativeTimeStr),
+    swimmer: matched.swimmer,
+    event: formalEvent,
+    cumulativeTime,
   };
 
-  if (strReactionPrefixed) {
-    // 正規表現の都合上、\n～の形でマッチするため、頭の改行文字を削除する
-    const reactionStr = removePrefixedLinefeed(strReactionPrefixed);
-    const reaction = toCentiSeconds(reactionStr);
+  if (matched.reactionStr) {
+    const reaction = toCentiSeconds(matched.reactionStr);
     raceCoreData = { ...raceCoreData, reaction };
   }
 
   return raceCoreData;
 }
 
-function toCentiSecondsArray(concatTimeLines: string): number[] {
-  // 全角数字を半角に置き換える
-  const normalizedCharacters = toHankakuNum(concatTimeLines);
-  const concatTimeArray = normalizedCharacters.split('\n');
-  return concatTimeArray.map((str) => toCentiSeconds(str));
+const inputTextPattern =
+  /^(?<gSwimmer>.*[^\n0-9０-９].*)\n(?<gEvent>.*[^\s0-9０-９].*)(?<gReaction>\n[0-9０-９]{2,3})?(?<gCumulativeTime>(?:\n[0-9０-９]{3,6})+$)/;
+
+type MatchedObjects = {
+  gSwimmer: string;
+  gEvent: string;
+  gReaction?: string;
+  gCumulativeTime: string;
+};
+
+function applyPattern(input: string) {
+  const found = input.match(inputTextPattern);
+  if (!found) {
+    return new WrongMessageFormat();
+  }
+
+  let { gSwimmer, gEvent, gReaction, gCumulativeTime } =
+    found.groups as MatchedObjects; // safe
+
+  // 正規表現の都合上、\n～の形でマッチするため、頭の改行文字を削除する
+  gCumulativeTime = removePrefixedLinefeed(gCumulativeTime);
+
+  if (gReaction) {
+    gReaction = removePrefixedLinefeed(gReaction);
+  }
+
+  return {
+    swimmer: gSwimmer,
+    event: gEvent,
+    reactionStr: gReaction,
+    cumulativeTimeStr: gCumulativeTime,
+  };
 }
 
+function toCentiSecondsArray(
+  concatTimeLines: string
+): number[] | PayloadTooLarge {
+  // 全角数字を半角に置き換える
+  const normalizedCharacters = toHankakuNum(concatTimeLines);
+  const strTimeArray = normalizedCharacters.split('\n');
+  if (strTimeArray.length > 20) return new PayloadTooLarge('too long time');
+  const centiSecondsArray = strTimeArray.map((str) => toCentiSeconds(str));
+  return centiSecondsArray;
+}
+
+// /^[0-9]{1,6}$/にマッチすることは事前の正規表現で確認している
 function toCentiSeconds(concatTime: string): number {
-  // 全部の桁が数字であることと6桁以内であることの確認
-  if (!/^[0-9]{1,6}$/.test(concatTime)) {
-    throw new Error('cannot convert to seconds!');
-  }
   const paddedConcatTime = concatTime.padStart(6, '0');
   const minutesSegment = paddedConcatTime.slice(0, 2);
   const secondsSegment = paddedConcatTime.slice(2, 4);
@@ -76,4 +104,5 @@ function removePrefixedLinefeed(str: string) {
 export const __local__ = {
   toCentiSeconds,
   toCentiSecondsArray,
+  applyPattern,
 };

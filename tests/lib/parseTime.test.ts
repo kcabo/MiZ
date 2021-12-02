@@ -1,7 +1,8 @@
+import { PayloadTooLarge, WrongMessageFormat } from 'exceptions';
 import { parseToRaceCoreData, __local__ } from 'lib/parseTime';
 import { RaceCoreData } from 'types';
 
-const { toCentiSeconds, toCentiSecondsArray } = __local__;
+const { toCentiSeconds, toCentiSecondsArray, applyPattern } = __local__;
 
 test('Time Parsing (unit)', () => {
   expect(toCentiSeconds('2')).toBe(2);
@@ -14,31 +15,13 @@ test('Time Parsing (unit)', () => {
   expect(toCentiSeconds('182021')).toBe(110021);
 });
 
-test('Time Parsing (unit, invalid)', () => {
-  expect(() => {
-    toCentiSeconds('-2');
-  }).toThrow();
-  expect(() => {
-    toCentiSeconds('Hello');
-  }).toThrow();
-  expect(() => {
-    toCentiSeconds('1234567');
-  }).toThrow();
-  expect(() => {
-    toCentiSeconds('3011 2');
-  }).toThrow();
-  expect(() => {
-    toCentiSeconds('');
-  }).toThrow();
-});
-
 test('Time Parsing (array)', () => {
-  expect(() => {
-    toCentiSecondsArray('11234\n３０0０\n９１1\n12３4５67');
-  }).toThrow();
-  expect(() => {
-    toCentiSecondsArray('文字列');
-  }).toThrow();
+  expect(toCentiSecondsArray('11234\n３０0０\n９１1\n12３4５6')).toStrictEqual([
+    7234, 3000, 911, 75456,
+  ]);
+  expect(toCentiSecondsArray('123\n'.repeat(21))).toStrictEqual(
+    new PayloadTooLarge('too long time')
+  );
 });
 
 test('positive: event, reaction, time', () => {
@@ -82,8 +65,45 @@ test('negative parsing', () => {
     '\n\n',
   ];
   invalidInputs.map((input) => {
-    expect(parseToRaceCoreData(input)).toStrictEqual(
-      SyntaxError('invalid pattern')
-    );
+    expect(parseToRaceCoreData(input)).toStrictEqual(new WrongMessageFormat());
   });
+});
+
+test('regex match', () => {
+  const userInput = `テスト君2
+200mバタフライ
+2822
+５９３０
+13２11
+20873`;
+  const output = {
+    swimmer: 'テスト君2',
+    event: '200mバタフライ',
+    reactionStr: undefined,
+    cumulativeTimeStr: `2822
+５９３０
+13２11
+20873`,
+  };
+  expect(applyPattern(userInput)).toStrictEqual(output);
+});
+
+test('regex match with reaction', () => {
+  const userInput = `テスト君2
+200mバタフライ
+0２０
+2822
+５９３０
+13２11
+20873`;
+  const output = {
+    swimmer: 'テスト君2',
+    event: '200mバタフライ',
+    reactionStr: '0２０',
+    cumulativeTimeStr: `2822
+５９３０
+13２11
+20873`,
+  };
+  expect(applyPattern(userInput)).toStrictEqual(output);
 });

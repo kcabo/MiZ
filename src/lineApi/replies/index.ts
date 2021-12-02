@@ -45,6 +45,10 @@ export function askFixCreateSheetFormat(): TextMessage {
   );
 }
 
+export function tooLongTimeText(): TextMessage {
+  return textMessageBase('タイムが長すぎます。登録できるのは20行までです');
+}
+
 export function paparazzoError(): TextMessage {
   return textMessageBase(
     '画像生成でエラーが生じました。時間をおいて再度お試しください'
