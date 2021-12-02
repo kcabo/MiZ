@@ -5,13 +5,13 @@ import {
   generateSheetImage,
   fetchUser,
   fetchCachedMeetData,
+  generateURLforDownload,
 } from 'aws';
 import { BotReply } from 'lineApi';
 import { parseToRaceCoreData } from 'lib/parseTime';
 import { formattedToday } from 'lib/utils';
 import { Race, RaceCoreData } from 'types';
 import { ItemNotFoundFromDB, PaparazzoError } from 'exceptions';
-import { sheetImageMessage } from 'showSheet';
 
 export async function createSheet(
   message: TextEventMessage,
@@ -59,5 +59,7 @@ export async function createSheet(
     return BotReply.putRaceError();
   }
 
-  return await sheetImageMessage(raceId);
+  const sheetObjectKey = raceId + '.png';
+  const url = await generateURLforDownload(sheetObjectKey);
+  return BotReply.sendImage(url);
 }

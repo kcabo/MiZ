@@ -43,7 +43,7 @@ export function askFixCreateSheetFormat(): TextMessage {
     'データ生成メッセージの形式が間違っています。正しい書式で再送してください。'
   );
 }
-export function sendSheetImage(url: string): ImageMessage {
+export function sendImage(url: string): ImageMessage {
   return {
     type: 'image' as const,
     originalContentUrl: url,
