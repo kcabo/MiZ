@@ -124,6 +124,9 @@ export function isPostbackData(arg: any): arg is PostbackData {
     ((arg.type === 'acceptTerm' && ['swimmer', 'manager'].includes(arg.mode)) ||
       (arg.type === 'download' && typeof arg.raceId === 'string') ||
       (arg.type === 'rerender' && typeof arg.raceId === 'string') ||
+      (arg.type === 'list' &&
+        typeof arg.start === 'object' &&
+        Object.keys(arg.start).every((k) => typeof k === 'string')) ||
       (arg.type === 'reqDelete' && typeof arg.raceId === 'string') ||
       (arg.type === 'delete' &&
         typeof arg.raceId === 'string' &&

@@ -2,22 +2,25 @@ import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
 import { InvalidItem, ItemNotFoundFromDB } from 'exceptions';
 import { dbErrorLog, ErrorLog } from 'lib/logger';
 import { isSkOnlyArray } from 'lib/typeGuard';
+import { QueryStartPoint } from 'types';
+
+const PAGE_SIZE = Number(process.env.RACE_LIST_PAGE_SIZE) || 10;
 
 export async function queryAllRaces(
   userId: string,
-  startKey?: { [key: string]: any }
+  startKey?: QueryStartPoint
 ) {
-  return await dbQueryRequest(userId, 10, startKey);
+  return await dbQueryRequest(userId, PAGE_SIZE, startKey);
 }
 
 async function dbQueryRequest(
   userId: string,
   pageSize: number,
-  startKey?: { [key: string]: any }
+  startKey?: QueryStartPoint
 ): Promise<
   | {
       raceIds: { sk: string }[];
-      LastEvaluatedKey?: { [key: string]: any };
+      LastEvaluatedKey?: QueryStartPoint;
     }
   | Error
 > {

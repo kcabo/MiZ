@@ -90,10 +90,13 @@ export type AmbiguousValue =
 
 export type AmbiguousObject = { [key: string]: AmbiguousValue };
 
+export type QueryStartPoint = { [key: string]: any };
+
 export type PostbackData =
   | AcceptTermPostback
   | DownloadSheetPostback
   | RerenderSheetPostback
+  | ListUpRacePostback
   | RequestDeleteRacePostback
   | DeleteRacePostback;
 
@@ -110,6 +113,11 @@ export type DownloadSheetPostback = {
 export type RerenderSheetPostback = {
   type: 'rerender';
   raceId: string;
+};
+
+export type ListUpRacePostback = {
+  type: 'list';
+  start: QueryStartPoint;
 };
 
 export type RequestDeleteRacePostback = {

@@ -1,13 +1,26 @@
 import { FlexBox, FlexBubble, FlexMessage } from '@line/bot-sdk';
 
-import { DownloadSheetPostback, RequestDeleteRacePostback } from 'types';
+import {
+  DownloadSheetPostback,
+  ListUpRacePostback,
+  QueryStartPoint,
+  RequestDeleteRacePostback,
+} from 'types';
 
 const RACES_LIFF_ID = process.env.RACES_LIFF_ID || '';
+const PAGE_SIZE = Number(process.env.RACE_LIST_PAGE_SIZE) || 10;
 
 export function sheetImageCarousel(
-  races: { raceId: string; url: string }[]
+  races: { raceId: string; url: string }[],
+  queryStartPoint: QueryStartPoint | undefined
 ): FlexMessage {
+  const listUpActionPayload: ListUpRacePostback = {
+    type: 'list',
+    start: queryStartPoint || {},
+  };
+
   const bubbles = races.map(({ raceId, url }) => sheetBubble(raceId, url));
+
   return {
     type: 'flex',
     altText: 'レース一覧',
@@ -15,6 +28,24 @@ export function sheetImageCarousel(
       type: 'carousel',
       contents: bubbles,
     },
+    ...(!queryStartPoint
+      ? {}
+      : {
+          quickReply: {
+            items: [
+              {
+                type: 'action',
+                imageUrl:
+                  'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/delete.png',
+                action: {
+                  type: 'postback',
+                  label: `次の${PAGE_SIZE}件`,
+                  data: JSON.stringify(listUpActionPayload),
+                },
+              },
+            ],
+          },
+        }),
   };
 }
 

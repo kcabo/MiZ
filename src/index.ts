@@ -106,6 +106,11 @@ async function respondToPostback(
     return await rerenderSheet(userId, raceId);
   }
 
+  if (data.type === 'list') {
+    const { start } = data;
+    return await listRaces(userId, start);
+  }
+
   if (data.type === 'reqDelete') {
     const { raceId } = data;
     return await confirmDeleteRace(userId, raceId);

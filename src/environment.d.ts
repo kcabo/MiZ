@@ -10,6 +10,7 @@ declare global {
       PRESIGN_EXPIRES_IN: string;
       RACES_LIFF_ID: string;
       SETTINGS_LIFF_ID: string;
+      RACE_LIST_PAGE_SIZE: string;
     }
   }
 }
