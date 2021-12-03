@@ -1,4 +1,4 @@
-import { Message, TextEventMessage } from '@line/bot-sdk';
+import { Message } from '@line/bot-sdk';
 
 import {
   createRace,
@@ -21,7 +21,7 @@ import { generateId } from 'lib/generateId';
 
 export async function createSheet(
   userId: string,
-  message: TextEventMessage
+  text: string
 ): Promise<Message | Message[]> {
   const user = await fetchUser(userId);
 
@@ -39,9 +39,9 @@ export async function createSheet(
 
   // 選手モードなら選手名なし・いきなり種目名からのメッセージ
   if (user.mode === 'swimmer') {
-    parsed = parseToRaceCoreData([user.userName, message.text].join('\n'));
+    parsed = parseToRaceCoreData([user.userName, text].join('\n'));
   } else {
-    parsed = parseToRaceCoreData(message.text);
+    parsed = parseToRaceCoreData(text);
   }
 
   if (parsed instanceof WrongMessageFormat) {

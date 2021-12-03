@@ -1,4 +1,4 @@
-import { EventMessage, Message, Postback, WebhookEvent } from '@line/bot-sdk';
+import { Message, Postback, WebhookEvent } from '@line/bot-sdk';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 
 import {
@@ -16,19 +16,19 @@ import { showSheet } from 'showSheet';
 import { confirmDeleteRace, confirmedDeleteRace } from 'deleteRace';
 import { rerenderSheet } from 'rerenderSheet';
 import { parsePostbackData } from 'lib/parsePostback';
-import { ErrorLog } from 'lib/logger';
+import { ErrorLog, EventLog } from 'lib/logger';
 
 export async function handler(
-  ApiGatewayEvent: APIGatewayProxyEventV2
+  apiGatewayEvent: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyResultV2> {
-  const { valid, lineEvents } = validateAndParseRequest(ApiGatewayEvent);
-  // console.log(JSON.stringify(ApiGatewayEvent, null, 2));
+  const { valid, lineEvents } = validateAndParseRequest(apiGatewayEvent);
 
   if (!valid) {
     ErrorLog('Request not from LINE:', lineEvents);
     return { statusCode: 200, body: 'who are you?' };
   }
 
+  EventLog(lineEvents);
   await Promise.all(lineEvents.map(async (e) => await processEvent(e)));
   return { statusCode: 200, body: 'ok' };
 }
@@ -37,47 +37,49 @@ async function processEvent(event: WebhookEvent) {
   const userId = await extractUserId(event);
 
   // 通常の画像生成リクエストか関係のないメッセージなど
-  if (event.type == 'message') {
-    const response = await respondToMessage(event.message, userId);
+  if (event.type === 'message' && event.message.type === 'text') {
+    const response = await respondToText(userId, event.message.text);
+    return await reply(event.replyToken, response);
+  }
+
+  // テキスト以外のメッセージ
+  if (event.type === 'message') {
+    const response = BotReply.randomSticker();
     return await reply(event.replyToken, response);
   }
 
   // ユーザーの新規登録またはブロック解除
-  if (event.type == 'follow') {
+  if (event.type === 'follow') {
     const response = await becomeFriend(userId);
     return await reply(event.replyToken, response);
   }
 
-  if (event.type == 'unfollow') {
+  if (event.type === 'unfollow') {
     return await blockedByUser(userId);
   }
 
-  if (event.type == 'postback') {
-    const response = await respondToPostback(event.postback, userId);
+  if (event.type === 'postback') {
+    const response = await respondToPostback(userId, event.postback);
     return await reply(event.replyToken, response);
   }
 
   ErrorLog('unknown event!:', event);
 }
 
-async function respondToMessage(
-  message: EventMessage,
-  userId: string
+async function respondToText(
+  userId: string,
+  text: string
 ): Promise<Message | Message[]> {
-  if (message.type != 'text') {
-    return BotReply.randomSticker();
+  if (text.includes('\n')) {
+    return await createSheet(userId, text);
   }
 
-  if (message.text.includes('\n')) {
-    return await createSheet(userId, message);
-  }
-
-  if (message.text == '一覧') {
+  if (text == '一覧') {
     return await listRaces(userId);
   }
 
-  if (/^!render=\w+$/.test(message.text)) {
-    const raceId = message.text.slice(8); // !render= が8文字
+  if (/^!render=\w+$/.test(text)) {
+    const raceId = text.slice(8); // !render= が8文字
     return await rerenderSheet(userId, raceId);
   }
 
@@ -85,8 +87,8 @@ async function respondToMessage(
 }
 
 async function respondToPostback(
-  postback: Postback,
-  userId: string
+  userId: string,
+  postback: Postback
 ): Promise<Message | Message[]> {
   const data = parsePostbackData(postback.data);
 

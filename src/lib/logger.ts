@@ -1,3 +1,4 @@
+import { WebhookEvent } from '@line/bot-sdk';
 import { DbItem } from 'types';
 
 export function ErrorLog(message: string, arg: any) {
@@ -26,4 +27,10 @@ export function dbErrorLog(
     rest
   );
   console.error(error);
+}
+
+export function EventLog(events: WebhookEvent[]) {
+  events.forEach((event) => {
+    console.log(`EVENT: [${event.type}]`, JSON.stringify(event, null, 2));
+  });
 }
