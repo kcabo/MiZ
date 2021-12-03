@@ -5,6 +5,7 @@ import {
   ListUpRacePostback,
   QueryStartPoint,
   RequestDeleteRacePostback,
+  RerenderSheetPostback,
 } from 'types';
 
 const RACES_LIFF_ID = process.env.RACES_LIFF_ID || '';
@@ -36,7 +37,7 @@ export function sheetImageCarousel(
               {
                 type: 'action',
                 imageUrl:
-                  'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/delete.png',
+                  'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/right.png',
                 action: {
                   type: 'postback',
                   label: `次の${PAGE_SIZE}件`,
@@ -54,6 +55,14 @@ function sheetBubble(raceId: string, url: string): FlexBubble {
     type: 'bubble',
     body: body(url),
     footer: footer(raceId),
+    styles: {
+      body: {
+        backgroundColor: '#E9EAEC',
+      },
+      footer: {
+        backgroundColor: '#E9EAEC',
+      },
+    },
   };
 }
 
@@ -69,8 +78,7 @@ function body(url: string): FlexBox {
         size: 'full',
       },
     ],
-    paddingAll: 'none',
-    backgroundColor: '#e9eaec',
+    paddingAll: '0px',
   };
 }
 
@@ -82,6 +90,11 @@ function footer(raceId: string): FlexBox {
 
   const requestDeleteRaceActionPayload: RequestDeleteRacePostback = {
     type: 'reqDelete',
+    raceId: raceId,
+  };
+
+  const rerenderActionPayload: RerenderSheetPostback = {
+    type: 'rerender',
     raceId: raceId,
   };
 
@@ -97,60 +110,100 @@ function footer(raceId: string): FlexBox {
         contents: [
           {
             type: 'icon',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/edit.png',
-            size: 'xxl',
-          },
-        ],
-        width: '50px',
-        action: {
-          type: 'uri',
-          label: '編集',
-          uri: editRaceLiffUrl,
-        },
-        justifyContent: 'center',
-      },
-      {
-        type: 'box',
-        layout: 'baseline',
-        contents: [
-          {
-            type: 'icon',
             url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/download.png',
-            size: '32px',
+            size: '24px',
           },
         ],
-        width: '50px',
+        backgroundColor: '#3399FF',
+        cornerRadius: 'md',
+        paddingStart: '16px',
+        paddingEnd: '16px',
+        paddingTop: '6px',
+        flex: 0,
+        height: '36px',
         action: {
           type: 'postback',
           label: '保存',
           data: JSON.stringify(downloadActionPayload),
           displayText: '[保存]',
         },
-        justifyContent: 'center',
       },
-
+      {
+        type: 'filler',
+        flex: 0,
+      },
       {
         type: 'box',
         layout: 'baseline',
         contents: [
           {
             type: 'icon',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/delete.png',
-            size: 'xxl',
+            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/edit-dark.png',
+            size: '24px',
           },
         ],
-        width: '50px',
+        backgroundColor: '#FFFFFF',
+        cornerRadius: 'md',
+        flex: 0,
+        paddingTop: '6px',
+        paddingStart: '14px',
+        paddingEnd: '14px',
+        action: {
+          type: 'uri',
+          label: '編集',
+          uri: editRaceLiffUrl,
+        },
+      },
+      {
+        type: 'box',
+        layout: 'baseline',
+        contents: [
+          {
+            type: 'icon',
+            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/refresh-dark.png',
+            size: '24px',
+          },
+        ],
+        backgroundColor: '#FFFFFF',
+        cornerRadius: 'md',
+        flex: 0,
+        paddingTop: '6px',
+        paddingStart: '14px',
+        paddingEnd: '14px',
+        action: {
+          type: 'postback',
+          label: '更新',
+          data: JSON.stringify(rerenderActionPayload),
+          displayText: '[更新]',
+        },
+      },
+      {
+        type: 'box',
+        layout: 'baseline',
+        contents: [
+          {
+            type: 'icon',
+            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/delete-dark.png',
+            size: '24px',
+          },
+        ],
+        backgroundColor: '#FFFFFF',
+        cornerRadius: 'md',
+        flex: 0,
+        paddingTop: '6px',
+        paddingStart: '14px',
+        paddingEnd: '14px',
         action: {
           type: 'postback',
           label: '削除',
           data: JSON.stringify(requestDeleteRaceActionPayload),
           displayText: '[削除する]',
         },
-        justifyContent: 'center',
       },
     ],
-    backgroundColor: '#e9eaec',
-    justifyContent: 'space-around',
-    paddingTop: 'none',
+    paddingTop: '0px',
+    paddingAll: '20px',
+    justifyContent: 'space-between',
+    paddingBottom: '14px',
   };
 }

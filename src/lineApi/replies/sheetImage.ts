@@ -46,12 +46,12 @@ export function sheetImage(
                 {
                   type: 'action',
                   imageUrl:
-                    'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/edit.png',
+                    'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/refresh.png',
                   action: {
                     type: 'postback',
-                    label: '画像再生成',
+                    label: '更新',
                     data: JSON.stringify(rerenderActionPayload),
-                    displayText: '[画像再生成]',
+                    displayText: '[更新]',
                   },
                 },
                 {
