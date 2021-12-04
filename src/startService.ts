@@ -19,5 +19,5 @@ export async function startService(userId: string, mode: UserMode) {
     return BotReply.updateUserError();
   }
 
-  return BotReply.tutorial();
+  return BotReply.tutorial(mode);
 }

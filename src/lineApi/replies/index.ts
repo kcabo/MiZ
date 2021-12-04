@@ -6,6 +6,7 @@ export { sheetImage } from './sheetImage';
 export { sheetImageCarousel } from './sheetImageCarousel';
 export { registration } from './registration';
 export { confirmDeleteRace } from './confirmDeleteRace';
+export { tutorial } from './tutorial';
 
 function textMessageBase(text: string): TextMessage {
   return { type: 'text', text };
@@ -88,12 +89,6 @@ export function termsAlreadyAccepted(): TextMessage {
 export function updateUserError(): TextMessage {
   return textMessageBase(
     'ユーザーデータの更新にエラーが発生しました。時間をおいて再度お試しください'
-  );
-}
-
-export function tutorial(): TextMessage {
-  return textMessageBase(
-    'ご利用いただきありがとうございます！MiZはレース結果を画像化するサービスです。まずはサンプルデータをお試しください'
   );
 }
 
