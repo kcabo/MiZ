@@ -1,7 +1,7 @@
 export { generateURLforDownload } from './s3Presign';
 export { deleteSheetImage } from './s3Client';
 export { generateSheetImage } from './callLambda';
-export { createRace, createUser } from './dbPutItem';
+export { createRace, createUser, putMeetCache } from './dbPutItem';
 export {
   fetchRace,
   checkRaceExists,

@@ -1,8 +1,15 @@
 import { PutCommandInput } from '@aws-sdk/lib-dynamodb';
 
 import { documentClient, RACE_TABLE_NAME } from './dynamodbClient';
-import { DbItem, DbRaceItem, DbUserItem, Race } from 'types';
-import { nowISO } from 'lib/utils';
+import {
+  DbItem,
+  DbMeetCacheItem,
+  DbRaceItem,
+  DbUserItem,
+  Meet,
+  Race,
+} from 'types';
+import { nowISO, nowUnix } from 'lib/utils';
 import { dbErrorLog } from 'lib/logger';
 
 export async function createRace(userId: string, raceId: string, race: Race) {
@@ -31,6 +38,19 @@ export async function createUser(userId: string, userName: string) {
     isTermAccepted: false, // 同意したらこの属性をアップデート
     friendship: true,
     createdAt: now,
+  };
+
+  return await dbPutRequest(item);
+}
+
+export async function putMeetCache(userId: string, meet: Meet) {
+  const ttl = nowUnix() + 86400 * 3; // 3日間有効
+  const sk = 'CACHE#' + userId;
+  const item: DbMeetCacheItem = {
+    userId,
+    sk,
+    ttl,
+    ...meet,
   };
 
   return await dbPutRequest(item);
