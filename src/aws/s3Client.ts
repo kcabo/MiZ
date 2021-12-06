@@ -1,4 +1,8 @@
-import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  DeleteObjectCommand,
+  HeadObjectCommand,
+} from '@aws-sdk/client-s3';
 import { ErrorLog } from 'lib/logger';
 
 const BUCKET_NAME = process.env.PAPARAZZO_BUCKET_NAME;
@@ -14,11 +18,7 @@ export async function deleteSheetImage(raceId: string) {
     Key: objectKey,
   };
   const command = new DeleteObjectCommand(param);
-  const result = await sendS3Command(command);
-  return result;
-}
 
-async function sendS3Command(command: DeleteObjectCommand): Promise<0 | Error> {
   try {
     await s3Client.send(command);
     return 0;
@@ -29,5 +29,27 @@ async function sendS3Command(command: DeleteObjectCommand): Promise<0 | Error> {
     } else {
       throw new Error();
     }
+  }
+}
+
+// never throws errors
+export async function getSheetImageMetadata(raceId: string) {
+  const objectKey = raceId + '.png';
+
+  const param = {
+    Bucket: BUCKET_NAME,
+    Key: objectKey,
+  };
+  const command = new HeadObjectCommand(param);
+
+  try {
+    const { Metadata } = await s3Client.send(command);
+    return Metadata || {};
+  } catch (error) {
+    ErrorLog(
+      `Head object failed on ${objectKey}. fallback to empty object...`,
+      error
+    );
+    return {};
   }
 }

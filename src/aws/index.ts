@@ -1,5 +1,5 @@
 export { generateURLforDownload } from './s3Presign';
-export { deleteSheetImage } from './s3Client';
+export { deleteSheetImage, getSheetImageMetadata } from './s3Client';
 export { generateSheetImage } from './callLambda';
 export { createRace, createUser, putMeetCache } from './dbPutItem';
 export {
