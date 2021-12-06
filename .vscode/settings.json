@@ -1,77 +1,7 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "prettier.singleQuote": true,
   "jest.jestCommandLine": "npx jest --transform='{\"^.+\\\\.ts$\": \"esbuild-jest\"}'",
   "jest.autoRun": {
     "watch": false,
     "onSave": "test-file"
-  },
-  "gitmoji.additionalEmojis": [
-    {
-      "emoji": "🚧",
-      "code": ":construction:",
-      "description": "Work in progress"
-    },
-    {
-      "emoji": "🍰",
-      "code": ":cake:",
-      "description": "chore"
-    },
-    {
-      "emoji": "✨",
-      "code": ":sparkles:",
-      "description": "Introduce new features"
-    },
-    {
-      "emoji": "💄",
-      "code": ":lipstick:",
-      "description": "Add or update the UI and style files"
-    },
-    {
-      "emoji": "♻️",
-      "code": ":recycle:",
-      "description": "Refactor code"
-    },
-    {
-      "emoji": "🚚",
-      "code": ":truck:",
-      "description": "Move or rename resources"
-    },
-    {
-      "emoji": "🐛",
-      "code": ":bug:",
-      "description": "Fix a bug"
-    },
-    {
-      "emoji": "📝",
-      "code": ":memo:",
-      "description": "Add or update documentation"
-    },
-    {
-      "emoji": "🔧",
-      "code": ":wrench:",
-      "description": "Add or update configuration files"
-    },
-    {
-      "emoji": "📦️",
-      "code": ":package:",
-      "description": "Change dependencies"
-    },
-    {
-      "emoji": "🚀",
-      "code": ":rocket:",
-      "description": "Project milestones"
-    },
-    {
-      "emoji": "✅",
-      "code": ":white_check_mark:",
-      "description": "Add, update, or pass tests"
-    }
-  ],
-  "gitmoji.onlyUseAdditionalEmojis": true,
-  "cSpell.words": ["Centi", "hoge", "postback", "unfollow", "Zenkaku"]
+  }
 }

@@ -2,7 +2,8 @@
 
 set -eu
 
-# 事前に開発コンテナ内でJSをビルドするのを忘れずに
+# build sorce
+npm run build
 
 # Login
 aws configure set output text
