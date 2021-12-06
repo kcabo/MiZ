@@ -92,6 +92,13 @@ export type AmbiguousObject = { [key: string]: AmbiguousValue };
 
 export type QueryStartPoint = { [key: string]: any };
 
+export type SheetImageBubbleProps = {
+  raceId: string;
+  url: string;
+  width: number;
+  height: number;
+};
+
 export type PostbackData =
   | AcceptTermPostback
   | DownloadSheetPostback

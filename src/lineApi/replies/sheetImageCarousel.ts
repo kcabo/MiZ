@@ -6,13 +6,14 @@ import {
   QueryStartPoint,
   RequestDeleteRacePostback,
   RerenderSheetPostback,
+  SheetImageBubbleProps,
 } from 'types';
 
 const RACES_LIFF_ID = process.env.RACES_LIFF_ID || '';
 const PAGE_SIZE = Number(process.env.RACE_LIST_PAGE_SIZE) || 10;
 
 export function sheetImageCarousel(
-  races: { raceId: string; url: string }[],
+  bubblePropsArray: SheetImageBubbleProps[],
   queryStartPoint: QueryStartPoint | undefined
 ): FlexMessage {
   const listUpActionPayload: ListUpRacePostback = {
@@ -20,7 +21,7 @@ export function sheetImageCarousel(
     start: queryStartPoint || {},
   };
 
-  const bubbles = races.map(({ raceId, url }) => sheetBubble(raceId, url));
+  const bubbles = bubblePropsArray.map(sheetBubble);
 
   return {
     type: 'flex',
@@ -50,11 +51,13 @@ export function sheetImageCarousel(
   };
 }
 
-function sheetBubble(raceId: string, url: string): FlexBubble {
+function sheetBubble(props: SheetImageBubbleProps): FlexBubble {
+  const aspectRatio = generateAspectRatio(props);
+
   return {
     type: 'bubble',
-    body: body(url),
-    footer: footer(raceId),
+    body: body(props.url, aspectRatio),
+    footer: footer(props.raceId),
     styles: {
       body: {
         backgroundColor: '#E9EAEC',
@@ -66,7 +69,23 @@ function sheetBubble(raceId: string, url: string): FlexBubble {
   };
 }
 
-function body(url: string): FlexBox {
+function generateAspectRatio({
+  width,
+  height,
+}: SheetImageBubbleProps): `${number}:${number}` | undefined {
+  const norNan = !!(width && height);
+  const validRatio = !!(height / width < 3);
+  if (norNan && validRatio) {
+    return `${width}:${height}`;
+  } else {
+    return undefined;
+  }
+}
+
+function body(
+  url: string,
+  aspectRatio: `${number}:${number}` = '750:1000'
+): FlexBox {
   return {
     type: 'box',
     layout: 'vertical',
@@ -74,7 +93,7 @@ function body(url: string): FlexBox {
       {
         type: 'image',
         url: url,
-        aspectRatio: '750:1094',
+        aspectRatio: aspectRatio,
         size: 'full',
       },
     ],

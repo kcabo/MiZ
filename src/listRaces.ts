@@ -1,9 +1,13 @@
 import { Message } from '@line/bot-sdk';
 
-import { generateURLforDownload, queryAllRaces } from 'aws';
+import {
+  generateURLforDownload,
+  getSheetImageMetadata,
+  queryAllRaces,
+} from 'aws';
 import { BotReply } from 'lineApi';
 import { ItemNotFoundFromDB } from 'exceptions';
-import { QueryStartPoint } from 'types';
+import { QueryStartPoint, SheetImageBubbleProps } from 'types';
 
 export async function listRaces(
   userId: string,
@@ -23,13 +27,25 @@ export async function listRaces(
 
   const { raceIds, LastEvaluatedKey } = result;
 
-  const urlAndSkArray = await Promise.all(
-    raceIds.map(async ({ sk }) => ({
-      raceId: sk,
-      url: await generateURLforDownload(sk),
-    }))
-  );
+  const props = await Promise.all(raceIds.map(generateProps));
 
   // 絞り込み、表示の切り替えも実装予定
-  return BotReply.sheetImageCarousel(urlAndSkArray, LastEvaluatedKey);
+  return BotReply.sheetImageCarousel(props, LastEvaluatedKey);
+}
+
+async function generateProps({
+  sk,
+}: {
+  sk: string;
+}): Promise<SheetImageBubbleProps> {
+  const raceId = sk;
+  const url = await generateURLforDownload(raceId);
+  const { width, height } = await getSheetImageMetadata(raceId);
+
+  return {
+    raceId,
+    url,
+    width: parseInt(width),
+    height: parseInt(height),
+  };
 }
