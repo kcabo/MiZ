@@ -15,6 +15,7 @@ import { listRaces } from 'listRaces';
 import { showSheet } from 'showSheet';
 import { confirmDeleteRace, confirmedDeleteRace } from 'deleteRace';
 import { rerenderSheet } from 'rerenderSheet';
+import { lecture } from 'lecture';
 import { parsePostbackData } from 'lib/parsePostback';
 import { ErrorLog, EventLog } from 'lib/logger';
 
@@ -119,6 +120,10 @@ async function respondToPostback(
   if (data.type === 'delete') {
     const { raceId, expiresAt } = data;
     return await confirmedDeleteRace(userId, raceId, expiresAt);
+  }
+
+  if (data.type === 'help') {
+    return await lecture(userId);
   }
 
   if (data.type === 'acceptTerm') {

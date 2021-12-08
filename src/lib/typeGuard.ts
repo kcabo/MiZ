@@ -130,6 +130,7 @@ export function isPostbackData(arg: any): arg is PostbackData {
       (arg.type === 'reqDelete' && typeof arg.raceId === 'string') ||
       (arg.type === 'delete' &&
         typeof arg.raceId === 'string' &&
-        typeof arg.expiresAt === 'number'))
+        typeof arg.expiresAt === 'number') ||
+      arg.type === 'help')
   );
 }

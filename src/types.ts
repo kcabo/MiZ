@@ -105,7 +105,8 @@ export type PostbackData =
   | RerenderSheetPostback
   | ListUpRacePostback
   | RequestDeleteRacePostback
-  | DeleteRacePostback;
+  | DeleteRacePostback
+  | HelpPostback;
 
 export type AcceptTermPostback = {
   type: 'acceptTerm';
@@ -136,4 +137,8 @@ export type DeleteRacePostback = {
   type: 'delete';
   raceId: string;
   expiresAt: number; // unix time
+};
+
+export type HelpPostback = {
+  type: 'help';
 };

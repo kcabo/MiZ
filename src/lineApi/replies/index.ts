@@ -6,7 +6,7 @@ export { sheetImage } from './sheetImage';
 export { sheetImageCarousel } from './sheetImageCarousel';
 export { registration, pleaseAcceptTerm } from './registration';
 export { confirmDeleteRace } from './confirmDeleteRace';
-export { tutorial } from './tutorial';
+export { tutorial, howToUseCarousel, wrongFormat } from './tutorial';
 
 function textMessageBase(text: string): TextMessage {
   return { type: 'text', text };
@@ -23,20 +23,12 @@ export function randomSticker(): StickerMessage {
 }
 
 export function tellIamBot(): TextMessage {
-  return textMessageBase(
-    '申し訳ございませんが、個別にお返事することはできません'
-  );
+  return textMessageBase('ごめんなさい。個別にお返事はできません🙇');
 }
 
 export function failedToIdentifyUser(): TextMessage {
   return textMessageBase(
     'あなたの登録情報を参照できませんでした。時間をおいて再度お試しください。'
-  );
-}
-
-export function askFixCreateSheetFormat(): TextMessage {
-  return textMessageBase(
-    'データ生成メッセージの形式が間違っています。正しい書式で再送してください。'
   );
 }
 

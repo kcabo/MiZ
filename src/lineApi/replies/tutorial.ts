@@ -12,6 +12,16 @@ export function tutorial(mode: UserMode): Message[] {
   ];
 }
 
+export function wrongFormat(isSwimmer: boolean): Message[] {
+  return [
+    {
+      type: 'text',
+      text: '送信フォーマットが間違っています💦 下記を参考に正しいフォーマットで再送してください🙇',
+    },
+    howToUseCarousel(isSwimmer),
+  ];
+}
+
 function thankYouText(isSwimmer: boolean): TextMessage {
   return {
     type: 'text',
@@ -21,10 +31,10 @@ function thankYouText(isSwimmer: boolean): TextMessage {
   };
 }
 
-function howToUseCarousel(isSwimmer: boolean): FlexMessage {
+export function howToUseCarousel(isSwimmer: boolean): FlexMessage {
   return {
     type: 'flex',
-    altText: 'はじめまして！MiZです',
+    altText: '🚩MiZの使い方',
     contents: {
       type: 'carousel',
       contents: [

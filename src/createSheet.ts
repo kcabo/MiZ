@@ -36,16 +36,17 @@ export async function createSheet(
   }
 
   let parsed: RaceCoreData | WrongMessageFormat | PayloadTooLarge;
+  const isSwimmer = user.mode === 'swimmer';
 
   // 選手モードなら選手名なし・いきなり種目名からのメッセージ
-  if (user.mode === 'swimmer') {
+  if (isSwimmer) {
     parsed = parseToRaceCoreData([user.userName, text].join('\n'));
   } else {
     parsed = parseToRaceCoreData(text);
   }
 
   if (parsed instanceof WrongMessageFormat) {
-    return BotReply.askFixCreateSheetFormat();
+    return BotReply.wrongFormat(isSwimmer);
   } else if (parsed instanceof PayloadTooLarge) {
     return BotReply.tooLongTimeText();
   }
