@@ -1,9 +1,39 @@
-import { FlexMessage } from '@line/bot-sdk';
+import {
+  FlexMessage,
+  ImageMapMessage,
+  Message,
+  TextMessage,
+} from '@line/bot-sdk';
 import { AcceptTermPostback } from 'types';
 
 const ORIGIN = process.env.PUBLIC_ASSETS_ORIGIN;
+const TERM_URL = process.env.TERM_URL;
 
-export function registration(): FlexMessage {
+export function registration(): Message[] {
+  return [helloText(), adImageMap(), selectMode()];
+}
+
+function helloText(): TextMessage {
+  return {
+    type: 'text',
+    text: 'はじめまして！MiZです。友達登録ありがとうございます😊',
+  };
+}
+
+function adImageMap(): ImageMapMessage {
+  return {
+    type: 'imagemap',
+    baseUrl: ORIGIN + '/ads',
+    altText: 'あなたのレースを、デジタルに',
+    baseSize: {
+      width: 1040,
+      height: 780,
+    },
+    actions: [],
+  };
+}
+
+function selectMode(): FlexMessage {
   const startAsSwimmerPostback: AcceptTermPostback = {
     type: 'acceptTerm',
     mode: 'swimmer',
@@ -14,7 +44,7 @@ export function registration(): FlexMessage {
   };
   return {
     type: 'flex',
-    altText: 'はじめまして！MiZです',
+    altText: 'モードを選択',
     contents: {
       type: 'bubble',
       header: {
@@ -30,7 +60,7 @@ export function registration(): FlexMessage {
           },
           {
             type: 'text',
-            text: '2つのうちどちらかを選択してください。\n設定画面からいつでも変更できます。',
+            text: '利用規約をよくお読みいただき、ご同意の上でどちらかをお選びください。モードはメニューの「設定」からいつでも変更できます。',
             color: '#FFFFFF',
             size: '14px',
             wrap: true,
@@ -233,7 +263,7 @@ export function registration(): FlexMessage {
             action: {
               type: 'uri',
               label: 'action',
-              uri: 'http://linecorp.com/',
+              uri: TERM_URL,
             },
           },
         ],
