@@ -4,7 +4,7 @@ import { getRandomIntInclusive } from 'lib/utils';
 
 export { sheetImage } from './sheetImage';
 export { sheetImageCarousel } from './sheetImageCarousel';
-export { registration } from './registration';
+export { registration, pleaseAcceptTerm } from './registration';
 export { confirmDeleteRace } from './confirmDeleteRace';
 export { tutorial } from './tutorial';
 
@@ -31,12 +31,6 @@ export function tellIamBot(): TextMessage {
 export function failedToIdentifyUser(): TextMessage {
   return textMessageBase(
     'あなたの登録情報を参照できませんでした。時間をおいて再度お試しください。'
-  );
-}
-
-export function pleaseAcceptTerm(): TextMessage {
-  return textMessageBase(
-    '利用規約とプライバシーポリシーに同意してからご利用いただけます。'
   );
 }
 

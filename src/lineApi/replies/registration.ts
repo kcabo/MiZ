@@ -13,10 +13,21 @@ export function registration(): Message[] {
   return [helloText(), adImageMap(), selectMode()];
 }
 
+export function pleaseAcceptTerm(): Message[] {
+  return [youCannotUseText(), selectMode()];
+}
+
 function helloText(): TextMessage {
   return {
     type: 'text',
     text: 'はじめまして！MiZです。友達登録ありがとうございます😊',
+  };
+}
+
+function youCannotUseText(): TextMessage {
+  return {
+    type: 'text',
+    text: '利用規約とプライバシーポリシーに同意してからご利用いただけます。',
   };
 }
 
