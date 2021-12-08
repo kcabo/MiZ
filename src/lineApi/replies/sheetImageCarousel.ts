@@ -11,6 +11,7 @@ import {
 
 const RACES_LIFF_ID = process.env.RACES_LIFF_ID || '';
 const PAGE_SIZE = Number(process.env.RACE_LIST_PAGE_SIZE) || 10;
+const ORIGIN = process.env.PUBLIC_ASSETS_ORIGIN;
 
 export function sheetImageCarousel(
   bubblePropsArray: SheetImageBubbleProps[],
@@ -37,8 +38,7 @@ export function sheetImageCarousel(
             items: [
               {
                 type: 'action',
-                imageUrl:
-                  'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/right.png',
+                imageUrl: ORIGIN + '/icons/right.png',
                 action: {
                   type: 'postback',
                   label: `次の${PAGE_SIZE}件`,
@@ -129,7 +129,7 @@ function footer(raceId: string): FlexBox {
         contents: [
           {
             type: 'icon',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/download.png',
+            url: ORIGIN + '/icons/download.png',
             size: '24px',
           },
         ],
@@ -157,7 +157,7 @@ function footer(raceId: string): FlexBox {
         contents: [
           {
             type: 'icon',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/edit-dark.png',
+            url: ORIGIN + '/icons/edit-dark.png',
             size: '24px',
           },
         ],
@@ -179,7 +179,7 @@ function footer(raceId: string): FlexBox {
         contents: [
           {
             type: 'icon',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/refresh-dark.png',
+            url: ORIGIN + '/icons/refresh-dark.png',
             size: '24px',
           },
         ],
@@ -202,7 +202,7 @@ function footer(raceId: string): FlexBox {
         contents: [
           {
             type: 'icon',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/delete-dark.png',
+            url: ORIGIN + '/icons/delete-dark.png',
             size: '24px',
           },
         ],

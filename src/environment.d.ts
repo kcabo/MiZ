@@ -11,6 +11,7 @@ declare global {
       RACES_LIFF_ID: string;
       SETTINGS_LIFF_ID: string;
       RACE_LIST_PAGE_SIZE: string;
+      PUBLIC_ASSETS_ORIGIN: string;
     }
   }
 }

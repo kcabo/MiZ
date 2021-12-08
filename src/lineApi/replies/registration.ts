@@ -1,6 +1,8 @@
 import { FlexMessage } from '@line/bot-sdk';
 import { AcceptTermPostback } from 'types';
 
+const ORIGIN = process.env.PUBLIC_ASSETS_ORIGIN;
+
 export function registration(): FlexMessage {
   const startAsSwimmerPostback: AcceptTermPostback = {
     type: 'acceptTerm',
@@ -53,7 +55,7 @@ export function registration(): FlexMessage {
                 contents: [
                   {
                     type: 'image',
-                    url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/swimmer.png',
+                    url: ORIGIN + '/swimmer.png',
                     aspectRatio: '100:94',
                     size: '50px',
                   },
@@ -137,7 +139,7 @@ export function registration(): FlexMessage {
                 contents: [
                   {
                     type: 'image',
-                    url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/watch.png',
+                    url: ORIGIN + '/watch.png',
                     aspectRatio: '100:94',
                     size: '52px',
                   },

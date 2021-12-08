@@ -3,6 +3,8 @@ import { FlexMessage } from '@line/bot-sdk';
 import { nowUnix } from 'lib/utils';
 import { DeleteRacePostback, Race } from 'types';
 
+const ORIGIN = process.env.PUBLIC_ASSETS_ORIGIN;
+
 export function confirmDeleteRace(raceId: string, race: Race): FlexMessage {
   const deleteRaceActionPayload: DeleteRacePostback = {
     type: 'delete',
@@ -21,7 +23,7 @@ export function confirmDeleteRace(raceId: string, race: Race): FlexMessage {
         contents: [
           {
             type: 'icon',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/warning.png',
+            url: ORIGIN + '/icons/warning.png',
             size: '28px',
             offsetTop: '8px',
           },

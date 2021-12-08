@@ -1,6 +1,8 @@
 import { FlexMessage, Message, TextMessage } from '@line/bot-sdk';
 import { UserMode } from 'types';
 
+const ORIGIN = process.env.PUBLIC_ASSETS_ORIGIN;
+
 export function tutorial(mode: UserMode): Message[] {
   const isSwimmer = mode === 'swimmer';
   return [
@@ -30,7 +32,7 @@ function howToUseCarousel(isSwimmer: boolean): FlexMessage {
           type: 'bubble',
           hero: {
             type: 'image',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/intro/intro1.png',
+            url: ORIGIN + '/intro/intro1.png',
             size: 'full',
             aspectRatio: '800:885',
           },
@@ -39,9 +41,7 @@ function howToUseCarousel(isSwimmer: boolean): FlexMessage {
           type: 'bubble',
           hero: {
             type: 'image',
-            url: `https://miz-assets.s3.ap-northeast-1.amazonaws.com/intro/intro2${
-              isSwimmer ? '' : '-manager'
-            }.png`,
+            url: `${ORIGIN}/intro/intro2${isSwimmer ? '' : '-manager'}.png`,
             size: 'full',
             aspectRatio: '800:885',
           },
@@ -50,9 +50,7 @@ function howToUseCarousel(isSwimmer: boolean): FlexMessage {
           type: 'bubble',
           hero: {
             type: 'image',
-            url: `https://miz-assets.s3.ap-northeast-1.amazonaws.com/intro/intro3${
-              isSwimmer ? '' : '-manager'
-            }.png`,
+            url: `${ORIGIN}/intro/intro3${isSwimmer ? '' : '-manager'}.png`,
             size: 'full',
             aspectRatio: '800:885',
           },
@@ -61,7 +59,7 @@ function howToUseCarousel(isSwimmer: boolean): FlexMessage {
           type: 'bubble',
           hero: {
             type: 'image',
-            url: 'https://miz-assets.s3.ap-northeast-1.amazonaws.com/intro/intro4.png',
+            url: ORIGIN + '/intro/intro4.png',
             size: 'full',
             aspectRatio: '800:885',
           },

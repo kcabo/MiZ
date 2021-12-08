@@ -2,6 +2,7 @@ import { Message } from '@line/bot-sdk';
 import { RequestDeleteRacePostback, RerenderSheetPostback } from 'types';
 
 const RACES_LIFF_ID = process.env.RACES_LIFF_ID || '';
+const ORIGIN = process.env.PUBLIC_ASSETS_ORIGIN;
 
 export function sheetImage(
   raceId: string,
@@ -35,8 +36,7 @@ export function sheetImage(
               items: [
                 {
                   type: 'action',
-                  imageUrl:
-                    'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/edit.png',
+                  imageUrl: ORIGIN + '/icons/edit.png',
                   action: {
                     type: 'uri',
                     label: '編集',
@@ -45,8 +45,7 @@ export function sheetImage(
                 },
                 {
                   type: 'action',
-                  imageUrl:
-                    'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/refresh.png',
+                  imageUrl: ORIGIN + '/icons/refresh.png',
                   action: {
                     type: 'postback',
                     label: '更新',
@@ -56,8 +55,7 @@ export function sheetImage(
                 },
                 {
                   type: 'action',
-                  imageUrl:
-                    'https://miz-assets.s3.ap-northeast-1.amazonaws.com/icons/delete.png',
+                  imageUrl: ORIGIN + '/icons/delete.png',
                   action: {
                     type: 'postback',
                     label: '削除',
