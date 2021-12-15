@@ -6,6 +6,7 @@ import {
   reply,
   extractUserId,
   BotReply,
+  notifyLine,
 } from 'lineApi';
 import { createSheet } from 'createSheet';
 import { becomeFriend } from 'becomeFriend';
@@ -51,11 +52,13 @@ async function processEvent(event: WebhookEvent) {
 
   // ユーザーの新規登録またはブロック解除
   if (event.type === 'follow') {
+    notifyLine('follow', userId);
     const response = await becomeFriend(userId);
     return await reply(event.replyToken, response);
   }
 
   if (event.type === 'unfollow') {
+    notifyLine('block', userId);
     return await blockedByUser(userId);
   }
 
@@ -71,6 +74,8 @@ async function respondToText(
   userId: string,
   text: string
 ): Promise<Message | Message[]> {
+  notifyLine('text', text);
+
   if (text.includes('\n')) {
     return await createSheet(userId, text);
   }
