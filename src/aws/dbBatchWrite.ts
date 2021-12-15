@@ -6,7 +6,7 @@ export async function deleteAllData(userId: string) {
   const result = await dbQueryRequest(userId, {});
   if (result instanceof Error) {
     ErrorLog('Failed to list all item on userId:', userId);
-    return;
+    return result;
   }
 
   const { sks } = result;
@@ -16,17 +16,17 @@ export async function deleteAllData(userId: string) {
   while (sks.length > index) {
     const range = sks.slice(index, index + width);
 
-    console.log('now at', range);
-
     const batchResult = await dbBatchDeleteRequest(userId, range);
 
     if (batchResult instanceof Error) {
       ErrorLog('Failed to delete all item on userId:', userId);
-      return;
+      return batchResult;
     }
 
     index += width;
   }
+
+  return sks;
 }
 
 async function dbBatchDeleteRequest(
