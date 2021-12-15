@@ -12,22 +12,12 @@ export function tutorial(mode: UserMode): Message[] {
   ];
 }
 
-export function wrongFormat(isSwimmer: boolean): Message[] {
-  return [
-    {
-      type: 'text',
-      text: '送信フォーマットが間違っています💦 下記を参考に正しいフォーマットで再送してください🙇',
-    },
-    howToUseCarousel(isSwimmer),
-  ];
-}
-
 function thankYouText(isSwimmer: boolean): TextMessage {
   return {
     type: 'text',
     text: `[${
       isSwimmer ? '選手' : 'マネージャー'
-    }モードに設定しました]\n\nご利用いただきありがとうございます！MiZはレース結果を画像化するサービスです。使い方をご紹介します。`,
+    }モードに設定しました]\n\nご利用いただきありがとうございます! MiZはレース結果を画像化するサービスです。使い方をご紹介します。`,
   };
 }
 

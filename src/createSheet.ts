@@ -46,7 +46,7 @@ export async function createSheet(
   }
 
   if (parsed instanceof WrongMessageFormat) {
-    return BotReply.wrongFormat(isSwimmer);
+    return handleWrongFormat(isSwimmer, text);
   } else if (parsed instanceof PayloadTooLarge) {
     return BotReply.tooLongTimeText();
   }
@@ -71,4 +71,27 @@ export async function createSheet(
 
   const url = await generateURLforDownload(raceId);
   return BotReply.sheetImage(raceId, url);
+}
+
+function handleWrongFormat(
+  isSwimmer: boolean,
+  input: string
+): Message | Message[] {
+  // 選手でかつしっかり数字が含まれている(適当ではない)inputにのみ反応する
+  if (!isSwimmer || !/[0-9０-９]/.test(input)) {
+    return BotReply.wrongFormatNormal(isSwimmer);
+  }
+
+  // コロンかピリオドが含まれているなら省いて再送
+  if (/[:.]/.test(input)) {
+    const suggestion = input.replace(/:/g, '').replace(/\./g, '');
+    return BotReply.wrongFormatWithSymbol(suggestion);
+  }
+
+  // 種目を忘れている=数字のみ
+  if (!/[^\s0-9０-９]/.test(input)) {
+    return BotReply.wrongFormatWithNoEvent(input);
+  }
+
+  return BotReply.wrongFormatNormal(isSwimmer);
 }

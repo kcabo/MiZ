@@ -2,11 +2,12 @@ import { StickerMessage, TextMessage } from '@line/bot-sdk';
 
 import { getRandomIntInclusive } from 'lib/utils';
 
-export { sheetImage } from './sheetImage';
-export { sheetImageCarousel } from './sheetImageCarousel';
-export { registration, pleaseAcceptTerm } from './registration';
-export { confirmDeleteRace } from './confirmDeleteRace';
-export { tutorial, howToUseCarousel, wrongFormat } from './tutorial';
+export * from './sheetImage';
+export * from './sheetImageCarousel';
+export * from './registration';
+export * from './confirmDeleteRace';
+export * from './tutorial';
+export * from './correctFormat';
 
 function textMessageBase(text: string): TextMessage {
   return { type: 'text', text };
