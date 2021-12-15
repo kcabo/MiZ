@@ -1,5 +1,26 @@
-export function shortenedEventToProperStyle(event: string) {
-  return event
+// 注意: クソコード
+
+export function shortenedEventToProperStyle(originEvent: string) {
+  const notContainHan = originEvent.replace('半', 'はん');
+
+  const result = challengeConvert(notContainHan);
+  if (result) return result;
+
+  const allHiragana = toHiragana(notContainHan);
+  const result2 = challengeConvert(allHiragana);
+  if (result2) return result2;
+
+  return originEvent;
+}
+
+function challengeConvert(origin: string) {
+  const after = hiraganaToEvent(origin);
+  if (origin === after) return false;
+  return after;
+}
+
+function hiraganaToEvent(hiragana: string) {
+  return hiragana
     .replace('はんふり', '50m自由形')
     .replace('いちふり', '100m自由形')
     .replace('にふり', '200m自由形')
@@ -30,5 +51,12 @@ export function shortenedEventToProperStyle(event: string) {
     .replace('はちけい', '800mフリーリレー')
     .replace('にめりれ', '200mメドレーリレー')
     .replace('よんめりれ', '400mメドレーリレー')
-    .replace('めりれ', '400mメドレーリレー');
+    .replace('めりれ', '400mメドレーリレー')
+    .replace('たいむ', 'タイム'); // タイム決勝がたいむ決勝に変換されたのを戻す
+}
+
+function toHiragana(str: string) {
+  return str.replace(/[\u30a1-\u30f6]/g, (s) =>
+    String.fromCharCode(s.charCodeAt(0) - 0x60)
+  );
 }
