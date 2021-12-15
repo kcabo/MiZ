@@ -12,7 +12,7 @@ export async function deleteRaceItem(userId: string, raceId: string) {
 // 存在しないItemを削除しようとするとConditionalCheckFailedExceptionが走る
 // このときログは吐かないが、NotFoundエラーオブジェクトを返す
 // 別の戦略として、削除結果(ReturnValues: ALL_OLD)を受け取り、それを判定する方法もある
-export async function dbDeleteRequest(key: DbPrimaryKeys): Promise<0 | Error> {
+async function dbDeleteRequest(key: DbPrimaryKeys): Promise<0 | Error> {
   try {
     await documentClient.delete({
       TableName: RACE_TABLE_NAME,

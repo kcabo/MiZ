@@ -25,7 +25,7 @@ describe('Query race', () => {
   test('success', async () => {
     const output = await queryAllRaces('');
     expect(output).toStrictEqual({
-      raceIds: skOnlys,
+      sks: skOnlys,
       LastEvaluatedKey: undefined,
     });
   });

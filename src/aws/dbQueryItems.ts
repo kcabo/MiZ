@@ -10,16 +10,25 @@ export async function queryAllRaces(
   userId: string,
   startKey?: QueryStartPoint
 ) {
-  return await dbQueryRequest(userId, PAGE_SIZE, startKey);
+  return await dbQueryRequest(userId, {
+    Limit: PAGE_SIZE,
+    ExclusiveStartKey: startKey,
+    IndexName: 'date-index',
+    ScanIndexForward: false, // 最近の日付から読む
+  });
 }
 
-async function dbQueryRequest(
+export async function dbQueryRequest(
   userId: string,
-  pageSize: number,
-  startKey?: QueryStartPoint
+  options: {
+    Limit?: number;
+    ExclusiveStartKey?: QueryStartPoint;
+    IndexName?: 'date-index';
+    ScanIndexForward?: false;
+  }
 ): Promise<
   | {
-      raceIds: { sk: string }[];
+      sks: { sk: string }[];
       LastEvaluatedKey?: QueryStartPoint;
     }
   | Error
@@ -27,15 +36,12 @@ async function dbQueryRequest(
   try {
     const { Items, LastEvaluatedKey } = await documentClient.query({
       TableName: RACE_TABLE_NAME,
-      IndexName: 'date-index',
       KeyConditionExpression: 'userId = :userId',
       ExpressionAttributeValues: {
         ':userId': userId,
       },
       ProjectionExpression: 'sk',
-      Limit: pageSize,
-      ExclusiveStartKey: startKey,
-      ScanIndexForward: false, // from end to start = 値の大きい最近の日付から読む
+      ...options,
     });
 
     if (typeof Items === 'undefined' || Items.length === 0) {
@@ -47,10 +53,10 @@ async function dbQueryRequest(
       return new InvalidItem();
     }
 
-    return { raceIds: Items, LastEvaluatedKey };
+    return { sks: Items, LastEvaluatedKey };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      dbErrorLog('query', { userId, sk: '-' }, error);
+      dbErrorLog('query', { userId, sk: '*' }, error);
       return error;
     } else {
       throw new Error();
