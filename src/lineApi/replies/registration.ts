@@ -55,7 +55,7 @@ function selectMode(): FlexMessage {
   };
   return {
     type: 'flex',
-    altText: 'モードを選択',
+    altText: '🔀モードを選択',
     contents: {
       type: 'bubble',
       header: {

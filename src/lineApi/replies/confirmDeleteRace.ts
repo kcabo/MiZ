@@ -14,7 +14,7 @@ export function confirmDeleteRace(raceId: string, race: Race): FlexMessage {
 
   return {
     type: 'flex',
-    altText: 'レースデータを削除しますか？',
+    altText: '💀レースデータを削除しますか？',
     contents: {
       type: 'bubble',
       header: {

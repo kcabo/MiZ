@@ -24,7 +24,7 @@ function thankYouText(isSwimmer: boolean): TextMessage {
 export function howToUseCarousel(isSwimmer: boolean): FlexMessage {
   return {
     type: 'flex',
-    altText: '🚩MiZの使い方',
+    altText: '🌱MiZの使い方',
     contents: {
       type: 'carousel',
       contents: [
@@ -72,7 +72,7 @@ export function howToUseCarousel(isSwimmer: boolean): FlexMessage {
 function sampleDataBubble(isSwimmer: boolean): FlexMessage {
   return {
     type: 'flex',
-    altText: 'サンプルデータ',
+    altText: '🗿サンプルデータ',
     contents: {
       type: 'bubble',
       header: {

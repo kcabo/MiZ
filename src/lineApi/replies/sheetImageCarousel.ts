@@ -26,7 +26,7 @@ export function sheetImageCarousel(
 
   return {
     type: 'flex',
-    altText: 'レース一覧',
+    altText: '📚レース一覧',
     contents: {
       type: 'carousel',
       contents: bubbles,
