@@ -1,7 +1,8 @@
 import {
   S3Client,
-  DeleteObjectCommand,
   HeadObjectCommand,
+  DeleteObjectsCommand,
+  DeleteObjectsCommandInput,
 } from '@aws-sdk/client-s3';
 import { ErrorLog } from 'lib/logger';
 
@@ -9,15 +10,22 @@ const BUCKET_NAME = process.env.PAPARAZZO_BUCKET_NAME;
 
 export const s3Client = new S3Client({ region: 'ap-northeast-1' });
 
-// NOTE: 存在しないキーを指定しても成功する
 export async function deleteSheetImage(raceId: string) {
-  const objectKey = raceId + '.png';
+  return deleteSheetImages([raceId]);
+}
 
-  const param = {
+// NOTE: 存在しないキーを指定しても成功する
+export async function deleteSheetImages(raceIds: string[]) {
+  const keys = raceIds.map((raceId) => ({ Key: raceId + '.png' }));
+
+  const param: DeleteObjectsCommandInput = {
     Bucket: BUCKET_NAME,
-    Key: objectKey,
+    Delete: {
+      Objects: keys,
+    },
   };
-  const command = new DeleteObjectCommand(param);
+
+  const command = new DeleteObjectsCommand(param);
 
   try {
     await s3Client.send(command);
