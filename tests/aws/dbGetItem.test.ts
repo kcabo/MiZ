@@ -17,7 +17,6 @@ const dbUserItem: DbUserItem = {
   userName: 'hoge',
   mode: 'swimmer',
   isTermAccepted: true,
-  friendship: true,
   createdAt: '2021-11-14T10:39:14Z',
 };
 

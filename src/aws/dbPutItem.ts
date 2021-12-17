@@ -36,7 +36,6 @@ export async function createUser(userId: string, userName: string) {
     userName,
     mode: 'swimmer', // デフォルト値
     isTermAccepted: false, // 同意したらこの属性をアップデート
-    friendship: true,
     createdAt: now,
   };
 

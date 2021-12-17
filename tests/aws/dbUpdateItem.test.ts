@@ -3,7 +3,7 @@ import { DynamoDBDocumentClient, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 
 import { updateUser } from 'aws';
 import { __local__ } from 'aws/dbUpdateItem';
-import { UserSettingsKeys, UserStatusKeys } from 'types';
+import { UserSettingsKeys } from 'types';
 
 const ddbMock = mockClient(DynamoDBDocumentClient);
 ddbMock
@@ -16,7 +16,7 @@ afterAll(() => jest.restoreAllMocks());
 
 describe('Update user', () => {
   test('success', async () => {
-    const output = await updateUser('', { friendship: false });
+    const output = await updateUser('', { isTermAccepted: true });
     expect(output).toBe(0);
   });
 
@@ -43,7 +43,7 @@ const attributes = {
 };
 
 test('construct command', () => {
-  const allowedKeys = [...UserSettingsKeys, ...UserStatusKeys];
+  const allowedKeys = [...UserSettingsKeys, 'isTermAccepted'];
   const res = __local__.constructUpdateCommand(attributes, allowedKeys as any);
   expect(res).toStrictEqual({
     UpdateExpression:

@@ -55,18 +55,8 @@ export type UserSettings = {
 
 export const UserSettingsKeys: (keyof UserSettings)[] = ['userName', 'mode'];
 
-export type UserStatus = {
-  isTermAccepted: boolean;
-  friendship: boolean;
-};
-
-export const UserStatusKeys: (keyof UserStatus)[] = [
-  'isTermAccepted',
-  'friendship',
-];
-
 export type DbUserItem = DbItem<
-  UserSettings & UserStatus & { createdAt: string }
+  UserSettings & { isTermAccepted: boolean; createdAt: string }
 >;
 
 export type DbMeetCacheItem = DbItem<

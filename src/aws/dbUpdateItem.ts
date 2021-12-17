@@ -3,20 +3,18 @@ import { dbErrorLog, ErrorLog } from 'lib/logger';
 import {
   UserSettings,
   UserSettingsKeys,
-  UserStatus,
-  UserStatusKeys,
   AmbiguousObject,
   AmbiguousValue,
 } from 'types';
 
-type UpdatableUserData = Partial<UserSettings | UserStatus>;
+type UpdatableUserData = Partial<UserSettings | { isTermAccepted: boolean }>;
 
 export async function updateUser(
   userId: string,
   target: UpdatableUserData
 ): Promise<0 | Error> {
   const sk = 'USER#' + userId;
-  const allowedKeys = [...UserSettingsKeys, ...UserStatusKeys];
+  const allowedKeys = [...UserSettingsKeys, 'isTermAccepted'];
 
   try {
     await dbUpdateRequest(userId, sk, target, allowedKeys, 'isTermAccepted'); // 既存のUserItemなら必ずisTermAcceptedのattributeが存在しているはず

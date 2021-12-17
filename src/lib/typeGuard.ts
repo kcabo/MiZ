@@ -24,7 +24,6 @@ export function isDbUserItem(arg: any): arg is DbUserItem {
     typeof arg.sk === 'string' &&
     isUserSettings({ userName: arg.userName, mode: arg.mode }) &&
     typeof arg.isTermAccepted === 'boolean' &&
-    typeof arg.friendship === 'boolean' &&
     isValidISO8601(arg.createdAt)
   );
 }
