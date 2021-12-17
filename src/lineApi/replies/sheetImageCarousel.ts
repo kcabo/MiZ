@@ -56,6 +56,7 @@ function sheetBubble(props: SheetImageBubbleProps): FlexBubble {
 
   return {
     type: 'bubble',
+    size: 'kilo',
     body: body(props.url, aspectRatio),
     footer: footer(props.raceId),
     styles: {
@@ -148,10 +149,6 @@ function footer(raceId: string): FlexBox {
         },
       },
       {
-        type: 'filler',
-        flex: 0,
-      },
-      {
         type: 'box',
         layout: 'baseline',
         contents: [
@@ -221,8 +218,6 @@ function footer(raceId: string): FlexBox {
       },
     ],
     paddingTop: '0px',
-    paddingAll: '20px',
-    justifyContent: 'space-between',
-    paddingBottom: '14px',
+    justifyContent: 'space-around',
   };
 }

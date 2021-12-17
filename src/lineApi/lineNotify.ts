@@ -6,6 +6,7 @@ import { ErrorLog } from 'lib/logger';
 const LINE_NOTIFY_ACCESS_TOKEN = process.env.LINE_NOTIFY_ACCESS_TOKEN;
 
 export function notifyLine(type: 'follow' | 'block' | 'text', payload: string) {
+  if (process.env.NODE_ENV === 'development') return;
   _notifyLine(`[${type}] ${payload}`);
 }
 
